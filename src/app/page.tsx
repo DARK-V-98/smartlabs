@@ -82,6 +82,9 @@ export default function Home() {
       <section className="bg-primary/10 py-20 md:py-32">
         <div className="container mx-auto text-center">
           <div className="max-w-4xl mx-auto">
+            <div className="flex justify-center mb-8">
+              <Image src="/logo.png" alt="Smart Labs Logo" width={192} height={192} className="h-48 w-48" />
+            </div>
             <h1 className="text-4xl md:text-6xl font-headline font-bold text-gray-800">
               Smart Learning, Smarter Futures.
             </h1>
