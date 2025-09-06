@@ -102,6 +102,39 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="founder" className="py-20 bg-gray-50">
+        <div className="container mx-auto grid lg:grid-cols-5 gap-12 items-center">
+            <div className="lg:col-span-2">
+                <div className="relative aspect-square rounded-xl overflow-hidden shadow-lg mx-auto max-w-sm lg:max-w-none">
+                    <Image
+                      src="https://picsum.photos/600/600"
+                      alt="Lahiruka Weeraratne (Laheer) - Founder of Smart Labs"
+                      data-ai-hint="professional woman"
+                      fill
+                      className="object-cover"
+                    />
+                </div>
+            </div>
+            <div className="lg:col-span-3">
+                <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
+                <p className="mt-4 text-muted-foreground">
+                    Our Founder and Director, Lahiruka Weeraratne, known in the industry as Laheer, is a distinguished expert trainer officially trained by Pearson UK. She specializes in PTE, IELTS, and CELPIP exams—the essential pathways for students and professionals seeking to study, migrate, or settle abroad. With over 6 years of professional experience, she has successfully trained more than 5,000 students, empowering them to achieve their global aspirations. Her passion for education and innovation led to the creation of Smart Labs, a hub designed to provide a smarter and more effective approach to language learning.
+                </p>
+                <div className="mt-8">
+                  <h3 className="font-headline font-semibold text-xl mb-4">Her Role at Smart Labs</h3>
+                   <ul className="space-y-3">
+                    {founderExpertise.map((item, index) => (
+                      <li key={index} className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-muted-foreground">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+            </div>
+        </div>
+      </section>
+
       <section id="about" className="py-20 md:py-28">
         <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="relative h-80 md:h-full rounded-xl overflow-hidden shadow-lg">
@@ -194,40 +227,6 @@ export default function Home() {
         </div>
       </section>
       
-      <section id="founder" className="py-20 bg-gray-50">
-        <div className="container mx-auto grid lg:grid-cols-5 gap-12 items-center">
-            <div className="lg:col-span-2">
-                <div className="relative aspect-square rounded-xl overflow-hidden shadow-lg mx-auto max-w-sm lg:max-w-none">
-                    <Image
-                      src="https://picsum.photos/600/600"
-                      alt="Lahiruka Weeraratne (Laheer) - Founder of Smart Labs"
-                      data-ai-hint="professional woman"
-                      fill
-                      className="object-cover"
-                    />
-                </div>
-            </div>
-            <div className="lg:col-span-3">
-                <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
-                <p className="mt-4 text-muted-foreground">
-                    Our Founder and Director, Lahiruka Weeraratne, known in the industry as Laheer, is a distinguished expert trainer officially trained by Pearson UK. She specializes in PTE, IELTS, and CELPIP exams—the essential pathways for students and professionals seeking to study, migrate, or settle abroad. With over 6 years of professional experience, she has successfully trained more than 5,000 students, empowering them to achieve their global aspirations. Her passion for education and innovation led to the creation of Smart Labs, a hub designed to provide a smarter and more effective approach to language learning.
-                </p>
-                <div className="mt-8">
-                  <h3 className="font-headline font-semibold text-xl mb-4">Her Role at Smart Labs</h3>
-                   <ul className="space-y-3">
-                    {founderExpertise.map((item, index) => (
-                      <li key={index} className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-            </div>
-        </div>
-      </section>
-
-
       <section id="testimonials" className="py-20">
         <div className="container mx-auto">
           <h2 className="text-3xl font-headline font-bold text-center mb-12">
