@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/lib/firebase';
@@ -19,7 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Calendar, ChevronRight, Video, FileText, LogOut, Download } from 'lucide-react';
+import { BookOpen, Calendar, ChevronRight, Video, FileText, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 
@@ -45,42 +45,9 @@ const recentMaterials = [
     { title: 'Vocabulary for Academic Writing', type: 'PDF', icon: FileText },
 ];
 
-interface BeforeInstallPromptEvent extends Event {
-  readonly platforms: string[];
-  readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed',
-    platform: string,
-  }>;
-  prompt(): Promise<void>;
-}
-
 export default function DashboardPage() {
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstallable, setIsInstallable] = useState(false);
-
-  useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setIsInstallable(true);
-    });
-  }, []);
-
-  const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-      } else {
-        console.log('User dismissed the install prompt');
-      }
-      setDeferredPrompt(null);
-      setIsInstallable(false);
-    }
-  };
 
   useEffect(() => {
     if (!loading && !user) {
@@ -117,22 +84,6 @@ export default function DashboardPage() {
                 </div>
             </header>
             
-            {isInstallable && (
-                <Card className="mb-8 bg-primary/10 border-primary/20">
-                    <CardContent className="pt-6">
-                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <p className="font-medium text-center sm:text-left">
-                                Get a better experience by installing the Smart Labs app on your device!
-                            </p>
-                            <Button onClick={handleInstallClick}>
-                                <Download className="mr-2 h-4 w-4" />
-                                Install App
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
-
             <div className="grid lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-8">
                 {/* Current Course */}

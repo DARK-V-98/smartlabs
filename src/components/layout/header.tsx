@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -10,7 +11,7 @@ import { NAV_LINKS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/lib/firebase';
-import { User } from 'lucide-react';
+import { User, Download } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,9 +22,48 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { signOut } from 'firebase/auth';
 
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed',
+    platform: string,
+  }>;
+  prompt(): Promise<void>;
+}
+
 export default function Header() {
   const pathname = usePathname();
   const [user, loading] = useAuthState(auth);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
+      setIsInstallable(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+      setDeferredPrompt(null);
+      setIsInstallable(false);
+    }
+  };
   
   const handleLogout = async () => {
     await signOut(auth);
@@ -58,6 +98,12 @@ export default function Header() {
           ))}
         </nav>
         <div className="flex flex-1 items-center justify-end gap-4">
+           {isInstallable && (
+            <Button onClick={handleInstallClick} variant="outline" size="sm">
+              <Download className="mr-2 h-4 w-4" />
+              Install
+            </Button>
+          )}
           {loading ? null : user ? (
              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
