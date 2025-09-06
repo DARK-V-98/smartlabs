@@ -140,9 +140,8 @@ export default function Home() {
         <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="relative h-80 md:h-full rounded-xl overflow-hidden shadow-lg">
             <Image
-              src="https://picsum.photos/800/900"
+              src="/ab.png"
               alt="Smart Labs training center"
-              data-ai-hint="modern office"
               fill
               className="object-cover"
             />
