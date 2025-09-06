@@ -1,3 +1,12 @@
+
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
+
 import {
   Card,
   CardContent,
@@ -10,15 +19,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Calendar, ChevronRight, Video, FileText } from 'lucide-react';
+import { BookOpen, Calendar, ChevronRight, Video, FileText, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
-
-const student = {
-  name: 'Alex Johnson',
-  course: 'IELTS',
-  avatar: 'https://picsum.photos/100/100?random=10',
-};
 
 const courseProgress = {
   overall: 65,
@@ -43,22 +46,41 @@ const recentMaterials = [
 ];
 
 export default function DashboardPage() {
+  const [user, loading] = useAuthState(auth);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+  
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push('/login');
+  };
+
+  if (loading || !user) {
+    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+  }
+
   return (
     <div className="bg-gray-50/50 min-h-full">
         <div className="container mx-auto py-12 md:py-16">
             <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-4xl font-headline font-bold">Welcome, {student.name}!</h1>
+                    <h1 className="text-4xl font-headline font-bold">Welcome, {user.displayName || 'Student'}!</h1>
                     <p className="text-lg text-muted-foreground mt-1">Here is your learning dashboard.</p>
                 </div>
-                <div className="flex items-center gap-2 mt-4 sm:mt-0">
+                <div className="flex items-center gap-4 mt-4 sm:mt-0">
                     <Avatar>
-                        <AvatarImage src={student.avatar} alt={student.name} />
-                        <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={user.photoURL || undefined} alt={user.displayName || ''} />
+                        <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
                     </Avatar>
-                     <Badge variant="outline" className="text-sm py-1 px-3">
-                      {student.course} Student
-                    </Badge>
+                     <Button onClick={handleLogout} variant="outline">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                    </Button>
                 </div>
             </header>
             
@@ -69,7 +91,7 @@ export default function DashboardPage() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 font-headline text-2xl">
                       <BookOpen className="text-primary"/> 
-                      Your Course: {student.course}
+                      Your Course: IELTS
                     </CardTitle>
                     <CardDescription>Your learning journey and progress.</CardDescription>
                   </CardHeader>

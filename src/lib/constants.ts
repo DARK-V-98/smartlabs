@@ -3,6 +3,7 @@ export const NAV_LINKS = [
   { href: '/courses', label: 'Courses' },
   { href: '/corporate-training', label: 'Corporate Training' },
   { href: '/contact', label: 'Contact' },
+  { href: '/login', label: 'Login' },
 ];
 
 export const courseData = [
