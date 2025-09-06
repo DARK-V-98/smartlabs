@@ -12,7 +12,8 @@ import {
   GoogleAuthProvider,
   User,
 } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, setDoc } from "firebase/firestore"; 
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -54,16 +55,30 @@ export default function LoginPage() {
     defaultValues: { email: '', password: '' },
   });
 
-  const handleAuthSuccess = (user: User) => {
-    setIsLoading(false);
-    toast({
-      title: 'Login Successful!',
-      description: `Welcome back!`,
-    });
-    if (user.email === ADMIN_EMAIL) {
-      router.push('/admin/dashboard');
-    } else {
-      router.push('/dashboard');
+  const handleAuthSuccess = async (user: User) => {
+    try {
+      // Save or update user data in Firestore
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
+        lastLogin: new Date(),
+      }, { merge: true }); // Use merge to avoid overwriting createdAt
+
+      setIsLoading(false);
+      toast({
+        title: 'Login Successful!',
+        description: `Welcome back!`,
+      });
+      if (user.email === ADMIN_EMAIL) {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    } catch(error) {
+        handleAuthError(error);
     }
   };
 
@@ -80,7 +95,7 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
-      handleAuthSuccess(userCredential.user);
+      await handleAuthSuccess(userCredential.user);
     } catch (error) {
       handleAuthError(error);
     }
@@ -91,7 +106,7 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      handleAuthSuccess(result.user);
+      await handleAuthSuccess(result.user);
     } catch (error) {
       handleAuthError(error);
     }
