@@ -83,7 +83,7 @@ export default function Home() {
         <div className="container mx-auto text-center">
           <div className="max-w-4xl mx-auto">
             <div className="flex justify-center mb-8">
-              <Image src="/logo.png" alt="Smart Labs Logo" width={192} height={192} className="h-48 w-48" />
+              <Image src="/logo.png" alt="Smart Labs Logo" width={256} height={256} className="h-64 w-64" />
             </div>
             <h1 className="text-4xl md:text-6xl font-headline font-bold text-gray-800">
               Smart Learning, Smarter Futures.
