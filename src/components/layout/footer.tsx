@@ -31,7 +31,7 @@ export default function Footer() {
                     </a>
                 </Button>
               {socialLinks.map((social) => (
-                <Button key={social.href} variant="outline" size="icon" asChild>
+                <Button key={social['aria-label']} variant="outline" size="icon" asChild>
                   <a href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social['aria-label']}>
                     <social.icon className="h-5 w-5" />
                   </a>
