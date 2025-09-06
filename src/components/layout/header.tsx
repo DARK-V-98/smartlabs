@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { MobileNav } from '@/components/layout/mobile-nav';
-import { Logo } from '@/components/icons/logo';
 import { NAV_LINKS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
@@ -15,7 +15,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center">
         <Link href="/" className="mr-8 flex items-center gap-2">
-          <Logo className="h-6 w-6 text-primary" />
+          <Image src="/logo.png" alt="Smart Labs logo" width={24} height={24} className="h-6 w-6" />
           <span className="font-headline text-xl font-bold">Smart Labs</span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">

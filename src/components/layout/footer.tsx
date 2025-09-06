@@ -1,7 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Logo } from '@/components/icons/logo';
 import { NAV_LINKS, courseData } from '@/lib/constants';
 import { Github, Twitter, Linkedin, Send, MessageCircle, Phone, Mail } from 'lucide-react';
 
@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Logo className="h-7 w-7 text-primary" />
+              <Image src="/logo.png" alt="Smart Labs logo" width={28} height={28} className="h-7 w-7" />
               <span className="font-headline text-2xl font-bold">Smart Labs</span>
             </Link>
             <p className="text-sm text-muted-foreground">

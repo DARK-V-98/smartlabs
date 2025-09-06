@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu } from 'lucide-react';
 import {
   Sheet,
@@ -12,7 +13,6 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { NAV_LINKS } from '@/lib/constants';
-import { Logo } from '../icons/logo';
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ export function MobileNav() {
         <SheetHeader>
           <SheetTitle asChild>
             <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-              <Logo className="h-6 w-6 text-primary" />
+              <Image src="/logo.png" alt="Smart Labs logo" width={24} height={24} className="h-6 w-6" />
               <span className="font-headline text-xl font-bold">
                 Smart Labs
               </span>
