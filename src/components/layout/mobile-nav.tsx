@@ -30,10 +30,7 @@ export function MobileNav() {
         <SheetHeader>
           <SheetTitle asChild>
             <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-              <Image src="/logo.png" alt="Smart Labs logo" width={32} height={32} className="h-8 w-8" />
-              <span className="font-headline text-xl font-bold">
-                Smart Labs
-              </span>
+              <Image src="/logo.png" alt="Smart Labs logo" width={96} height={96} className="h-24 w-24" />
             </Link>
           </SheetTitle>
         </SheetHeader>

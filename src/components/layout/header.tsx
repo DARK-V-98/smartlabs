@@ -16,8 +16,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center">
         <Link href="/" className="mr-8 flex items-center gap-2">
-          <Image src="/logo.png" alt="Smart Labs logo" width={32} height={32} className="h-8 w-8" />
-          <span className="font-headline text-xl font-bold">Smart Labs</span>
+          <Image src="/logo.png" alt="Smart Labs logo" width={96} height={96} className="h-24 w-24" />
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
           {NAV_LINKS.map((link) => (
