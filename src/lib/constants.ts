@@ -1,9 +1,16 @@
-export const NAV_LINKS = [
+
+type NavLink = {
+  href: string;
+  label: string;
+  authRequired?: boolean;
+};
+
+export const NAV_LINKS: NavLink[] = [
   { href: '/', label: 'Home' },
   { href: '/courses', label: 'Courses' },
   { href: '/corporate-training', label: 'Corporate Training' },
   { href: '/contact', label: 'Contact' },
-  { href: '/login', label: 'Login' },
+  { href: '/dashboard', label: 'Dashboard', authRequired: true },
 ];
 
 export const courseData = [

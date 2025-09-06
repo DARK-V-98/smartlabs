@@ -7,9 +7,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
-  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  updateProfile,
   User,
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -31,40 +32,35 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { LogIn } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const loginSchema = z.object({
+const signupSchema = z.object({
+  displayName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email.' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type SignupFormValues = z.infer<typeof signupSchema>;
 
-const ADMIN_EMAIL = "admin@smartlabs.com"; // Replace with your admin email
-
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+  const form = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: { displayName: '', email: '', password: '' },
   });
 
   const handleAuthSuccess = (user: User) => {
     setIsLoading(false);
     toast({
-      title: 'Login Successful!',
-      description: `Welcome back!`,
+      title: 'Account Created!',
+      description: 'Welcome to Smart Labs!',
     });
-    if (user.email === ADMIN_EMAIL) {
-      router.push('/admin/dashboard');
-    } else {
-      router.push('/dashboard');
-    }
+    router.push('/dashboard');
   };
 
   const handleAuthError = (error: any) => {
@@ -72,14 +68,19 @@ export default function LoginPage() {
     toast({
       variant: 'destructive',
       title: 'Uh oh! Something went wrong.',
-      description: 'Invalid email or password. Please try again.',
+      description: error.code === 'auth/email-already-in-use' 
+        ? 'This email is already registered. Please login instead.'
+        : error.message || 'There was a problem with your request.',
     });
   };
 
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data: SignupFormValues) => {
     setIsLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      await updateProfile(userCredential.user, {
+        displayName: data.displayName,
+      });
       handleAuthSuccess(userCredential.user);
     } catch (error) {
       handleAuthError(error);
@@ -101,12 +102,25 @@ export default function LoginPage() {
     <div className="container mx-auto flex min-h-[calc(100vh-12rem)] items-center justify-center py-12">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="text-center">
-          <CardTitle className="font-headline text-3xl">Login</CardTitle>
-          <CardDescription>Access your student dashboard.</CardDescription>
+          <CardTitle className="font-headline text-3xl">Create Account</CardTitle>
+          <CardDescription>Join Smart Labs to start learning.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="displayName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="email"
@@ -134,8 +148,8 @@ export default function LoginPage() {
                 )}
               />
               <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-                <LogIn className="mr-2 h-4 w-4" />
-                {isLoading ? 'Logging in...' : 'Login'}
+                <UserPlus className="mr-2 h-4 w-4" />
+                {isLoading ? 'Creating Account...' : 'Sign Up'}
               </Button>
             </form>
           </Form>
@@ -149,12 +163,13 @@ export default function LoginPage() {
           </div>
           <Button variant="outline" className="w-full" size="lg" onClick={handleGoogleSignIn} disabled={isLoading}>
             <Image src="/google-logo.svg" alt="Google" width={20} height={20} className="mr-2" />
-            Sign in with Google
+            Sign up with Google
           </Button>
+
            <div className="mt-6 text-center text-sm">
-            Don't have an account?{' '}
-            <Link href="/signup" className="font-semibold text-primary hover:underline">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/login" className="font-semibold text-primary hover:underline">
+              Login
             </Link>
           </div>
         </CardContent>

@@ -14,9 +14,18 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { NAV_LINKS } from '@/lib/constants';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/lib/firebase';
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
+  const [user] = useAuthState(auth);
+
+  const navLinks = NAV_LINKS.filter(link => {
+      if (link.authRequired === true && !user) return false;
+      if (link.authRequired === false && user) return false;
+      return true;
+  });
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -35,7 +44,7 @@ export function MobileNav() {
           </SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-4 py-8">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -46,9 +55,16 @@ export function MobileNav() {
             </Link>
           ))}
         </div>
-        <Button asChild size="lg" className="w-full">
-            <Link href="/contact" onClick={() => setOpen(false)}>Contact Us</Link>
-        </Button>
+        {!user && (
+            <div className="flex flex-col gap-2">
+                <Button asChild size="lg" className="w-full" variant="outline">
+                    <Link href="/login" onClick={() => setOpen(false)}>Login</Link>
+                </Button>
+                <Button asChild size="lg" className="w-full">
+                    <Link href="/signup" onClick={() => setOpen(false)}>Sign Up</Link>
+                </Button>
+            </div>
+        )}
       </SheetContent>
     </Sheet>
   );
