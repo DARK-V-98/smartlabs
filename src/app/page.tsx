@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -107,10 +108,10 @@ export default function Home() {
             <div className="lg:col-span-2">
                 <div className="relative aspect-square rounded-xl overflow-hidden shadow-lg mx-auto max-w-sm lg:max-w-none">
                     <Image
-                      src="https://picsum.photos/600/600"
+                      src="/la.png"
                       alt="Lahiruka Weeraratne (Laheer) - Founder of Smart Labs"
-                      data-ai-hint="professional woman"
-                      fill
+                      width={600}
+                      height={600}
                       className="object-cover"
                     />
                 </div>
