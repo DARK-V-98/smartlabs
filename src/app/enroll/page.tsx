@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { useEffect, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -46,7 +45,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-async function enrollAction(data: FormValues) {
+async function enrollAction(prevState: any, data: FormValues) {
   // Here you would typically process the enrollment and payment
   console.log('Enrolling user:', data);
 
@@ -62,7 +61,7 @@ async function enrollAction(data: FormValues) {
 
 export default function EnrollPage() {
   const { toast } = useToast();
-  const [state, formAction] = useFormState(enrollAction, { success: false, message: '' });
+  const [state, formAction] = useActionState(enrollAction, { success: false, message: '' });
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),

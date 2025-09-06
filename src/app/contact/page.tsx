@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { useEffect, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -22,7 +21,7 @@ const contactFormSchema = z.object({
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
 
-async function submitContactForm(data: ContactFormValues) {
+async function submitContactForm(prevState: any, data: ContactFormValues) {
   console.log('Contact form submitted:', data);
   await new Promise(resolve => setTimeout(resolve, 1000));
   return { success: true, message: "Thank you for your message! We'll get back to you soon." };
@@ -31,7 +30,7 @@ async function submitContactForm(data: ContactFormValues) {
 
 export default function ContactPage() {
     const { toast } = useToast();
-    const [state, formAction] = useFormState(submitContactForm, { success: false, message: '' });
+    const [state, formAction] = useActionState(submitContactForm, { success: false, message: '' });
 
     const form = useForm<ContactFormValues>({
         resolver: zodResolver(contactFormSchema),
