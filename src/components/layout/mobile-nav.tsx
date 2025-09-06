@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -29,7 +30,7 @@ export function MobileNav() {
         <SheetHeader>
           <SheetTitle asChild>
             <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-              <Image src="/logo.png" alt="Smart Labs logo" width={24} height={24} className="h-6 w-6" />
+              <Image src="/logo.png" alt="Smart Labs logo" width={32} height={32} className="h-8 w-8" />
               <span className="font-headline text-xl font-bold">
                 Smart Labs
               </span>

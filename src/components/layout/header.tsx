@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -15,7 +16,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center">
         <Link href="/" className="mr-8 flex items-center gap-2">
-          <Image src="/logo.png" alt="Smart Labs logo" width={24} height={24} className="h-6 w-6" />
+          <Image src="/logo.png" alt="Smart Labs logo" width={32} height={32} className="h-8 w-8" />
           <span className="font-headline text-xl font-bold">Smart Labs</span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
