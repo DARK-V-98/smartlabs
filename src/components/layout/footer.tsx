@@ -84,6 +84,9 @@ export default function Footer() {
 
         <div className="mt-12 border-t pt-8 text-center text-sm text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} Smart Labs. All rights reserved.</p>
+           <p className="mt-2">
+            Developed by <a href="https://www.esystemlk.xyz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">esystemlk</a>
+          </p>
         </div>
       </div>
     </footer>
