@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Smart Labs - Your Partner in Test Preparation',
   description:
     'Smart Labs offers expert coaching and personalized study plans for IELTS, OET, PTE, and TOEFL.',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -29,6 +30,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300..700&display=swap"
           rel="stylesheet"
         />
+        <meta name="theme-color" content="#3b82f6" />
       </head>
       <body
         className={cn(
