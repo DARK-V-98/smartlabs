@@ -1,45 +1,28 @@
 export const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/courses', label: 'Courses' },
-  { href: '/study-plan', label: 'Study Plan' },
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/resources', label: 'Resources' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/corporate-training', label: 'Corporate Training' },
   { href: '/contact', label: 'Contact' },
 ];
 
 export const courseData = [
   {
-    title: 'IELTS',
-    description: 'Prepare for the International English Language Testing System with our comprehensive course.',
-    duration: '8 Weeks',
-    syllabus: ['Listening', 'Reading', 'Writing', 'Speaking'],
-    targetAudience: 'Students and professionals aiming for study or work abroad.',
-    features: ['Mock Tests', 'Personalized Feedback', 'Vocabulary Building'],
-  },
-  {
-    title: 'OET',
-    description: 'Master the Occupational English Test, designed for healthcare professionals.',
-    duration: '6 Weeks',
-    syllabus: ['Medicine', 'Nursing', 'Dentistry specific modules'],
-    targetAudience: 'Healthcare professionals seeking to work in an English-speaking environment.',
-    features: ['Role-playing Scenarios', 'Medical Terminology', 'Case Note Analysis'],
-  },
-  {
     title: 'PTE',
     description: 'Achieve your desired score in the Pearson Test of English Academic.',
     duration: '4 Weeks',
-    syllabus: ['Speaking & Writing', 'Reading', 'Listening'],
-    targetAudience: 'Students looking for fast results for university admissions.',
     features: ['AI Scoring Practice', 'Test-taking Strategies', 'Integrated Skills Practice'],
   },
   {
-    title: 'TOEFL',
-    description: 'Excel in the Test of English as a Foreign Language for university admissions in North America.',
+    title: 'IELTS',
+    description: 'Prepare for the International English Language Testing System with our comprehensive course.',
     duration: '8 Weeks',
-    syllabus: ['Reading', 'Listening', 'Speaking', 'Writing'],
-    targetAudience: 'Students applying to universities and colleges in the US and Canada.',
-    features: ['Academic Skill Development', 'Integrated Tasks', 'Full-length Simulations'],
+    features: ['Mock Tests', 'Personalized Feedback', 'Vocabulary Building'],
+  },
+  {
+    title: 'CELPIP',
+    description: 'Excel in the Canadian English Language Proficiency Index Program for immigration to Canada.',
+    duration: '6 Weeks',
+    features: ['Computer-Based Practice', 'Real-Life Scenarios', 'Accent Training'],
   },
 ];
 

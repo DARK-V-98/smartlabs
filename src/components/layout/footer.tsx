@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Logo } from '@/components/icons/logo';
 import { NAV_LINKS, courseData } from '@/lib/constants';
-import { Github, Twitter, Linkedin, Send, MessageCircle } from 'lucide-react';
+import { Github, Twitter, Linkedin, Send, MessageCircle, Phone, Mail } from 'lucide-react';
 
 const socialLinks = [
   { icon: Twitter, href: '#', 'aria-label': 'Twitter profile' },
@@ -26,7 +26,7 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4 mt-6">
                 <Button variant="outline" size="icon" asChild>
-                    <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+                    <a href="https://wa.me/94766914650" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
                         <MessageCircle className="h-5 w-5" />
                     </a>
                 </Button>
@@ -67,12 +67,18 @@ export default function Footer() {
           </div>
 
           <div className="col-span-2 md:col-span-2">
-             <h3 className="font-headline font-semibold text-foreground tracking-wider uppercase">Stay Updated</h3>
-            <p className="mt-4 text-sm text-muted-foreground">Subscribe to our newsletter for the latest tips and offers.</p>
-            <form className="mt-4 flex w-full max-w-sm items-center space-x-2">
-                <Input type="email" placeholder="Enter your email" />
-                <Button type="submit" size="icon"><Send className="h-4 w-4" /></Button>
-            </form>
+             <h3 className="font-headline font-semibold text-foreground tracking-wider uppercase">Contact Us</h3>
+                <div className="space-y-3 mt-4 text-sm">
+                    <p className="text-muted-foreground">
+                        3rd Floor, No. 326, Jana Jaya Building, Rajagiriya, Colombo 05
+                    </p>
+                    <a href="tel:0766914650" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
+                        <Phone className="h-4 w-4" /> 076 691 4650
+                    </a>
+                     <a href="tel:0774533233" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
+                        <Phone className="h-4 w-4" /> 077 453 3233
+                    </a>
+                </div>
           </div>
         </div>
 

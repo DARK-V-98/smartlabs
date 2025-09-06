@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Phone, MessageCircle, Send } from 'lucide-react';
+import { Mail, Phone, MessageCircle, Send, MapPin } from 'lucide-react';
 
 const contactFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -107,13 +107,17 @@ export default function ContactPage() {
                     <CardTitle className="font-headline">Contact Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-muted-foreground">
-                    <div className="flex items-center gap-4">
-                        <Mail className="h-5 w-5 text-primary" />
-                        <a href="mailto:info@smartlabs.com" className="hover:text-foreground">info@smartlabs.com</a>
+                    <div className="flex items-start gap-4">
+                        <MapPin className="h-5 w-5 text-primary mt-1" />
+                        <span>3rd Floor, No. 326, Jana Jaya Building, Rajagiriya, Colombo 05</span>
                     </div>
                      <div className="flex items-center gap-4">
                         <Phone className="h-5 w-5 text-primary" />
-                        <a href="tel:+1234567890" className="hover:text-foreground">+1 (234) 567-890</a>
+                        <a href="tel:0766914650" className="hover:text-foreground">076 691 4650</a>
+                    </div>
+                     <div className="flex items-center gap-4">
+                        <Phone className="h-5 w-5 text-primary" />
+                        <a href="tel:0774533233" className="hover:text-foreground">077 453 3233</a>
                     </div>
                 </CardContent>
             </Card>
@@ -124,7 +128,7 @@ export default function ContactPage() {
                 <CardContent>
                     <p className="text-muted-foreground mb-4">Get instant answers to your questions.</p>
                     <Button asChild className="w-full" size="lg">
-                        <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer">
+                        <a href="https://wa.me/94766914650" target="_blank" rel="noopener noreferrer">
                            <MessageCircle className="mr-2 h-5 w-5" />
                            Open WhatsApp
                         </a>

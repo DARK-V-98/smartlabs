@@ -49,7 +49,7 @@ export function MobileNav() {
           ))}
         </div>
         <Button asChild size="lg" className="w-full">
-            <Link href="/enroll" onClick={() => setOpen(false)}>Enroll Now</Link>
+            <Link href="/contact" onClick={() => setOpen(false)}>Contact Us</Link>
         </Button>
       </SheetContent>
     </Sheet>

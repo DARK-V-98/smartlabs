@@ -36,7 +36,7 @@ export default function Header() {
         </nav>
         <div className="flex flex-1 items-center justify-end gap-4">
           <Button asChild>
-            <Link href="/enroll">Enroll Now</Link>
+            <Link href="/contact">Contact Us</Link>
           </Button>
           <div className="md:hidden">
             <MobileNav />

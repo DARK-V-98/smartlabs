@@ -10,11 +10,11 @@ export default function CoursesPage() {
       <div className="text-center mb-12">
         <h1 className="text-4xl font-headline font-bold">Our Courses</h1>
         <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-          Compare our expert-led courses and find the perfect fit for your goals. We offer specialized training for all major English proficiency tests.
+          Compare our expert-led courses and find the perfect fit for your goals. We offer specialized training for PTE, IELTS & CELPIP.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
         {courseData.map((course) => (
           <Card key={course.title} className="flex flex-col h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader className="bg-primary/10">
@@ -26,9 +26,6 @@ export default function CoursesPage() {
               <div className="my-4">
                 <p className="font-semibold text-sm">
                   <span className="font-bold text-foreground">Duration:</span> {course.duration}
-                </p>
-                <p className="font-semibold text-sm mt-1">
-                  <span className="font-bold text-foreground">Best for:</span> {course.targetAudience}
                 </p>
               </div>
 
@@ -44,7 +41,7 @@ export default function CoursesPage() {
             </CardContent>
             <CardFooter>
               <Button asChild className="w-full">
-                <Link href="/enroll">Enroll Now</Link>
+                <Link href="/contact">Enroll Now</Link>
               </Button>
             </CardFooter>
           </Card>
