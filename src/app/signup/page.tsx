@@ -13,7 +13,8 @@ import {
   updateProfile,
   User,
 } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -44,6 +45,8 @@ const signupSchema = z.object({
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
+const ADMIN_EMAIL = "admin@smartlabs.com";
+
 export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -54,13 +57,27 @@ export default function SignupPage() {
     defaultValues: { displayName: '', email: '', password: '' },
   });
 
-  const handleAuthSuccess = (user: User) => {
-    setIsLoading(false);
-    toast({
-      title: 'Account Created!',
-      description: 'Welcome to Smart Labs!',
-    });
-    router.push('/dashboard');
+  const handleAuthSuccess = async (user: User, displayName?: string | null) => {
+    try {
+       // Save user data to Firestore
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, {
+        uid: user.uid,
+        email: user.email,
+        displayName: displayName || user.displayName,
+        role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
+        createdAt: new Date(),
+      });
+
+      setIsLoading(false);
+      toast({
+        title: 'Account Created!',
+        description: 'Welcome to Smart Labs!',
+      });
+      router.push('/dashboard');
+    } catch (error) {
+        handleAuthError(error);
+    }
   };
 
   const handleAuthError = (error: any) => {
@@ -81,7 +98,7 @@ export default function SignupPage() {
       await updateProfile(userCredential.user, {
         displayName: data.displayName,
       });
-      handleAuthSuccess(userCredential.user);
+      await handleAuthSuccess(userCredential.user, data.displayName);
     } catch (error) {
       handleAuthError(error);
     }
@@ -92,7 +109,7 @@ export default function SignupPage() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      handleAuthSuccess(result.user);
+      await handleAuthSuccess(result.user);
     } catch (error) {
       handleAuthError(error);
     }
