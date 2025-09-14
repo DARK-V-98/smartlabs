@@ -163,7 +163,7 @@ export default function Home() {
         className="py-20 bg-gray-50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-12 items-center">
@@ -203,7 +203,7 @@ export default function Home() {
         className="py-20 md:py-28"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -245,7 +245,7 @@ export default function Home() {
         className="py-20 bg-gray-50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -283,7 +283,7 @@ export default function Home() {
         className="py-20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -319,7 +319,7 @@ export default function Home() {
         className="py-20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -365,7 +365,7 @@ export default function Home() {
         className="py-20 bg-primary/10"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -387,5 +387,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
