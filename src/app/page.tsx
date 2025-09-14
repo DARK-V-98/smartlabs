@@ -21,6 +21,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { testimonials } from '@/lib/constants';
 import { motion } from 'framer-motion';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
+
+const heroImages = ['/1.png', '/2.png', '/3.png', '/4.png', '/5.png'];
 
 const services = [
   {
@@ -99,31 +107,54 @@ const itemVariants = (from: 'left' | 'right') => ({
 export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden">
-      <section className="bg-primary/10 py-20 md:py-32">
-        <div className="container mx-auto text-center">
-          <motion.div 
-            className="max-w-4xl mx-auto"
-            initial="hidden"
-            animate="visible"
-            variants={sectionVariants}
-          >
-            <motion.div variants={itemVariants('left')} className="flex justify-center mb-8">
-              <Image src="/logo.png" alt="Smart Labs Logo" width={256} height={256} className="h-64 w-64" />
+      <section className="relative h-[60vh] md:h-[80vh] w-full overflow-hidden">
+        <Carousel
+          className="absolute inset-0 w-full h-full"
+          plugins={[Autoplay({ delay: 5000, stopOnInteraction: false })]}
+          opts={{ loop: true }}
+        >
+          <CarouselContent>
+            {heroImages.map((src, index) => (
+              <CarouselItem key={index}>
+                <div className="relative w-full h-full">
+                  <Image
+                    src={src}
+                    alt={`Hero image ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                  <div className="absolute inset-0 bg-black/30" />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+
+        <div className="relative z-10 flex h-full items-center justify-center">
+            <motion.div
+                className="max-w-4xl mx-auto text-center p-8 bg-black/20 backdrop-blur-md rounded-xl border border-white/20"
+                initial="hidden"
+                animate="visible"
+                variants={sectionVariants}
+            >
+                <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
+                    <Image src="/logo.png" alt="Smart Labs Logo" width={200} height={200} className="h-48 w-48" />
+                </motion.div>
+                <motion.h1 variants={itemVariants('right')} className="text-4xl md:text-6xl font-headline font-bold text-white">
+                    Smart Learning, Smarter Futures.
+                </motion.h1>
+                <motion.p variants={itemVariants('left')} className="mt-6 text-lg md:text-xl text-gray-200">
+                    Expert training for PTE, IELTS & CELPIP | Corporate Language Training | Legal & Migration Support.
+                </motion.p>
+                <motion.div variants={itemVariants('right')} className="mt-8 flex gap-4 justify-center">
+                    <Button asChild size="lg">
+                        <Link href="/courses">
+                        Explore Our Programs <ArrowRight className="ml-2" />
+                        </Link>
+                    </Button>
+                </motion.div>
             </motion.div>
-            <motion.h1 variants={itemVariants('right')} className="text-4xl md:text-6xl font-headline font-bold text-gray-800">
-              Smart Learning, Smarter Futures.
-            </motion.h1>
-            <motion.p variants={itemVariants('left')} className="mt-6 text-lg md:text-xl text-muted-foreground">
-             Expert training for PTE, IELTS & CELPIP | Corporate Language Training | Legal & Migration Support.
-            </motion.p>
-            <motion.div variants={itemVariants('right')} className="mt-8 flex gap-4 justify-center">
-              <Button asChild size="lg">
-                <Link href="/courses">
-                  Explore Our Programs <ArrowRight className="ml-2" />
-                </Link>
-              </Button>
-            </motion.div>
-          </motion.div>
         </div>
       </section>
 
@@ -132,7 +163,7 @@ export default function Home() {
         className="py-20 bg-gray-50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-12 items-center">
@@ -172,7 +203,7 @@ export default function Home() {
         className="py-20 md:py-28"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -214,7 +245,7 @@ export default function Home() {
         className="py-20 bg-gray-50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -252,7 +283,7 @@ export default function Home() {
         className="py-20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.2 }}
+        viewport={{ once: false, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -288,7 +319,7 @@ export default function Home() {
         className="py-20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.2 }}
+        viewport={{ once: false, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -334,7 +365,7 @@ export default function Home() {
         className="py-20 bg-primary/10"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -356,3 +387,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
