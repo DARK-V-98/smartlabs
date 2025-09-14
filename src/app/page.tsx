@@ -107,16 +107,16 @@ const itemVariants = (from: 'left' | 'right') => ({
 export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden">
-      <section className="relative h-[60vh] md:h-[80vh] w-full overflow-hidden">
+      <section className="relative h-[60vh] md:h-[80vh] w-full">
         <Carousel
-          className="absolute inset-0 w-full h-full"
+          className="w-full h-full"
           plugins={[Autoplay({ delay: 5000, stopOnInteraction: false })]}
           opts={{ loop: true }}
         >
           <CarouselContent>
             {heroImages.map((src, index) => (
               <CarouselItem key={index}>
-                <div className="relative w-full h-full">
+                <div className="relative w-full h-[60vh] md:h-[80vh]">
                   <Image
                     src={src}
                     alt={`Hero image ${index + 1}`}
@@ -124,18 +124,18 @@ export default function Home() {
                     className="object-cover"
                     priority={index === 0}
                   />
-                  <div className="absolute inset-0 bg-black/30" />
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
         </Carousel>
-
-        <div className="relative z-10 flex h-full items-center justify-center">
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
                 className="max-w-4xl mx-auto text-center p-8 bg-black/20 backdrop-blur-md rounded-xl border border-white/20"
                 initial="hidden"
                 animate="visible"
+                viewport={{ once: true, amount: 0.5 }}
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
@@ -387,7 +387,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
-
-    
