@@ -129,13 +129,13 @@ export default function Home() {
             ))}
           </CarouselContent>
         </Carousel>
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
-                className="max-w-4xl mx-auto text-center p-8 bg-black/20 backdrop-blur-md rounded-xl border border-white/20"
+                className="max-w-4xl mx-auto text-center p-8"
                 initial="hidden"
-                animate="visible"
-                viewport={{ once: true, amount: 0.5 }}
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.5 }}
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
@@ -163,7 +163,7 @@ export default function Home() {
         className="py-20 bg-gray-50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-12 items-center">
@@ -203,7 +203,7 @@ export default function Home() {
         className="py-20 md:py-28"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -245,7 +245,7 @@ export default function Home() {
         className="py-20 bg-gray-50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -283,7 +283,7 @@ export default function Home() {
         className="py-20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: false, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -319,7 +319,7 @@ export default function Home() {
         className="py-20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: false, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -365,7 +365,7 @@ export default function Home() {
         className="py-20 bg-primary/10"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
