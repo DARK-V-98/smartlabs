@@ -37,25 +37,29 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="container mx-auto py-12 md:py-20">
-      <header className="flex items-center justify-between mb-8">
-        <h1 className="text-4xl font-headline font-bold">Admin Dashboard</h1>
-         <Button onClick={handleLogout} variant="outline">
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-        </Button>
-      </header>
-      
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-         <Card>
-            <CardHeader>
-                <CardTitle>Welcome, Admin!</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <p>This is the protected admin dashboard. Here you can manage users, courses, and site content.</p>
-            </CardContent>
-         </Card>
-      </div>
+    <div className="w-full">
+      <section className="bg-yellow-50/50 py-12 md:py-20">
+        <div className="container mx-auto">
+          <header className="flex items-center justify-between mb-8">
+            <h1 className="text-4xl font-headline font-bold">Admin Dashboard</h1>
+            <Button onClick={handleLogout} variant="outline">
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+            </Button>
+          </header>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Welcome, Admin!</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p>This is the protected admin dashboard. Here you can manage users, courses, and site content.</p>
+                </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

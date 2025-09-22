@@ -134,7 +134,7 @@ export default function Home() {
                 className="max-w-4xl mx-auto text-center p-8"
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: false, amount: 0.5 }}
+                viewport={{ once: true, amount: 0.5 }}
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
@@ -159,10 +159,10 @@ export default function Home() {
 
       <motion.section 
         id="founder" 
-        className="py-20 bg-gray-50"
+        className="py-20 bg-yellow-50/50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-12 items-center">
@@ -199,10 +199,10 @@ export default function Home() {
 
       <motion.section 
         id="about" 
-        className="py-20 md:py-28"
+        className="py-20 md:py-28 bg-primary/10"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -219,7 +219,7 @@ export default function Home() {
             <p className="text-muted-foreground">
               Smart Labs is a premier training institute founded with the vision of creating a smarter, more effective way of learning languages and competency tests. With over 6 years of experience and more than 5,000 successful students, Smart Labs has become a trusted name for PTE, IELTS, CELPIP training, and corporate language development.
             </p>
-             <Card className="bg-gray-50/50">
+             <Card className="bg-background/50">
                 <CardHeader>
                     <CardTitle className="font-headline text-xl">Our Vision</CardTitle>
                 </CardHeader>
@@ -227,7 +227,7 @@ export default function Home() {
                     <p className="italic text-muted-foreground">"To create a smarter world of learning by becoming the leading hub for language mastery and corporate training, empowering individuals and organizations to achieve growth, confidence, and global success."</p>
                 </CardContent>
              </Card>
-             <Card className="bg-gray-50/50">
+             <Card className="bg-background/50">
                 <CardHeader>
                     <CardTitle className="font-headline text-xl">Our Mission</CardTitle>
                 </CardHeader>
@@ -241,10 +241,10 @@ export default function Home() {
       
       <motion.section 
         id="services" 
-        className="py-20 bg-gray-50"
+        className="py-20 bg-yellow-50/50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -279,10 +279,10 @@ export default function Home() {
 
       <motion.section 
         id="why-choose-us" 
-        className="py-20"
+        className="py-20 bg-primary/10"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -315,10 +315,10 @@ export default function Home() {
       
       <motion.section 
         id="testimonials" 
-        className="py-20"
+        className="py-20 bg-yellow-50/50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -364,7 +364,7 @@ export default function Home() {
         className="py-20 bg-primary/10"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">

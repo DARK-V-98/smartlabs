@@ -52,92 +52,94 @@ export default function ContactPage() {
     };
 
     return (
-    <div className="bg-secondary/5">
-        <div className="container mx-auto py-12 md:py-20">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-headline font-bold">Get in Touch</h1>
-        <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-          Have questions? We're here to help. Reach out to us via the form below or through our other contact channels.
-        </p>
-      </div>
+      <div className="w-full">
+        <section className="bg-yellow-50/50 py-12 md:py-20">
+          <div className="container mx-auto">
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-headline font-bold">Get in Touch</h1>
+              <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+                Have questions? We're here to help. Reach out to us via the form below or through our other contact channels.
+              </p>
+            </div>
 
-      <div className="grid lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-2">
-            <Card className="shadow-lg">
-                <CardHeader>
-                    <CardTitle className="font-headline text-2xl">Send us a Message</CardTitle>
-                    <CardDescription>We typically respond within 24 hours.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <FormField control={form.control} name="name" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Full Name</FormLabel>
-                                    <FormControl><Input placeholder="Your Name" {...field} /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                            <FormField control={form.control} name="email" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl><Input type="email" placeholder="your.email@example.com" {...field} /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                            <FormField control={form.control} name="message" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Message</FormLabel>
-                                    <FormControl><Textarea placeholder="How can we help you?" className="min-h-[120px]" {...field} /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                            <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
-                                <Send className="mr-2 h-4 w-4" />
-                                {form.formState.isSubmitting ? 'Sending...' : 'Send Message'}
-                            </Button>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
-        </div>
-        <div className="space-y-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline">Contact Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-muted-foreground">
-                    <div className="flex items-start gap-4">
-                        <MapPin className="h-5 w-5 text-primary mt-1" />
-                        <span>3rd Floor, No. 326, Jana Jaya Building, Rajagiriya, Colombo 05</span>
-                    </div>
-                     <div className="flex items-center gap-4">
-                        <Phone className="h-5 w-5 text-primary" />
-                        <a href="tel:0766914650" className="hover:text-foreground">076 691 4650</a>
-                    </div>
-                     <div className="flex items-center gap-4">
-                        <Phone className="h-5 w-5 text-primary" />
-                        <a href="tel:0774533233" className="hover:text-foreground">077 453 3233</a>
-                    </div>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline">Chat with Us</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground mb-4">Get instant answers to your questions.</p>
-                    <Button asChild className="w-full" size="lg">
-                        <a href="https://wa.me/94766914650" target="_blank" rel="noopener noreferrer">
-                           <MessageCircle className="mr-2 h-5 w-5" />
-                           Open WhatsApp
-                        </a>
-                    </Button>
-                </CardContent>
-            </Card>
-        </div>
-      </div>
-    </div>
+            <div className="grid lg:grid-cols-3 gap-12">
+              <div className="lg:col-span-2">
+                  <Card className="shadow-lg">
+                      <CardHeader>
+                          <CardTitle className="font-headline text-2xl">Send us a Message</CardTitle>
+                          <CardDescription>We typically respond within 24 hours.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                          <Form {...form}>
+                              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                  <FormField control={form.control} name="name" render={({ field }) => (
+                                      <FormItem>
+                                          <FormLabel>Full Name</FormLabel>
+                                          <FormControl><Input placeholder="Your Name" {...field} /></FormControl>
+                                          <FormMessage />
+                                      </FormItem>
+                                  )} />
+                                  <FormField control={form.control} name="email" render={({ field }) => (
+                                      <FormItem>
+                                          <FormLabel>Email</FormLabel>
+                                          <FormControl><Input type="email" placeholder="your.email@example.com" {...field} /></FormControl>
+                                          <FormMessage />
+                                      </FormItem>
+                                  )} />
+                                  <FormField control={form.control} name="message" render={({ field }) => (
+                                      <FormItem>
+                                          <FormLabel>Message</FormLabel>
+                                          <FormControl><Textarea placeholder="How can we help you?" className="min-h-[120px]" {...field} /></FormControl>
+                                          <FormMessage />
+                                      </FormItem>
+                                  )} />
+                                  <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
+                                      <Send className="mr-2 h-4 w-4" />
+                                      {form.formState.isSubmitting ? 'Sending...' : 'Send Message'}
+                                  </Button>
+                              </form>
+                          </Form>
+                      </CardContent>
+                  </Card>
+              </div>
+              <div className="space-y-8">
+                  <Card>
+                      <CardHeader>
+                          <CardTitle className="font-headline">Contact Information</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4 text-muted-foreground">
+                          <div className="flex items-start gap-4">
+                              <MapPin className="h-5 w-5 text-primary mt-1" />
+                              <span>3rd Floor, No. 326, Jana Jaya Building, Rajagiriya, Colombo 05</span>
+                          </div>
+                          <div className="flex items-center gap-4">
+                              <Phone className="h-5 w-5 text-primary" />
+                              <a href="tel:0766914650" className="hover:text-foreground">076 691 4650</a>
+                          </div>
+                          <div className="flex items-center gap-4">
+                              <Phone className="h-5 w-5 text-primary" />
+                              <a href="tel:0774533233" className="hover:text-foreground">077 453 3233</a>
+                          </div>
+                      </CardContent>
+                  </Card>
+                  <Card>
+                      <CardHeader>
+                          <CardTitle className="font-headline">Chat with Us</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                          <p className="text-muted-foreground mb-4">Get instant answers to your questions.</p>
+                          <Button asChild className="w-full" size="lg">
+                              <a href="https://wa.me/94766914650" target="_blank" rel="noopener noreferrer">
+                                <MessageCircle className="mr-2 h-5 w-5" />
+                                Open WhatsApp
+                              </a>
+                          </Button>
+                      </CardContent>
+                  </Card>
+              </div>
+            </div>
+          </div>
+        </section>
     </div>
   );
 }

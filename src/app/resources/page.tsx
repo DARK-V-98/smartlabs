@@ -15,44 +15,46 @@ export default function ResourcesPage() {
   const videos = resourceLibrary.filter(r => r.type === 'video');
 
   return (
-    <div className="bg-primary/5">
-        <div className="container mx-auto py-12 md:py-20">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-headline font-bold">Resource Library</h1>
-        <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-          A curated collection of practice tests, vocabulary lists, and video lessons to boost your preparation.
-        </p>
-      </div>
-      
-      <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto mb-10">
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="videos">Videos</TabsTrigger>
-        </TabsList>
-        <TabsContent value="all">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {resourceLibrary.map((item, index) => (
-              <ResourceCard key={index} item={item} />
-            ))}
+    <div className="w-full">
+      <section className="bg-yellow-50/50 py-12 md:py-20">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-headline font-bold">Resource Library</h1>
+            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+              A curated collection of practice tests, vocabulary lists, and video lessons to boost your preparation.
+            </p>
           </div>
-        </TabsContent>
-        <TabsContent value="documents">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testsAndLists.map((item, index) => (
-              <ResourceCard key={index} item={item} />
-            ))}
-          </div>
-        </TabsContent>
-        <TabsContent value="videos">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {videos.map((item, index) => (
-              <ResourceCard key={index} item={item} />
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+          
+          <Tabs defaultValue="all" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto mb-10">
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="documents">Documents</TabsTrigger>
+              <TabsTrigger value="videos">Videos</TabsTrigger>
+            </TabsList>
+            <TabsContent value="all">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {resourceLibrary.map((item, index) => (
+                  <ResourceCard key={index} item={item} />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="documents">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {testsAndLists.map((item, index) => (
+                  <ResourceCard key={index} item={item} />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="videos">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {videos.map((item, index) => (
+                  <ResourceCard key={index} item={item} />
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </section>
     </div>
   );
 }
@@ -74,7 +76,7 @@ function ResourceCard({ item }: { item: ResourceItem }) {
                     height={225}
                     className="w-full object-cover transition-transform group-hover:scale-105"
                 />
-                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <Video className="h-16 w-16 text-white/80" />
                 </div>
             </div>

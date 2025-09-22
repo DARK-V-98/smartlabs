@@ -65,8 +65,9 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="bg-primary/5 min-h-full">
-        <div className="container mx-auto py-12 md:py-16">
+    <div className="w-full">
+      <section className="bg-yellow-50/50 py-12 md:py-16">
+        <div className="container mx-auto">
             <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
                 <div>
                     <h1 className="text-4xl font-headline font-bold">Welcome, {user.displayName || 'Student'}!</h1>
@@ -77,7 +78,7 @@ export default function DashboardPage() {
                         <AvatarImage src={user.photoURL || undefined} alt={user.displayName || ''} />
                         <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
                     </Avatar>
-                     <Button onClick={handleLogout} variant="outline">
+                      <Button onClick={handleLogout} variant="outline">
                         <LogOut className="mr-2 h-4 w-4" />
                         Logout
                     </Button>
@@ -164,7 +165,7 @@ export default function DashboardPage() {
                   <CardContent>
                     <ul className="space-y-4">
                         {upcomingClasses.map((item, index) => (
-                             <li key={index} className="flex gap-4">
+                              <li key={index} className="flex gap-4">
                                 <div className="flex flex-col items-center">
                                     <span className="font-bold text-sm">{item.date}</span>
                                     <span className="text-xs text-muted-foreground">{item.time}</span>
@@ -172,17 +173,18 @@ export default function DashboardPage() {
                                 <div className="border-l pl-4 flex-1">
                                     <p className="font-semibold">{item.title}</p>
                                 </div>
-                             </li>
+                              </li>
                         ))}
                     </ul>
                   </CardContent>
-                   <CardFooter>
+                    <CardFooter>
                       <Button className="w-full">View Full Schedule</Button>
                   </CardFooter>
                 </Card>
               </div>
             </div>
         </div>
+      </section>
     </div>
   );
 }
