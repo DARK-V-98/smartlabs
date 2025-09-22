@@ -13,7 +13,7 @@ import {
   User,
 } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
-import { doc, setDoc } from "firebase/firestore"; 
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; 
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -57,28 +57,39 @@ export default function LoginPage() {
 
   const handleAuthSuccess = async (user: User) => {
     try {
-      // Save or update user data in Firestore
       const userRef = doc(db, 'users', user.uid);
-      await setDoc(userRef, {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
-        lastLogin: new Date(),
-      }, { merge: true }); // Use merge to avoid overwriting createdAt
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        // User exists, update last login
+        await updateDoc(userRef, {
+          lastLogin: new Date(),
+        });
+      } else {
+        // New user, create document
+        await setDoc(userRef, {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
+          createdAt: new Date(),
+          lastLogin: new Date(),
+        });
+      }
 
       setIsLoading(false);
       toast({
         title: 'Login Successful!',
         description: `Welcome back!`,
       });
+
       if (user.email === ADMIN_EMAIL) {
         router.push('/admin/dashboard');
       } else {
         router.push('/dashboard');
       }
-    } catch(error) {
-        handleAuthError(error);
+    } catch (error) {
+      handleAuthError(error);
     }
   };
 
@@ -113,9 +124,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-full bg-amber-400">
-        <div className="container mx-auto flex min-h-[calc(100vh-12rem)] items-center justify-center py-12">
-          <Card className="w-full max-w-md shadow-lg">
+    <div className="w-full bg-amber-200">
+      <div className="container mx-auto flex min-h-[calc(100vh-8rem)] items-center justify-center py-12">
+        <div className="w-full max-w-md">
+          <Card className="shadow-lg">
             <CardHeader className="text-center">
               <CardTitle className="font-headline text-3xl">Login</CardTitle>
               <CardDescription>Access your student dashboard.</CardDescription>
@@ -184,6 +196,7 @@ export default function LoginPage() {
             </CardContent>
           </Card>
         </div>
+      </div>
     </div>
   );
 }

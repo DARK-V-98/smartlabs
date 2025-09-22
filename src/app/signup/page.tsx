@@ -14,7 +14,7 @@ import {
   User,
 } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -59,15 +59,23 @@ export default function SignupPage() {
 
   const handleAuthSuccess = async (user: User, displayName?: string | null) => {
     try {
-       // Save user data to Firestore
       const userRef = doc(db, 'users', user.uid);
-      await setDoc(userRef, {
-        uid: user.uid,
-        email: user.email,
-        displayName: displayName || user.displayName,
-        role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
-        createdAt: new Date(),
-      });
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+         await updateDoc(userRef, {
+            lastLogin: new Date(),
+         });
+      } else {
+        await setDoc(userRef, {
+          uid: user.uid,
+          email: user.email,
+          displayName: displayName || user.displayName,
+          role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
+          createdAt: new Date(),
+          lastLogin: new Date(),
+        });
+      }
 
       setIsLoading(false);
       toast({
@@ -116,9 +124,10 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="w-full bg-amber-400">
-        <div className="container mx-auto flex min-h-[calc(100vh-12rem)] items-center justify-center py-12">
-          <Card className="w-full max-w-md shadow-lg">
+    <div className="w-full bg-sky-200">
+      <div className="container mx-auto flex min-h-[calc(100vh-8rem)] items-center justify-center py-12">
+        <div className="w-full max-w-md">
+          <Card className="shadow-lg">
             <CardHeader className="text-center">
               <CardTitle className="font-headline text-3xl">Create Account</CardTitle>
               <CardDescription>Join Smart Labs to start learning.</CardDescription>
@@ -193,6 +202,7 @@ export default function SignupPage() {
             </CardContent>
           </Card>
         </div>
+      </div>
     </div>
   );
 }
