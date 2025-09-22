@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -137,7 +138,7 @@ export default function Home() {
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
-                    <Image src="/logo.png" alt="Smart Labs Logo" width={400} height={400} className="h-48 w-48 sm:h-64 sm:w-64 md:h-80 md:w-80 lg:h-96 lg:w-96" />
+                    <Image src="/logo.png" alt="Smart Labs Logo" width={500} height={500} className="h-64 w-64 sm:h-80 sm:w-80 md:h-96 md:w-96 lg:w-[500px] lg:h-[500px]" />
                 </motion.div>
                 <motion.h1 variants={itemVariants('right')} className="text-3xl sm:text-4xl md:text-6xl font-headline font-bold text-white">
                     Smart Learning, Smarter Futures.
