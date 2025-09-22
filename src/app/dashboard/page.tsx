@@ -66,7 +66,7 @@ export default function DashboardPage() {
 
   return (
     <div className="w-full">
-      <section className="bg-amber-200 py-12 md:py-16">
+      <section className="bg-amber-400 py-12 md:py-16">
         <div className="container mx-auto">
             <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
                 <div>

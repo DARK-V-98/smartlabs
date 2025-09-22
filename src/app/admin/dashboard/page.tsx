@@ -38,7 +38,7 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="w-full">
-      <section className="bg-amber-200 py-12 md:py-20">
+      <section className="bg-amber-400 py-12 md:py-20">
         <div className="container mx-auto">
           <header className="flex items-center justify-between mb-8">
             <h1 className="text-4xl font-headline font-bold">Admin Dashboard</h1>

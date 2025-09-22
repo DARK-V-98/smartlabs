@@ -22,7 +22,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="w-full">
-        <section className="bg-amber-200 py-12 md:py-20">
+        <section className="bg-amber-400 py-12 md:py-20">
             <div className="container mx-auto">
                 <div className="max-w-3xl mx-auto">
                     <Button variant="ghost" asChild className="mb-8">

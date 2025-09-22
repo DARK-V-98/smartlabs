@@ -26,7 +26,7 @@ export default function StudyPlanPage() {
 
   return (
     <div className="w-full">
-      <section className="bg-amber-200 py-12 md:py-20">
+      <section className="bg-amber-400 py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-headline font-bold">Generate Your Personalized Study Plan</h1>
@@ -94,7 +94,7 @@ export default function StudyPlanPage() {
 
             <div>
               {isPlanGenerated ? (
-                <Card className="bg-sky-100 shadow-lg">
+                <Card className="bg-sky-400 shadow-lg">
                   <CardHeader>
                     <div className="flex items-center gap-3">
                       <Bot className="h-8 w-8 text-primary" />

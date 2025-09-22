@@ -53,7 +53,7 @@ export default function ContactPage() {
 
     return (
       <div className="w-full">
-        <section className="bg-amber-200 py-12 md:py-20">
+        <section className="bg-amber-400 py-12 md:py-20">
           <div className="container mx-auto">
             <div className="text-center mb-12">
               <h1 className="text-4xl font-headline font-bold">Get in Touch</h1>

@@ -137,7 +137,7 @@ export default function Home() {
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
-                    <Image src="/logo.png" alt="Smart Labs Logo" width={320} height={320} className="h-80 w-80" />
+                    <Image src="/logo.png" alt="Smart Labs Logo" width={400} height={400} className="h-96 w-96" />
                 </motion.div>
                 <motion.h1 variants={itemVariants('right')} className="text-4xl md:text-6xl font-headline font-bold text-white">
                     Smart Learning, Smarter Futures.
@@ -158,7 +158,7 @@ export default function Home() {
 
       <motion.section 
         id="founder" 
-        className="py-20 bg-amber-200"
+        className="py-20 bg-amber-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -198,7 +198,7 @@ export default function Home() {
 
       <motion.section 
         id="about" 
-        className="py-20 md:py-28 bg-sky-200"
+        className="py-20 md:py-28 bg-sky-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -240,7 +240,7 @@ export default function Home() {
       
       <motion.section 
         id="services" 
-        className="py-20 bg-amber-200"
+        className="py-20 bg-amber-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -278,7 +278,7 @@ export default function Home() {
 
       <motion.section 
         id="why-choose-us" 
-        className="py-20 bg-sky-200"
+        className="py-20 bg-sky-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -314,7 +314,7 @@ export default function Home() {
       
       <motion.section 
         id="testimonials" 
-        className="py-20 bg-amber-200"
+        className="py-20 bg-amber-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -360,7 +360,7 @@ export default function Home() {
 
       <motion.section 
         id="location" 
-        className="py-20 bg-sky-200"
+        className="py-20 bg-sky-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
