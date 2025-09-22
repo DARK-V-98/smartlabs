@@ -6,7 +6,6 @@ import Link from 'next/link';
 import {
   ArrowRight,
   Award,
-  BookOpen,
   Briefcase,
   CheckCircle,
   Clock,
@@ -160,7 +159,7 @@ export default function Home() {
 
       <motion.section
         id="founder"
-        className="py-20 bg-secondary text-secondary-foreground"
+        className="py-20 bg-secondary/80 text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -179,17 +178,17 @@ export default function Home() {
                 </div>
             </motion.div>
             <motion.div variants={itemVariants('right')} className="lg:col-span-3">
-                <h2 className="text-3xl md:text-4xl font-headline font-bold text-black">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
-                <p className="mt-4 text-black/80">
+                <h2 className="text-3xl md:text-4xl font-headline font-bold text-background">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
+                <p className="mt-4 text-background/80">
                     Our Founder and Director, Lahiruka Weeraratne, known in the industry as Laheer, is a distinguished expert trainer officially trained by Pearson UK. She specializes in PTE, IELTS, and CELPIP exams—the essential pathways for students and professionals seeking to study, migrate, or settle abroad. With over 6 years of professional experience, she has successfully trained more than 5,000 students, empowering them to achieve their global aspirations. Her passion for education and innovation led to the creation of Smart Labs, a hub designed to provide a smarter and more effective approach to language learning.
                 </p>
                 <div className="mt-8">
-                  <h3 className="font-headline font-semibold text-xl mb-4 text-black">Her Role at Smart Labs</h3>
+                  <h3 className="font-headline font-semibold text-xl mb-4 text-background">Her Role at Smart Labs</h3>
                    <ul className="space-y-3">
                     {founderExpertise.map((item, index) => (
                       <li key={index} className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-800 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-black/80">{item}</span>
+                        <CheckCircle className="h-5 w-5 text-green-300 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-background/80">{item}</span>
                       </li>
                     ))}
                   </ul>
@@ -200,7 +199,7 @@ export default function Home() {
 
       <motion.section
         id="about"
-        className="py-20 md:py-28 bg-primary text-primary-foreground"
+        className="py-20 md:py-28 bg-primary/80 text-primary-foreground"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -216,8 +215,8 @@ export default function Home() {
             />
           </motion.div>
            <motion.div variants={itemVariants('left')} className="space-y-6">
-            <h2 className="text-3xl md:text-4xl font-headline font-bold">About Smart Labs</h2>
-            <p className="text-primary-foreground/80">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold text-background">About Smart Labs</h2>
+            <p className="text-background/80">
               Smart Labs is a premier training institute founded with the vision of creating a smarter, more effective way of learning languages and competency tests. With over 6 years of experience and more than 5,000 successful students, Smart Labs has become a trusted name for PTE, IELTS, CELPIP training, and corporate language development.
             </p>
              <Card className="bg-background/80 text-foreground shadow-lg">
@@ -242,14 +241,14 @@ export default function Home() {
 
       <motion.section
         id="services"
-        className="py-20 bg-secondary text-secondary-foreground"
+        className="py-20 bg-secondary/80 text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-headline font-bold mb-4 text-black">
+          <h2 className="text-3xl font-headline font-bold mb-4 text-background">
             Our Services
           </h2>
            <div className="grid md:grid-cols-3 gap-8 mt-12">
@@ -280,17 +279,17 @@ export default function Home() {
 
       <motion.section
         id="why-choose-us"
-        className="py-20 bg-primary text-primary-foreground"
+        className="py-20 bg-primary/80 text-primary-foreground"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12">
+          <h2 className="text-3xl font-headline font-bold text-center mb-12 text-background">
             Why Choose Smart Labs?
           </h2>
-          <p className="max-w-3xl mx-auto text-center text-primary-foreground/80 mb-12">
+          <p className="max-w-3xl mx-auto text-center text-background/80 mb-12">
             At Smart Labs, we don’t just teach – we transform the way you learn. Here’s why thousands of students and professionals trust us:
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -316,14 +315,14 @@ export default function Home() {
 
       <motion.section
         id="testimonials"
-        className="py-20 bg-secondary text-secondary-foreground"
+        className="py-20 bg-secondary/80 text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12 text-black">
+          <h2 className="text-3xl font-headline font-bold text-center mb-12 text-background">
             What Our Students Say
           </h2>
           <div className="grid lg:grid-cols-3 gap-8">
@@ -362,18 +361,18 @@ export default function Home() {
 
       <motion.section
         id="location"
-        className="py-20 bg-primary text-primary-foreground"
+        className="py-20 bg-primary/80 text-primary-foreground"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
-            <motion.div variants={itemVariants('left')} className="mx-auto bg-primary-foreground/20 text-primary-foreground p-4 rounded-full w-fit mb-4">
+            <motion.div variants={itemVariants('left')} className="mx-auto bg-primary/80 text-primary-foreground p-4 rounded-full w-fit mb-4">
                 <Building className="h-10 w-10" />
             </motion.div>
-            <motion.h2 variants={itemVariants('right')} className="text-3xl font-headline font-bold mb-4">Visit Us</motion.h2>
-            <motion.p variants={itemVariants('left')} className="max-w-2xl mx-auto text-primary-foreground/80">
+            <motion.h2 variants={itemVariants('right')} className="text-3xl font-headline font-bold mb-4 text-background">Visit Us</motion.h2>
+            <motion.p variants={itemVariants('left')} className="max-w-2xl mx-auto text-background/80">
                 Our permanent office and training center, located at 3rd Floor, No. 326, Jana Jaya Building, Rajagiriya, Colombo 05, is a professional space where students can access consultations, personalized guidance, and classes in a focused environment.
             </motion.p>
             <motion.div variants={itemVariants('right')} className="mt-8">
