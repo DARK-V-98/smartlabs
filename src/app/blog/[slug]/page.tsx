@@ -25,15 +25,15 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         <section className="bg-amber-400 py-12 md:py-20">
             <div className="container mx-auto">
                 <div className="max-w-3xl mx-auto">
-                    <Button variant="ghost" asChild className="mb-8">
+                    <Button variant="ghost" asChild className="mb-4 md:mb-8">
                         <Link href="/blog"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Blog</Link>
                     </Button>
                     
                     <article>
                         <header className="space-y-4">
                             <Badge variant="secondary" className="w-fit">{post.category}</Badge>
-                            <h1 className="text-4xl md:text-5xl font-headline font-bold">{post.title}</h1>
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-headline font-bold">{post.title}</h1>
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
                                 <div className="flex items-center gap-2">
                                     <Avatar className="h-8 w-8">
                                         <AvatarImage src={`https://picsum.photos/100/100?random=${post.author}`} alt={post.author} />
@@ -41,14 +41,14 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                                     </Avatar>
                                     <span>{post.author}</span>
                                 </div>
-                                <span>&bull;</span>
+                                <span className="hidden sm:inline">&bull;</span>
                                 <time dateTime={post.date}>
                                     {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                 </time>
                             </div>
                         </header>
 
-                        <div className="relative w-full aspect-video my-8 rounded-xl overflow-hidden shadow-lg">
+                        <div className="relative w-full aspect-video my-6 md:my-8 rounded-xl overflow-hidden shadow-lg">
                             <Image
                                 src={post.image}
                                 alt={post.title}

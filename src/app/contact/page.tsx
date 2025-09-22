@@ -56,13 +56,13 @@ export default function ContactPage() {
         <section className="bg-amber-400 py-12 md:py-20">
           <div className="container mx-auto">
             <div className="text-center mb-12">
-              <h1 className="text-4xl font-headline font-bold">Get in Touch</h1>
-              <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+              <h1 className="text-3xl md:text-4xl font-headline font-bold">Get in Touch</h1>
+              <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
                 Have questions? We're here to help. Reach out to us via the form below or through our other contact channels.
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-12">
+            <div className="grid lg:grid-cols-3 gap-8 md:gap-12">
               <div className="lg:col-span-2">
                   <Card className="shadow-lg">
                       <CardHeader>

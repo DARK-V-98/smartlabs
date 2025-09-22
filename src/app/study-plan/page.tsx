@@ -29,13 +29,13 @@ export default function StudyPlanPage() {
       <section className="bg-amber-400 py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-headline font-bold">Generate Your Personalized Study Plan</h1>
-            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-headline font-bold">Generate Your Personalized Study Plan</h1>
+            <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
               Our AI-powered tool creates a custom study schedule based on your needs to help you prepare effectively.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
             <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle className="font-headline text-2xl">Tell Us About Yourself</CardTitle>
@@ -152,7 +152,7 @@ export default function StudyPlanPage() {
                   </CardContent>
                 </Card>
               ) : (
-                <div className="h-full flex items-center justify-center bg-gray-100 rounded-lg p-8">
+                <div className="h-full flex items-center justify-center bg-gray-100 rounded-lg p-8 min-h-[300px] md:min-h-full">
                     <div className="text-center">
                         <Sparkles className="mx-auto h-12 w-12 text-muted-foreground/50" />
                         <p className="mt-4 text-muted-foreground">Your study plan will appear here.</p>

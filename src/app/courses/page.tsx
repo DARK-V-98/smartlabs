@@ -10,8 +10,8 @@ export default function CoursesPage() {
       <section className="bg-amber-400 py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-headline font-bold">Our Courses</h1>
-            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-headline font-bold">Our Courses</h1>
+            <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
               Compare our expert-led courses and find the perfect fit for your goals. We offer specialized training for PTE, IELTS & CELPIP.
             </p>
           </div>

@@ -19,34 +19,34 @@ export default function ResourcesPage() {
       <section className="bg-amber-400 py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-headline font-bold">Resource Library</h1>
-            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-headline font-bold">Resource Library</h1>
+            <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
               A curated collection of practice tests, vocabulary lists, and video lessons to boost your preparation.
             </p>
           </div>
           
           <Tabs defaultValue="all" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto mb-10">
+            <TabsList className="grid w-full grid-cols-3 max-w-xs sm:max-w-md mx-auto mb-10">
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="documents">Documents</TabsTrigger>
               <TabsTrigger value="videos">Videos</TabsTrigger>
             </TabsList>
             <TabsContent value="all">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {resourceLibrary.map((item, index) => (
                   <ResourceCard key={index} item={item} />
                 ))}
               </div>
             </TabsContent>
             <TabsContent value="documents">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {testsAndLists.map((item, index) => (
                   <ResourceCard key={index} item={item} />
                 ))}
               </div>
             </TabsContent>
             <TabsContent value="videos">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {videos.map((item, index) => (
                   <ResourceCard key={index} item={item} />
                 ))}
@@ -67,17 +67,16 @@ function ResourceCard({ item }: { item: ResourceItem }) {
   if (item.type === 'video') {
     return (
         <Card className="overflow-hidden group shadow-lg hover:shadow-xl transition-shadow">
-            <div className="relative">
+            <div className="relative aspect-video">
                 <Image 
                     src={`https://picsum.photos/400/225?random=${item.title}`}
                     alt={item.title}
                     data-ai-hint="lesson video"
-                    width={400}
-                    height={225}
+                    fill
                     className="w-full object-cover transition-transform group-hover:scale-105"
                 />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <Video className="h-16 w-16 text-white/80" />
+                    <Video className="h-12 w-12 sm:h-16 sm:w-16 text-white/80" />
                 </div>
             </div>
             <CardHeader>

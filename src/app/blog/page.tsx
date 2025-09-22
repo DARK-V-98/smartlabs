@@ -10,13 +10,13 @@ export default function BlogPage() {
       <section className="bg-amber-400 py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-headline font-bold">Smart Labs Blog</h1>
-            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-headline font-bold">Smart Labs Blog</h1>
+            <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
               Insights, tips, and success stories to guide you on your test preparation journey.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogPosts.map((post) => (
               <Card key={post.slug} className="group overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
                 <Link href={`/blog/${post.slug}`} className="block">
@@ -31,7 +31,7 @@ export default function BlogPage() {
                     />
                   </div>
                   <CardHeader>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
                         <Badge variant="secondary">{post.category}</Badge>
                         <span>{new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                     </div>

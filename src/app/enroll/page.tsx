@@ -100,13 +100,13 @@ export default function EnrollPage() {
       <section className="bg-amber-400 py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-headline font-bold">Enroll Now</h1>
-            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-headline font-bold">Enroll Now</h1>
+            <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
               Begin your journey to success. Secure your spot in one of our expert-led courses.
             </p>
           </div>
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
-            <div className="relative aspect-square max-w-lg mx-auto lg:max-w-none lg:aspect-auto h-full">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-start">
+            <div className="relative aspect-[4/3] lg:aspect-auto h-64 lg:h-full w-full max-w-lg mx-auto lg:max-w-none">
                 <Image 
                     src="https://picsum.photos/800/800"
                     alt="Student enrolling online"

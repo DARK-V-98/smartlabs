@@ -19,7 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Calendar, ChevronRight, Video, FileText, LogOut } from 'lucide-react';
+import { Calendar, ChevronRight, Video, FileText, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 
@@ -61,19 +61,26 @@ export default function DashboardPage() {
   };
 
   if (loading || !user) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center bg-amber-400">
+        <div className="text-center">
+            <p className="text-lg font-semibold">Loading...</p>
+            <p className="text-sm text-muted-foreground">Please wait while we load your dashboard.</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="w-full">
       <section className="bg-amber-400 py-12 md:py-16">
         <div className="container mx-auto">
-            <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
+            <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
                 <div>
-                    <h1 className="text-4xl font-headline font-bold">Welcome, {user.displayName || 'Student'}!</h1>
+                    <h1 className="text-3xl md:text-4xl font-headline font-bold">Welcome, {user.displayName || 'Student'}!</h1>
                     <p className="text-lg text-muted-foreground mt-1">Here is your learning dashboard.</p>
                 </div>
-                <div className="flex items-center gap-4 mt-4 sm:mt-0">
+                <div className="flex items-center gap-4">
                     <Avatar>
                         <AvatarImage src={user.photoURL || undefined} alt={user.displayName || ''} />
                         <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>

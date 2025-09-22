@@ -16,10 +16,10 @@ export default function Footer() {
   return (
     <footer className="bg-gray-100/50 border-t">
       <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          <div className="col-span-2 md:col-span-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
+          <div className="col-span-1 md:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Image src="/logo.png" alt="Smart Labs logo" width={128} height={128} className="h-32 w-32" />
+              <Image src="/logo.png" alt="Smart Labs logo" width={128} height={128} className="h-24 w-24 sm:h-32 sm:w-32" />
             </Link>
             <p className="text-sm text-muted-foreground">
               Empowering students to achieve their global academic and professional goals.
@@ -40,7 +40,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div>
+          <div className="col-span-1">
             <h3 className="font-headline font-semibold text-foreground tracking-wider uppercase">Navigate</h3>
             <ul className="mt-4 space-y-2">
               {NAV_LINKS.map((link) => (
@@ -53,7 +53,7 @@ export default function Footer() {
             </ul>
           </div>
           
-          <div>
+          <div className="col-span-1">
             <h3 className="font-headline font-semibold text-foreground tracking-wider uppercase">Courses</h3>
             <ul className="mt-4 space-y-2">
               {courseData.map((course) => (
@@ -66,7 +66,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="col-span-2 md:col-span-2">
+          <div className="col-span-full md:col-span-2">
              <h3 className="font-headline font-semibold text-foreground tracking-wider uppercase">Contact Us</h3>
                 <div className="space-y-3 mt-4 text-sm">
                     <p className="text-muted-foreground">

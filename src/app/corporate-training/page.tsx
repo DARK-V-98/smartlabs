@@ -24,15 +24,15 @@ export default function CorporateTrainingPage() {
       <section className="bg-amber-400 py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-headline font-bold">Corporate Training at Smart Labs</h1>
-            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-headline font-bold">Corporate Training at Smart Labs</h1>
+            <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
               Empowering Teams, Elevating Organizations
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-headline font-bold mb-4">Customized Training for Your Organization</h2>
+              <h2 className="text-2xl md:text-3xl font-headline font-bold mb-4">Customized Training for Your Organization</h2>
               <p className="text-muted-foreground mb-6">
                 At Smart Labs, we believe that effective communication and professional skills are the backbone of any successful organization. Our corporate training programs are designed to bridge skill gaps, enhance workplace efficiency, and foster a culture of continuous learning.
               </p>
@@ -58,7 +58,7 @@ export default function CorporateTrainingPage() {
       </section>
       <section className="bg-sky-400 py-12 md:py-20">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12">Our Approach</h2>
+          <h2 className="text-2xl md:text-3xl font-headline font-bold text-center mb-12">Our Approach</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {approachPoints.map((point) => (
                   <Card key={point.title}>
@@ -75,8 +75,8 @@ export default function CorporateTrainingPage() {
       </section>
       <section className="bg-amber-400 py-12 md:py-20">
         <div className="container mx-auto">
-          <div className="text-center bg-sky-100 p-10 rounded-lg">
-            <h2 className="text-3xl font-headline font-bold mb-4">Partner with Smart Labs</h2>
+          <div className="text-center bg-sky-100 p-8 md:p-10 rounded-lg">
+            <h2 className="text-2xl md:text-3xl font-headline font-bold mb-4">Partner with Smart Labs</h2>
             <p className="max-w-3xl mx-auto text-muted-foreground mb-6">
                 Investing in your team’s communication and professional skills is investing in your company’s future growth and success. Let Smart Labs help you create a high-performing, confident, and collaborative workforce.
             </p>

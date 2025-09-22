@@ -63,52 +63,54 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="container mx-auto flex min-h-[calc(100vh-12rem)] items-center justify-center py-12">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="text-center">
-          <CardTitle className="font-headline text-3xl">Forgot Password</CardTitle>
-           {!isSuccess && <CardDescription>Enter your email to receive a password reset link.</CardDescription>}
-        </CardHeader>
-        <CardContent>
-          {isSuccess ? (
-            <div className="text-center">
-              <p className="text-muted-foreground mb-4">
-                A password reset link has been sent to your email address. Please check your inbox.
-              </p>
-              <Button asChild>
-                <Link href="/login">Back to Login</Link>
-              </Button>
-            </div>
-          ) : (
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="your.email@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-                  <KeyRound className="mr-2 h-4 w-4" />
-                  {isLoading ? 'Sending...' : 'Send Reset Link'}
-                </Button>
-                 <div className="mt-6 text-center text-sm">
-                    <Link href="/login" className="font-semibold text-primary hover:underline">
-                      Back to Login
-                    </Link>
+    <div className="w-full bg-amber-400">
+        <div className="container mx-auto flex min-h-[calc(100vh-12rem)] items-center justify-center py-12">
+          <Card className="w-full max-w-md shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle className="font-headline text-3xl">Forgot Password</CardTitle>
+               {!isSuccess && <CardDescription>Enter your email to receive a password reset link.</CardDescription>}
+            </CardHeader>
+            <CardContent>
+              {isSuccess ? (
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-4">
+                    A password reset link has been sent to your email address. Please check your inbox.
+                  </p>
+                  <Button asChild>
+                    <Link href="/login">Back to Login</Link>
+                  </Button>
                 </div>
-              </form>
-            </Form>
-          )}
-        </CardContent>
-      </Card>
+              ) : (
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="your.email@example.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                      <KeyRound className="mr-2 h-4 w-4" />
+                      {isLoading ? 'Sending...' : 'Send Reset Link'}
+                    </Button>
+                     <div className="mt-6 text-center text-sm">
+                        <Link href="/login" className="font-semibold text-primary hover:underline">
+                          Back to Login
+                        </Link>
+                    </div>
+                  </form>
+                </Form>
+              )}
+            </CardContent>
+          </Card>
+        </div>
     </div>
   );
 }

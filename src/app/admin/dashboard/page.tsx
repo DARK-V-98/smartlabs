@@ -33,15 +33,22 @@ export default function AdminDashboardPage() {
   };
 
   if (loading || !isAdmin) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center bg-amber-400">
+        <div className="text-center">
+            <p className="text-lg font-semibold">Loading...</p>
+            <p className="text-sm text-muted-foreground">Please wait while we verify your credentials.</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="w-full">
       <section className="bg-amber-400 py-12 md:py-20">
         <div className="container mx-auto">
-          <header className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl font-headline font-bold">Admin Dashboard</h1>
+          <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+            <h1 className="text-3xl md:text-4xl font-headline font-bold">Admin Dashboard</h1>
             <Button onClick={handleLogout} variant="outline">
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout

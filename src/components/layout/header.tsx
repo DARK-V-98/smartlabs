@@ -78,10 +78,10 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center">
-        <Link href="/" className="mr-8 flex items-center gap-2">
-          <Image src="/logo.png" alt="Smart Labs logo" width={96} height={96} className="h-24 w-24" />
+        <Link href="/" className="mr-4 sm:mr-8 flex items-center gap-2">
+          <Image src="/logo.png" alt="Smart Labs logo" width={96} height={96} className="h-20 w-20 sm:h-24 sm:w-24" />
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+        <nav className="hidden items-center gap-4 lg:gap-6 text-sm font-medium md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -97,7 +97,7 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <div className="flex flex-1 items-center justify-end gap-4">
+        <div className="flex flex-1 items-center justify-end gap-2 sm:gap-4">
            {isInstallable && (
             <Button onClick={handleInstallClick} variant="outline" size="sm">
               <Download className="mr-2 h-4 w-4" />

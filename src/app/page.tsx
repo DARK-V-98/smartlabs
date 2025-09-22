@@ -105,7 +105,7 @@ const itemVariants = (from: 'left' | 'right') => ({
 export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden">
-      <section className="relative h-[60vh] md:h-[80vh] w-full">
+      <section className="relative h-[80vh] md:h-[90vh] w-full">
         <Carousel
           className="w-full h-full"
           plugins={[Autoplay({ delay: 5000, stopOnInteraction: false })]}
@@ -114,7 +114,7 @@ export default function Home() {
           <CarouselContent>
             {heroImages.map((src, index) => (
               <CarouselItem key={index}>
-                <div className="relative w-full h-[60vh] md:h-[80vh]">
+                <div className="relative w-full h-[80vh] md:h-[90vh]">
                   <Image
                     src={src}
                     alt={`Hero image ${index + 1}`}
@@ -130,23 +130,23 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
-                className="max-w-4xl mx-auto text-center p-8 flex flex-col items-center"
+                className="max-w-4xl mx-auto text-center p-4 sm:p-8 flex flex-col items-center"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.5 }}
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
-                    <Image src="/logo.png" alt="Smart Labs Logo" width={400} height={400} className="h-96 w-96" />
+                    <Image src="/logo.png" alt="Smart Labs Logo" width={400} height={400} className="h-48 w-48 sm:h-64 sm:w-64 md:h-80 md:w-80 lg:h-96 lg:w-96" />
                 </motion.div>
-                <motion.h1 variants={itemVariants('right')} className="text-4xl md:text-6xl font-headline font-bold text-white">
+                <motion.h1 variants={itemVariants('right')} className="text-3xl sm:text-4xl md:text-6xl font-headline font-bold text-white">
                     Smart Learning, Smarter Futures.
                 </motion.h1>
-                <motion.p variants={itemVariants('left')} className="mt-6 text-lg md:text-xl text-gray-200">
+                <motion.p variants={itemVariants('left')} className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-gray-200">
                     Expert training for PTE, IELTS & CELPIP | Corporate Language Training | Legal & Migration Support.
                 </motion.p>
-                <motion.div variants={itemVariants('right')} className="mt-8 flex gap-4 justify-center">
-                    <Button asChild size="lg">
+                <motion.div variants={itemVariants('right')} className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto">
+                    <Button asChild size="lg" className="w-full sm:w-auto">
                         <Link href="/courses">
                         Explore Our Programs <ArrowRight className="ml-2" />
                         </Link>
@@ -158,13 +158,13 @@ export default function Home() {
 
       <motion.section 
         id="founder" 
-        className="py-20 bg-amber-400"
+        className="py-12 md:py-20 bg-amber-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
-        <div className="container mx-auto grid lg:grid-cols-5 gap-12 items-center">
+        <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
             <motion.div variants={itemVariants('left')} className="lg:col-span-2">
                 <div className="relative aspect-square rounded-xl overflow-hidden shadow-lg mx-auto max-w-sm lg:max-w-none">
                     <Image
@@ -198,14 +198,14 @@ export default function Home() {
 
       <motion.section 
         id="about" 
-        className="py-20 md:py-28 bg-sky-400"
+        className="py-12 md:py-28 bg-sky-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
-        <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <motion.div variants={itemVariants('right')} className="relative h-80 md:h-full rounded-xl overflow-hidden shadow-lg">
+        <div className="container mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <motion.div variants={itemVariants('right')} className="relative h-64 md:h-full rounded-xl overflow-hidden shadow-lg">
             <Image
               src="/ab.png"
               alt="Smart Labs training center"
@@ -240,7 +240,7 @@ export default function Home() {
       
       <motion.section 
         id="services" 
-        className="py-20 bg-amber-400"
+        className="py-12 md:py-20 bg-amber-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -278,7 +278,7 @@ export default function Home() {
 
       <motion.section 
         id="why-choose-us" 
-        className="py-20 bg-sky-400"
+        className="py-12 md:py-20 bg-sky-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -314,7 +314,7 @@ export default function Home() {
       
       <motion.section 
         id="testimonials" 
-        className="py-20 bg-amber-400"
+        className="py-12 md:py-20 bg-amber-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -360,7 +360,7 @@ export default function Home() {
 
       <motion.section 
         id="location" 
-        className="py-20 bg-sky-400"
+        className="py-12 md:py-20 bg-sky-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -368,7 +368,7 @@ export default function Home() {
       >
         <div className="container mx-auto text-center">
             <motion.div variants={itemVariants('left')} className="mx-auto bg-primary/20 text-primary p-4 rounded-full w-fit mb-4">
-                <Building className="h-10 w-10" />
+                <Building className="h-8 w-8 md:h-10 md:w-10" />
             </motion.div>
             <motion.h2 variants={itemVariants('right')} className="text-3xl font-headline font-bold mb-4">Visit Us</motion.h2>
             <motion.p variants={itemVariants('left')} className="max-w-2xl mx-auto text-muted-foreground">
