@@ -158,7 +158,7 @@ export default function Home() {
 
       <motion.section 
         id="founder" 
-        className="py-20 bg-secondary/5"
+        className="py-20 bg-gray-50"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -218,7 +218,7 @@ export default function Home() {
             <p className="text-muted-foreground">
               Smart Labs is a premier training institute founded with the vision of creating a smarter, more effective way of learning languages and competency tests. With over 6 years of experience and more than 5,000 successful students, Smart Labs has become a trusted name for PTE, IELTS, CELPIP training, and corporate language development.
             </p>
-             <Card className="bg-muted">
+             <Card className="bg-gray-50/50">
                 <CardHeader>
                     <CardTitle className="font-headline text-xl">Our Vision</CardTitle>
                 </CardHeader>
@@ -226,7 +226,7 @@ export default function Home() {
                     <p className="italic text-muted-foreground">"To create a smarter world of learning by becoming the leading hub for language mastery and corporate training, empowering individuals and organizations to achieve growth, confidence, and global success."</p>
                 </CardContent>
              </Card>
-             <Card className="bg-muted">
+             <Card className="bg-gray-50/50">
                 <CardHeader>
                     <CardTitle className="font-headline text-xl">Our Mission</CardTitle>
                 </CardHeader>
@@ -240,7 +240,7 @@ export default function Home() {
       
       <motion.section 
         id="services" 
-        className="py-20 bg-secondary/5"
+        className="py-20 bg-gray-50"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -360,7 +360,7 @@ export default function Home() {
 
       <motion.section 
         id="location" 
-        className="py-20 bg-primary/5"
+        className="py-20 bg-primary/10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -380,7 +380,7 @@ export default function Home() {
                 </Button>
             </motion.div>
         </div>
-      </motion.section>
+      </section>
 
     </div>
   );
