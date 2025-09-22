@@ -129,7 +129,7 @@ export default function Home() {
             ))}
           </CarouselContent>
         </Carousel>
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/60" />
         <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
                 className="max-w-4xl mx-auto text-center p-8"
@@ -160,7 +160,7 @@ export default function Home() {
 
       <motion.section 
         id="founder" 
-        className="py-20 bg-gray-50"
+        className="py-20 bg-secondary/10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -200,7 +200,7 @@ export default function Home() {
 
       <motion.section 
         id="about" 
-        className="py-20 md:py-28"
+        className="py-20 md:py-28 bg-primary/10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -220,7 +220,7 @@ export default function Home() {
             <p className="text-muted-foreground">
               Smart Labs is a premier training institute founded with the vision of creating a smarter, more effective way of learning languages and competency tests. With over 6 years of experience and more than 5,000 successful students, Smart Labs has become a trusted name for PTE, IELTS, CELPIP training, and corporate language development.
             </p>
-             <Card className="bg-gray-50/50">
+             <Card className="bg-background/50">
                 <CardHeader>
                     <CardTitle className="font-headline text-xl">Our Vision</CardTitle>
                 </CardHeader>
@@ -228,7 +228,7 @@ export default function Home() {
                     <p className="italic text-muted-foreground">"To create a smarter world of learning by becoming the leading hub for language mastery and corporate training, empowering individuals and organizations to achieve growth, confidence, and global success."</p>
                 </CardContent>
              </Card>
-             <Card className="bg-gray-50/50">
+             <Card className="bg-background/50">
                 <CardHeader>
                     <CardTitle className="font-headline text-xl">Our Mission</CardTitle>
                 </CardHeader>
@@ -242,7 +242,7 @@ export default function Home() {
       
       <motion.section 
         id="services" 
-        className="py-20 bg-gray-50"
+        className="py-20 bg-secondary/10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -257,7 +257,7 @@ export default function Home() {
                 const Icon = service.icon;
                 return (
                     <motion.div key={service.title} variants={itemVariants(index % 2 === 0 ? 'left' : 'right')}>
-                        <Card className="text-center hover:shadow-lg transition-shadow p-6 h-full">
+                        <Card className="text-center hover:shadow-lg transition-shadow p-6 h-full bg-background/50">
                           <div className="mx-auto bg-primary/20 text-primary p-4 rounded-full w-fit mb-4">
                             <Icon className="h-8 w-8" />
                           </div>
@@ -280,7 +280,7 @@ export default function Home() {
 
       <motion.section 
         id="why-choose-us" 
-        className="py-20"
+        className="py-20 bg-primary/10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.2 }}
@@ -298,7 +298,7 @@ export default function Home() {
               const Icon = feature.icon;
               return (
                  <motion.div key={feature.title} variants={itemVariants(index % 2 === 0 ? 'right' : 'left')}>
-                     <Card className="text-left p-6 flex gap-4 items-start h-full">
+                     <Card className="text-left p-6 flex gap-4 items-start h-full bg-background/50">
                         <div className="text-primary pt-1">
                             <Icon className="h-6 w-6" />
                         </div>
@@ -316,7 +316,7 @@ export default function Home() {
       
       <motion.section 
         id="testimonials" 
-        className="py-20"
+        className="py-20 bg-secondary/10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.2 }}
@@ -329,7 +329,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <motion.div key={testimonial.name} variants={itemVariants(index === 1 ? 'left' : 'right')}>
-                <Card className="flex flex-col h-full">
+                <Card className="flex flex-col h-full bg-background/50">
                   <CardContent className="pt-6 flex-grow">
                     <div className="flex mb-2">
                       {[...Array(5)].map((_, i) => (
@@ -387,3 +387,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
