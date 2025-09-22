@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Image from 'next/image';
@@ -121,7 +122,7 @@ export default function Home() {
                     src={src}
                     alt={`Hero image ${index + 1}`}
                     fill
-                    className="object-cover"
+                    className="object-contain"
                     priority={index === 0}
                   />
                 </div>
@@ -382,12 +383,8 @@ export default function Home() {
                 </Button>
             </motion.div>
         </div>
-      </motion.section>
+      </section>
 
     </div>
   );
 }
-
-    
-
-    
