@@ -61,17 +61,20 @@ export default function SignupPage() {
     try {
       const userRef = doc(db, 'users', user.uid);
       const userDoc = await getDoc(userRef);
+      let userRole = 'user';
 
       if (userDoc.exists()) {
-         await updateDoc(userRef, {
+        userRole = userDoc.data().role || 'user';
+        await updateDoc(userRef, {
             lastLogin: new Date(),
-         });
+        });
       } else {
+        userRole = user.email === ADMIN_EMAIL ? 'admin' : 'user';
         await setDoc(userRef, {
           uid: user.uid,
           email: user.email,
           displayName: displayName || user.displayName,
-          role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
+          role: userRole,
           createdAt: new Date(),
           lastLogin: new Date(),
         });
@@ -82,7 +85,12 @@ export default function SignupPage() {
         title: 'Account Created!',
         description: 'Welcome to Smart Labs!',
       });
-      router.push('/dashboard');
+      
+      if (userRole === 'admin') {
+          router.push('/admin/dashboard');
+      } else {
+          router.push('/dashboard');
+      }
     } catch (error) {
         handleAuthError(error);
     }

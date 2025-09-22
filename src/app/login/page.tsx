@@ -43,7 +43,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-const ADMIN_EMAIL = "admin@smartlabs.com"; // Replace with your admin email
+const ADMIN_EMAIL = "admin@smartlabs.com";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -59,17 +59,21 @@ export default function LoginPage() {
     try {
       const userRef = doc(db, 'users', user.uid);
       const userDoc = await getDoc(userRef);
+      let userRole = 'user';
 
       if (userDoc.exists()) {
+        const userData = userDoc.data();
+        userRole = userData.role || 'user';
         await updateDoc(userRef, {
           lastLogin: new Date(),
         });
       } else {
+        userRole = user.email === ADMIN_EMAIL ? 'admin' : 'user';
         await setDoc(userRef, {
           uid: user.uid,
           email: user.email,
           displayName: user.displayName,
-          role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
+          role: userRole,
           createdAt: new Date(),
           lastLogin: new Date(),
         });
@@ -81,7 +85,7 @@ export default function LoginPage() {
         description: `Welcome back!`,
       });
 
-      if (user.email === ADMIN_EMAIL) {
+      if (userRole === 'admin') {
         router.push('/admin/dashboard');
       } else {
         router.push('/dashboard');
@@ -127,7 +131,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           <Card className="shadow-lg">
             <CardHeader className="text-center items-center">
-              <Image src="/logo.png" alt="Smart Labs Logo" width={100} height={100} className="h-24 w-24 mb-4" />
+              <Image src="/logo.png" alt="Smart Labs Logo" width={500} height={500} className="h-48 w-48 mb-4" />
               <CardTitle className="font-headline text-3xl">Login</CardTitle>
               <CardDescription>Access your student dashboard.</CardDescription>
             </CardHeader>
