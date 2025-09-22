@@ -4,12 +4,10 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { NAV_LINKS, courseData } from '@/lib/constants';
-import { Github, Twitter, Linkedin, Send, MessageCircle, Phone, Mail } from 'lucide-react';
+import { Facebook, Send, MessageCircle, Phone, Mail } from 'lucide-react';
 
 const socialLinks = [
-  { icon: Twitter, href: '#', 'aria-label': 'Twitter profile' },
-  { icon: Github, href: '#', 'aria-label': 'GitHub profile' },
-  { icon: Linkedin, href: '#', 'aria-label': 'LinkedIn profile' },
+  { icon: Facebook, href: 'https://www.facebook.com/lahirukaweeraratne', 'aria-label': 'Facebook profile' },
 ];
 
 export default function Footer() {
