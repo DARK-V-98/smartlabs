@@ -6,7 +6,8 @@ import Link from 'next/link';
 
 export default function CoursesPage() {
   return (
-    <div className="container mx-auto py-12 md:py-20">
+    <div className="bg-primary/5">
+        <div className="container mx-auto py-12 md:py-20">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-headline font-bold">Our Courses</h1>
         <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -47,6 +48,7 @@ export default function CoursesPage() {
           </Card>
         ))}
       </div>
+    </div>
     </div>
   );
 }

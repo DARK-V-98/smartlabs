@@ -21,7 +21,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <div className="bg-gray-50/50">
+    <div className="bg-primary/5">
         <div className="container mx-auto py-12 md:py-20">
             <div className="max-w-3xl mx-auto">
                 <Button variant="ghost" asChild className="mb-8">
