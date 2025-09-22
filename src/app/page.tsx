@@ -120,7 +120,7 @@ export default function Home() {
                     src={src}
                     alt={`Hero image ${index + 1}`}
                     fill
-                    className="object-contain"
+                    className="object-cover"
                     priority={index === 0}
                   />
                 </div>
