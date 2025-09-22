@@ -159,7 +159,7 @@ export default function Home() {
 
       <motion.section 
         id="founder" 
-        className="py-20 bg-yellow-50/50"
+        className="py-20 bg-amber-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -199,7 +199,7 @@ export default function Home() {
 
       <motion.section 
         id="about" 
-        className="py-20 md:py-28 bg-primary/10"
+        className="py-20 md:py-28 bg-sky-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -241,7 +241,7 @@ export default function Home() {
       
       <motion.section 
         id="services" 
-        className="py-20 bg-yellow-50/50"
+        className="py-20 bg-amber-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -279,7 +279,7 @@ export default function Home() {
 
       <motion.section 
         id="why-choose-us" 
-        className="py-20 bg-primary/10"
+        className="py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -315,7 +315,7 @@ export default function Home() {
       
       <motion.section 
         id="testimonials" 
-        className="py-20 bg-yellow-50/50"
+        className="py-20 bg-amber-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -361,7 +361,7 @@ export default function Home() {
 
       <motion.section 
         id="location" 
-        className="py-20 bg-primary/10"
+        className="py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}

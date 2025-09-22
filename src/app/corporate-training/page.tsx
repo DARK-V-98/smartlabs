@@ -21,7 +21,7 @@ const approachPoints = [
 export default function CorporateTrainingPage() {
   return (
     <div className="w-full">
-      <section className="bg-yellow-50/50 py-12 md:py-20">
+      <section className="bg-amber-200 py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-headline font-bold">Corporate Training at Smart Labs</h1>
@@ -56,7 +56,7 @@ export default function CorporateTrainingPage() {
           </div>
         </div>
       </section>
-      <section className="bg-primary/10 py-12 md:py-20">
+      <section className="bg-sky-200 py-12 md:py-20">
         <div className="container mx-auto">
           <h2 className="text-3xl font-headline font-bold text-center mb-12">Our Approach</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -73,9 +73,9 @@ export default function CorporateTrainingPage() {
           </div>
         </div>
       </section>
-      <section className="bg-yellow-50/50 py-12 md:py-20">
+      <section className="bg-amber-200 py-12 md:py-20">
         <div className="container mx-auto">
-          <div className="text-center bg-primary/10 p-10 rounded-lg">
+          <div className="text-center bg-sky-100 p-10 rounded-lg">
             <h2 className="text-3xl font-headline font-bold mb-4">Partner with Smart Labs</h2>
             <p className="max-w-3xl mx-auto text-muted-foreground mb-6">
                 Investing in your team’s communication and professional skills is investing in your company’s future growth and success. Let Smart Labs help you create a high-performing, confident, and collaborative workforce.

@@ -7,7 +7,7 @@ import Link from 'next/link';
 export default function CoursesPage() {
   return (
     <div className="w-full">
-      <section className="bg-yellow-50/50 py-12 md:py-20">
+      <section className="bg-amber-200 py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-headline font-bold">Our Courses</h1>
@@ -19,7 +19,7 @@ export default function CoursesPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
             {courseData.map((course) => (
               <Card key={course.title} className="flex flex-col h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardHeader className="bg-primary/10">
+                <CardHeader className="bg-sky-100">
                   <CardTitle className="font-headline text-2xl text-center">{course.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6 flex-grow">
