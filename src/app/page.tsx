@@ -130,7 +130,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
-                className="max-w-4xl mx-auto text-center p-8"
+                className="max-w-4xl mx-auto text-center p-8 flex flex-col items-center"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.5 }}
