@@ -61,12 +61,10 @@ export default function LoginPage() {
       const userDoc = await getDoc(userRef);
 
       if (userDoc.exists()) {
-        // User exists, update last login
         await updateDoc(userRef, {
           lastLogin: new Date(),
         });
       } else {
-        // New user, create document
         await setDoc(userRef, {
           uid: user.uid,
           email: user.email,
@@ -124,11 +122,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-full bg-amber-200">
+    <div className="w-full bg-amber-400">
       <div className="container mx-auto flex min-h-[calc(100vh-8rem)] items-center justify-center py-12">
         <div className="w-full max-w-md">
           <Card className="shadow-lg">
-            <CardHeader className="text-center">
+            <CardHeader className="text-center items-center">
+              <Image src="/logo.png" alt="Smart Labs Logo" width={100} height={100} className="h-24 w-24 mb-4" />
               <CardTitle className="font-headline text-3xl">Login</CardTitle>
               <CardDescription>Access your student dashboard.</CardDescription>
             </CardHeader>
