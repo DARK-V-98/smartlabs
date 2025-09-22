@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {
   ArrowRight,
   Award,
+  BookOpen,
   Briefcase,
   CheckCircle,
   Clock,
@@ -133,7 +134,7 @@ export default function Home() {
                 className="max-w-4xl mx-auto text-center p-8"
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: 0.5 }}
+                viewport={{ once: false, amount: 0.5 }}
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
@@ -161,7 +162,7 @@ export default function Home() {
         className="py-20 bg-gray-50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-12 items-center">
@@ -186,7 +187,7 @@ export default function Home() {
                    <ul className="space-y-3">
                     {founderExpertise.map((item, index) => (
                       <li key={index} className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-primary mr-3 mt-1 flex-shrink-0" />
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
                         <span className="text-muted-foreground">{item}</span>
                       </li>
                     ))}
@@ -201,7 +202,7 @@ export default function Home() {
         className="py-20 md:py-28"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -243,7 +244,7 @@ export default function Home() {
         className="py-20 bg-gray-50"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -281,7 +282,7 @@ export default function Home() {
         className="py-20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: false, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -296,7 +297,7 @@ export default function Home() {
               const Icon = feature.icon;
               return (
                  <motion.div key={feature.title} variants={itemVariants(index % 2 === 0 ? 'right' : 'left')}>
-                     <Card className="text-left p-6 flex gap-4 items-start h-full hover:shadow-lg transition-shadow">
+                     <Card className="text-left p-6 flex gap-4 items-start h-full">
                         <div className="text-primary pt-1">
                             <Icon className="h-6 w-6" />
                         </div>
@@ -314,10 +315,10 @@ export default function Home() {
       
       <motion.section 
         id="testimonials" 
-        className="py-20 bg-secondary/5"
+        className="py-20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: false, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -327,7 +328,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <motion.div key={testimonial.name} variants={itemVariants(index === 1 ? 'left' : 'right')}>
-                <Card className="flex flex-col h-full hover:shadow-lg transition-shadow">
+                <Card className="flex flex-col h-full">
                   <CardContent className="pt-6 flex-grow">
                     <div className="flex mb-2">
                       {[...Array(5)].map((_, i) => (
@@ -337,7 +338,7 @@ export default function Home() {
                         />
                       ))}
                     </div>
-                    <p className="italic text-muted-foreground">"{testimonial.quote}"</p>
+                    <p className="italic">"{testimonial.quote}"</p>
                   </CardContent>
                   <CardHeader className="flex-row items-center gap-4">
                     <Avatar>
@@ -363,7 +364,7 @@ export default function Home() {
         className="py-20 bg-primary/10"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -380,7 +381,7 @@ export default function Home() {
                 </Button>
             </motion.div>
         </div>
-      </section>
+      </motion.section>
 
     </div>
   );
