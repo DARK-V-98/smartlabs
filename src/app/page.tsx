@@ -20,6 +20,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { testimonials } from '@/lib/constants';
 import { motion } from 'framer-motion';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
+
+const heroImages = ['/1.png', '/2.png', '/3.png', '/4.png', '/5.png'];
 
 const services = [
   {
@@ -99,14 +107,28 @@ export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden">
       <section className="relative h-[60vh] md:h-[80vh] w-full">
-        <Image
-          src="/1.png"
-          alt="Hero image"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/60" />
+        <Carousel
+          className="w-full h-full"
+          plugins={[Autoplay({ delay: 5000, stopOnInteraction: false })]}
+          opts={{ loop: true }}
+        >
+          <CarouselContent>
+            {heroImages.map((src, index) => (
+              <CarouselItem key={index}>
+                <div className="relative w-full h-[60vh] md:h-[80vh]">
+                  <Image
+                    src={src}
+                    alt={`Hero image ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+        <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
                 className="max-w-4xl mx-auto text-center p-8"
@@ -135,8 +157,8 @@ export default function Home() {
         </div>
       </section>
 
-      <motion.section
-        id="founder"
+      <motion.section 
+        id="founder" 
         className="py-20 bg-secondary/80 text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -175,8 +197,8 @@ export default function Home() {
         </div>
       </motion.section>
 
-      <motion.section
-        id="about"
+      <motion.section 
+        id="about" 
         className="py-20 md:py-28 bg-primary/80 text-primary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -216,9 +238,9 @@ export default function Home() {
           </motion.div>
         </div>
       </motion.section>
-
-      <motion.section
-        id="services"
+      
+      <motion.section 
+        id="services" 
         className="py-20 bg-secondary/80 text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -255,8 +277,8 @@ export default function Home() {
         </div>
       </motion.section>
 
-      <motion.section
-        id="why-choose-us"
+      <motion.section 
+        id="why-choose-us" 
         className="py-20 bg-primary/80 text-primary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -290,9 +312,9 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
-
-      <motion.section
-        id="testimonials"
+      
+      <motion.section 
+        id="testimonials" 
         className="py-20 bg-secondary/80 text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -337,8 +359,8 @@ export default function Home() {
         </div>
       </motion.section>
 
-      <motion.section
-        id="location"
+      <motion.section 
+        id="location" 
         className="py-20 bg-primary/80 text-primary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -359,7 +381,8 @@ export default function Home() {
                 </Button>
             </motion.div>
         </div>
-      </section>
+      </motion.section>
+
     </div>
   );
 }
