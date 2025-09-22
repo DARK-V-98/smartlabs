@@ -20,14 +20,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { testimonials } from '@/lib/constants';
 import { motion } from 'framer-motion';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
-
-const heroImages = ['/1.png', '/2.png', '/3.png', '/4.png', '/5.png'];
 
 const services = [
   {
@@ -107,27 +99,13 @@ export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden">
       <section className="relative h-[60vh] md:h-[80vh] w-full">
-        <Carousel
-          className="w-full h-full"
-          plugins={[Autoplay({ delay: 5000, stopOnInteraction: false })]}
-          opts={{ loop: true }}
-        >
-          <CarouselContent>
-            {heroImages.map((src, index) => (
-              <CarouselItem key={index}>
-                <div className="relative w-full h-[60vh] md:h-[80vh]">
-                  <Image
-                    src={src}
-                    alt={`Hero image ${index + 1}`}
-                    fill
-                    className="object-cover"
-                    priority={index === 0}
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+        <Image
+          src="/1.png"
+          alt="Hero image"
+          fill
+          className="object-cover"
+          priority
+        />
         <div className="absolute inset-0 bg-black/60" />
         <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
