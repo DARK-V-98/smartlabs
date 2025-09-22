@@ -135,7 +135,7 @@ export default function Home() {
                 className="max-w-4xl mx-auto text-center p-8"
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: false, amount: 0.5 }}
+                viewport={{ once: true, amount: 0.5 }}
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
@@ -163,7 +163,7 @@ export default function Home() {
         className="py-20 bg-secondary text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-12 items-center">
@@ -179,17 +179,17 @@ export default function Home() {
                 </div>
             </motion.div>
             <motion.div variants={itemVariants('right')} className="lg:col-span-3">
-                <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
-                <p className="mt-4 text-secondary-foreground/80">
+                <h2 className="text-3xl md:text-4xl font-headline font-bold text-black">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
+                <p className="mt-4 text-black/80">
                     Our Founder and Director, Lahiruka Weeraratne, known in the industry as Laheer, is a distinguished expert trainer officially trained by Pearson UK. She specializes in PTE, IELTS, and CELPIP exams—the essential pathways for students and professionals seeking to study, migrate, or settle abroad. With over 6 years of professional experience, she has successfully trained more than 5,000 students, empowering them to achieve their global aspirations. Her passion for education and innovation led to the creation of Smart Labs, a hub designed to provide a smarter and more effective approach to language learning.
                 </p>
                 <div className="mt-8">
-                  <h3 className="font-headline font-semibold text-xl mb-4">Her Role at Smart Labs</h3>
+                  <h3 className="font-headline font-semibold text-xl mb-4 text-black">Her Role at Smart Labs</h3>
                    <ul className="space-y-3">
                     {founderExpertise.map((item, index) => (
                       <li key={index} className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-300 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-secondary-foreground/80">{item}</span>
+                        <CheckCircle className="h-5 w-5 text-green-800 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-black/80">{item}</span>
                       </li>
                     ))}
                   </ul>
@@ -203,7 +203,7 @@ export default function Home() {
         className="py-20 md:py-28 bg-primary text-primary-foreground"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -220,20 +220,20 @@ export default function Home() {
             <p className="text-primary-foreground/80">
               Smart Labs is a premier training institute founded with the vision of creating a smarter, more effective way of learning languages and competency tests. With over 6 years of experience and more than 5,000 successful students, Smart Labs has become a trusted name for PTE, IELTS, CELPIP training, and corporate language development.
             </p>
-             <Card className="bg-background/20 text-foreground">
+             <Card className="bg-background/80 text-foreground shadow-lg">
                 <CardHeader>
                     <CardTitle className="font-headline text-xl">Our Vision</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="italic text-foreground/80">"To create a smarter world of learning by becoming the leading hub for language mastery and corporate training, empowering individuals and organizations to achieve growth, confidence, and global success."</p>
+                    <p className="italic text-muted-foreground">"To create a smarter world of learning by becoming the leading hub for language mastery and corporate training, empowering individuals and organizations to achieve growth, confidence, and global success."</p>
                 </CardContent>
              </Card>
-             <Card className="bg-background/20 text-foreground">
+             <Card className="bg-background/80 text-foreground shadow-lg">
                 <CardHeader>
                     <CardTitle className="font-headline text-xl">Our Mission</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="italic text-foreground/80">"At Smart Labs, our mission is to provide innovative and practical learning solutions that enhance communication, build professional skills, and inspire continuous improvement. Through expert guidance, modern strategies, and a learner-centered approach, we help students and professionals unlock their potential and thrive in a competitive world."</p>
+                    <p className="italic text-muted-foreground">"At Smart Labs, our mission is to provide innovative and practical learning solutions that enhance communication, build professional skills, and inspire continuous improvement. Through expert guidance, modern strategies, and a learner-centered approach, we help students and professionals unlock their potential and thrive in a competitive world."</p>
                 </CardContent>
              </Card>
           </motion.div>
@@ -245,11 +245,11 @@ export default function Home() {
         className="py-20 bg-secondary text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-headline font-bold mb-4">
+          <h2 className="text-3xl font-headline font-bold mb-4 text-black">
             Our Services
           </h2>
            <div className="grid md:grid-cols-3 gap-8 mt-12">
@@ -257,7 +257,7 @@ export default function Home() {
                 const Icon = service.icon;
                 return (
                     <motion.div key={service.title} variants={itemVariants(index % 2 === 0 ? 'left' : 'right')}>
-                        <Card className="text-center hover:shadow-lg transition-shadow p-6 h-full bg-background/20 text-foreground">
+                        <Card className="text-center hover:shadow-xl transition-shadow p-6 h-full bg-background/80 text-foreground shadow-lg">
                           <div className="mx-auto bg-primary/20 text-primary p-4 rounded-full w-fit mb-4">
                             <Icon className="h-8 w-8" />
                           </div>
@@ -283,7 +283,7 @@ export default function Home() {
         className="py-20 bg-primary text-primary-foreground"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -298,7 +298,7 @@ export default function Home() {
               const Icon = feature.icon;
               return (
                  <motion.div key={feature.title} variants={itemVariants(index % 2 === 0 ? 'right' : 'left')}>
-                     <Card className="text-left p-6 flex gap-4 items-start h-full bg-background/20 text-foreground">
+                     <Card className="text-left p-6 flex gap-4 items-start h-full bg-background/80 text-foreground shadow-lg">
                         <div className="text-primary pt-1">
                             <Icon className="h-6 w-6" />
                         </div>
@@ -319,17 +319,17 @@ export default function Home() {
         className="py-20 bg-secondary text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12">
+          <h2 className="text-3xl font-headline font-bold text-center mb-12 text-black">
             What Our Students Say
           </h2>
           <div className="grid lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <motion.div key={testimonial.name} variants={itemVariants(index === 1 ? 'left' : 'right')}>
-                <Card className="flex flex-col h-full bg-background/20 text-foreground">
+                <Card className="flex flex-col h-full bg-background/80 text-foreground shadow-lg">
                   <CardContent className="pt-6 flex-grow">
                     <div className="flex mb-2">
                       {[...Array(5)].map((_, i) => (
@@ -339,7 +339,7 @@ export default function Home() {
                         />
                       ))}
                     </div>
-                    <p className="italic">"{testimonial.quote}"</p>
+                    <p className="italic text-muted-foreground">"{testimonial.quote}"</p>
                   </CardContent>
                   <CardHeader className="flex-row items-center gap-4">
                     <Avatar>
@@ -365,7 +365,7 @@ export default function Home() {
         className="py-20 bg-primary text-primary-foreground"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
