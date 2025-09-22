@@ -158,8 +158,8 @@ export default function Home() {
         </div>
       </section>
 
-      <motion.section 
-        id="founder" 
+      <motion.section
+        id="founder"
         className="py-20 bg-secondary text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -198,8 +198,8 @@ export default function Home() {
         </div>
       </motion.section>
 
-      <motion.section 
-        id="about" 
+      <motion.section
+        id="about"
         className="py-20 md:py-28 bg-primary text-primary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -225,7 +225,7 @@ export default function Home() {
                     <CardTitle className="font-headline text-xl">Our Vision</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="italic text-muted-foreground">"To create a smarter world of learning by becoming the leading hub for language mastery and corporate training, empowering individuals and organizations to achieve growth, confidence, and global success."</p>
+                    <p className="italic">"To create a smarter world of learning by becoming the leading hub for language mastery and corporate training, empowering individuals and organizations to achieve growth, confidence, and global success."</p>
                 </CardContent>
              </Card>
              <Card className="bg-background/80 text-foreground shadow-lg">
@@ -233,15 +233,15 @@ export default function Home() {
                     <CardTitle className="font-headline text-xl">Our Mission</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="italic text-muted-foreground">"At Smart Labs, our mission is to provide innovative and practical learning solutions that enhance communication, build professional skills, and inspire continuous improvement. Through expert guidance, modern strategies, and a learner-centered approach, we help students and professionals unlock their potential and thrive in a competitive world."</p>
+                    <p className="italic">"At Smart Labs, our mission is to provide innovative and practical learning solutions that enhance communication, build professional skills, and inspire continuous improvement. Through expert guidance, modern strategies, and a learner-centered approach, we help students and professionals unlock their potential and thrive in a competitive world."</p>
                 </CardContent>
              </Card>
           </motion.div>
         </div>
       </motion.section>
-      
-      <motion.section 
-        id="services" 
+
+      <motion.section
+        id="services"
         className="py-20 bg-secondary text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -278,8 +278,8 @@ export default function Home() {
         </div>
       </motion.section>
 
-      <motion.section 
-        id="why-choose-us" 
+      <motion.section
+        id="why-choose-us"
         className="py-20 bg-primary text-primary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -313,9 +313,9 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
-      
-      <motion.section 
-        id="testimonials" 
+
+      <motion.section
+        id="testimonials"
         className="py-20 bg-secondary text-secondary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -339,7 +339,7 @@ export default function Home() {
                         />
                       ))}
                     </div>
-                    <p className="italic text-muted-foreground">"{testimonial.quote}"</p>
+                    <p className="italic">"{testimonial.quote}"</p>
                   </CardContent>
                   <CardHeader className="flex-row items-center gap-4">
                     <Avatar>
@@ -360,8 +360,8 @@ export default function Home() {
         </div>
       </motion.section>
 
-      <motion.section 
-        id="location" 
+      <motion.section
+        id="location"
         className="py-20 bg-primary text-primary-foreground"
         initial="hidden"
         whileInView="visible"
@@ -383,7 +383,6 @@ export default function Home() {
             </motion.div>
         </div>
       </section>
-
     </div>
   );
 }
