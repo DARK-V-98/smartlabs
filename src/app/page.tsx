@@ -5,7 +5,6 @@ import Link from 'next/link';
 import {
   ArrowRight,
   Award,
-  BookOpen,
   Briefcase,
   CheckCircle,
   Clock,
@@ -138,7 +137,7 @@ export default function Home() {
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
-                    <Image src="/logo.png" alt="Smart Labs Logo" width={200} height={200} className="h-48 w-48" />
+                    <Image src="/logo.png" alt="Smart Labs Logo" width={256} height={256} className="h-64 w-64" />
                 </motion.div>
                 <motion.h1 variants={itemVariants('right')} className="text-4xl md:text-6xl font-headline font-bold text-white">
                     Smart Learning, Smarter Futures.
