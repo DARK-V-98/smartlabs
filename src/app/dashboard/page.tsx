@@ -4,7 +4,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 
 import {
@@ -49,10 +50,18 @@ const recentMaterials = [
 export default function DashboardPage() {
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
+    } else if (user) {
+        const userRef = doc(db, 'users', user.uid);
+        getDoc(userRef).then(userDoc => {
+            if (userDoc.exists()) {
+                setUserRole(userDoc.data().role);
+            }
+        });
     }
   }, [user, loading, router]);
   
@@ -84,6 +93,7 @@ export default function DashboardPage() {
                     <div className="flex flex-col">
                         <span className="text-sm font-semibold">{user.displayName || 'Student'}</span>
                         <span className="text-xs text-muted-foreground">{user.email}</span>
+                         {userRole && <Badge variant="outline" className="capitalize mt-1 w-fit">{userRole}</Badge>}
                     </div>
                 </div>
             </SidebarHeader>

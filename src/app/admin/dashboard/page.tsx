@@ -4,18 +4,19 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
-import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal, ArrowUp } from 'lucide-react';
+import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
-const ADMIN_EMAIL = "admin@smartlabs.com";
+const ADMIN_EMAILS = ["admin@smartlabs.com", "thimira.vishwa2003@gmail.com"];
 
 const sampleUsers = [
     { name: 'Priya Sharma', email: 'priya.sharma@example.com', course: 'IELTS', date: '2024-10-26', avatar: 'https://picsum.photos/100/100?random=1' },
@@ -29,14 +30,27 @@ export default function AdminDashboardPage() {
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
-    if (!loading) {
-      if (!user || user.email !== ADMIN_EMAIL) {
-        router.push('/login');
-      } else {
-        setIsAdmin(true);
-      }
+    if (!loading && user) {
+      const userRef = doc(db, 'users', user.uid);
+      getDoc(userRef).then(userDoc => {
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const role = userData.role;
+          setUserRole(role);
+          if (role === 'admin' || role === 'developer') {
+            setIsAdmin(true);
+          } else {
+            router.push('/login');
+          }
+        } else {
+          router.push('/login');
+        }
+      });
+    } else if (!loading && !user) {
+      router.push('/login');
     }
   }, [user, loading, router]);
   
@@ -61,9 +75,12 @@ export default function AdminDashboardPage() {
       <section className="py-8 md:py-12">
         <div className="container mx-auto">
           <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-            <div>
-                <h1 className="text-3xl md:text-4xl font-headline font-bold">Admin Dashboard</h1>
-                <p className="text-md text-muted-foreground mt-1">Welcome back, Admin!</p>
+            <div className="flex items-center gap-4">
+                <div>
+                    <h1 className="text-3xl md:text-4xl font-headline font-bold">Admin Dashboard</h1>
+                    <p className="text-md text-muted-foreground mt-1">Welcome back, {user?.displayName || 'Admin'}!</p>
+                </div>
+                {userRole && <Badge variant="outline" className="capitalize">{userRole}</Badge>}
             </div>
             <Button onClick={handleLogout} variant="outline">
                 <LogOut className="mr-2 h-4 w-4" />

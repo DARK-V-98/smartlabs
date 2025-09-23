@@ -44,6 +44,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const ADMIN_EMAIL = "admin@smartlabs.com";
+const DEVELOPER_EMAIL = "thimira.vishwa2003@gmail.com";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -64,11 +65,20 @@ export default function LoginPage() {
       if (userDoc.exists()) {
         const userData = userDoc.data();
         userRole = userData.role || 'user';
+        // If developer logs in, ensure their role is updated
+        if (user.email === DEVELOPER_EMAIL) {
+            userRole = 'developer';
+        }
         await updateDoc(userRef, {
           lastLogin: new Date(),
+          role: userRole, // Persist developer role if it was just assigned
         });
       } else {
-        userRole = user.email === ADMIN_EMAIL ? 'admin' : 'user';
+        if (user.email === DEVELOPER_EMAIL) {
+            userRole = 'developer';
+        } else if (user.email === ADMIN_EMAIL) {
+            userRole = 'admin';
+        }
         await setDoc(userRef, {
           uid: user.uid,
           email: user.email,
@@ -85,7 +95,7 @@ export default function LoginPage() {
         description: `Welcome back!`,
       });
 
-      if (userRole === 'admin') {
+      if (userRole === 'admin' || userRole === 'developer') {
         router.push('/admin/dashboard');
       } else {
         router.push('/dashboard');

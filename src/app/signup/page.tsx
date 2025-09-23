@@ -46,6 +46,7 @@ const signupSchema = z.object({
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 const ADMIN_EMAIL = "admin@smartlabs.com";
+const DEVELOPER_EMAIL = "thimira.vishwa2003@gmail.com";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -64,12 +65,21 @@ export default function SignupPage() {
       let userRole = 'user';
 
       if (userDoc.exists()) {
-        userRole = userDoc.data().role || 'user';
+        const userData = userDoc.data();
+        userRole = userData.role || 'user';
+        if (user.email === DEVELOPER_EMAIL) {
+          userRole = 'developer';
+        }
         await updateDoc(userRef, {
             lastLogin: new Date(),
+            role: userRole,
         });
       } else {
-        userRole = user.email === ADMIN_EMAIL ? 'admin' : 'user';
+        if (user.email === DEVELOPER_EMAIL) {
+          userRole = 'developer';
+        } else if (user.email === ADMIN_EMAIL) {
+          userRole = 'admin';
+        }
         await setDoc(userRef, {
           uid: user.uid,
           email: user.email,
@@ -86,7 +96,7 @@ export default function SignupPage() {
         description: 'Welcome to Smart Labs!',
       });
       
-      if (userRole === 'admin') {
+      if (userRole === 'admin' || userRole === 'developer') {
           router.push('/admin/dashboard');
       } else {
           router.push('/dashboard');
