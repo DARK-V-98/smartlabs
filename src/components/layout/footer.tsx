@@ -7,7 +7,7 @@ import { NAV_LINKS, courseData } from '@/lib/constants';
 import { Facebook, Send, MessageCircle, Phone, Mail } from 'lucide-react';
 
 const socialLinks = [
-  { icon: Facebook, href: 'https://www.facebook.com/lahirukaweeraratne', 'aria-label': 'Facebook profile' },
+  { icon: '/facebook.png', href: 'https://www.facebook.com/lahirukaweeraratne', 'aria-label': 'Facebook profile' },
 ];
 
 export default function Footer() {
@@ -25,13 +25,13 @@ export default function Footer() {
             <div className="flex space-x-4 mt-6">
                 <Button variant="outline" size="icon" asChild>
                     <a href="https://wa.me/94766914650" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-                        <MessageCircle className="h-5 w-5" />
+                        <Image src="/whatsapp.png" alt="WhatsApp" width={20} height={20} className="h-5 w-5" />
                     </a>
                 </Button>
               {socialLinks.map((social) => (
                 <Button key={social['aria-label']} variant="outline" size="icon" asChild>
                   <a href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social['aria-label']}>
-                    <social.icon className="h-5 w-5" />
+                    <Image src={social.icon} alt={social['aria-label']} width={20} height={20} className="h-5 w-5" />
                   </a>
                 </Button>
               ))}
