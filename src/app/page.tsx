@@ -26,9 +26,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
 const heroImages = [
-    { src: '/hero-1.jpg', alt: 'Students collaborating in a bright, modern classroom environment', 'data-ai-hint': 'students classroom' },
-    { src: '/hero-2.jpg', alt: 'A focused student writing in a notebook during a seminar', 'data-ai-hint': 'student writing' },
-    { src: '/hero-3.jpg', alt: 'A teacher guiding a small group of students at a desk', 'data-ai-hint': 'teacher students' },
+    { src: '/1.png', alt: 'Students learning in a classroom', 'data-ai-hint': 'students classroom' },
+    { src: '/2.png', alt: 'Student focused on learning material', 'data-ai-hint': 'student learning' },
+    { src: '/3.png', alt: 'Collaborative learning session', 'data-ai-hint': 'students collaborating' },
+    { src: '/4.png', alt: 'Teacher assisting a student', 'data-ai-hint': 'teacher student' },
+    { src: '/5.png', alt: 'Modern classroom environment', 'data-ai-hint': 'modern classroom' },
 ];
 
 const services = [
