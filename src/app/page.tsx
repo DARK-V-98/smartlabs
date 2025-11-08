@@ -8,12 +8,10 @@ import {
   Award,
   Briefcase,
   CheckCircle,
-  Clock,
   Globe,
   Star,
   Target,
   Users,
-  Building,
   BookCheck,
   TrendingUp,
   Goal,
@@ -142,7 +140,7 @@ export default function Home() {
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
-                    <Image src="/logo.png" alt="Smart Labs Logo" width={500} height={500} className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80" />
+                    <Image src="/logo.png" alt="Smart Labs Logo" width={500} height={500} className="w-48 h-48 sm:w-64 sm:h-64" />
                 </motion.div>
                 <motion.h1 variants={itemVariants('right')} className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold text-white">
                     Achieve your target score with proven strategies, personal coaching, and guided practice.
