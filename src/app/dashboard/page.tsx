@@ -17,35 +17,21 @@ import {
   CardFooter
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, ChevronRight, Video, FileText, LogOut, BookOpen, BarChart3, Settings } from 'lucide-react';
+import { Calendar, ChevronRight, Video, FileText, LogOut, BookOpen, BarChart3, Settings, MessageSquare, ListVideo } from 'lucide-react';
 import Link from 'next/link';
-import { Separator } from '@/components/ui/separator';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 
-const courseProgress = {
-  overall: 65,
-  skills: [
-    { name: 'Listening', value: 80 },
-    { name: 'Reading', value: 70 },
-    { name: 'Writing', value: 55 },
-    { name: 'Speaking', value: 60 },
-  ],
-};
-
-const upcomingClasses = [
-    { time: '10:00 AM', title: 'Speaking Practice Session', date: 'Tomorrow' },
-    { time: '02:00 PM', title: 'Writing Task 2 Workshop', date: 'Oct 28' },
-    { time: '10:00 AM', title: 'Full Mock Test', date: 'Oct 30' },
+const lmsFeatures = [
+    { title: 'Class Recordings', description: 'Access recordings of all your past classes.', href: '/dashboard/recordings', icon: ListVideo },
+    { title: 'Templates & Study Materials', description: 'Find course materials, templates, and notes.', href: '/resources', icon: FileText },
+    { title: 'Practice Test Area', description: 'Take mock exams to prepare for the real test.', href: '/dashboard/practice-tests', icon: BookOpen },
+    { title: 'Progress & Feedback', description: 'View your assignment feedback and track your progress.', href: '/dashboard/progress', icon: BarChart3 },
+    { title: 'Class Schedule', description: 'Check your upcoming class timetable.', href: '/dashboard/schedule', icon: Calendar },
+    { title: 'Support Chat', description: 'Get help from your teacher or our support team.', href: '/dashboard/support', icon: MessageSquare },
 ];
 
-const recentMaterials = [
-    { title: 'IELTS Speaking Cues (Part 2)', type: 'PDF', icon: FileText },
-    { title: 'Essay Structure Breakdown', type: 'Video', icon: Video },
-    { title: 'Vocabulary for Academic Writing', type: 'PDF', icon: FileText },
-];
 
 export default function DashboardPage() {
   const [user, loading] = useAuthState(auth);
@@ -102,19 +88,31 @@ export default function DashboardPage() {
                     <SidebarMenuItem>
                         <SidebarMenuButton href="/dashboard" isActive>
                             <BookOpen />
-                            My Courses
+                            Dashboard
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <SidebarMenuButton href="/dashboard/recordings">
+                            <ListVideo />
+                            Recordings
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                      <SidebarMenuItem>
                         <SidebarMenuButton href="/resources">
                             <FileText />
-                            Materials Library
+                            Materials
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                      <SidebarMenuItem>
-                        <SidebarMenuButton href="#">
+                        <SidebarMenuButton href="/dashboard/practice-tests">
+                            <BookOpen />
+                            Practice Tests
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <SidebarMenuButton href="/dashboard/progress">
                             <BarChart3 />
-                            Performance
+                            Progress
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                      <SidebarMenuItem>
@@ -140,8 +138,8 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-4">
                              <SidebarTrigger className="md:hidden" />
                             <div>
-                                <h1 className="text-2xl md:text-3xl font-headline font-bold">My Courses</h1>
-                                <p className="text-md text-muted-foreground mt-1">Here is your learning dashboard.</p>
+                                <h1 className="text-2xl md:text-3xl font-headline font-bold">Student Dashboard</h1>
+                                <p className="text-md text-muted-foreground mt-1">Welcome back, {user.displayName}!</p>
                             </div>
                         </div>
                          <Button asChild variant="outline">
@@ -149,103 +147,30 @@ export default function DashboardPage() {
                         </Button>
                     </header>
                     
-                    <div className="grid lg:grid-cols-3 gap-8">
-                      <div className="lg:col-span-2 space-y-8">
-                        {/* Current Course */}
-                        <Card className="shadow-lg">
-                          <CardHeader>
-                            <CardTitle className="flex items-center gap-2 font-headline text-2xl">
-                              
-                              Your Course: IELTS
-                            </CardTitle>
-                            <CardDescription>Your learning journey and progress.</CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="mb-6">
-                              <div className="flex justify-between items-center mb-1">
-                                  <h4 className="font-semibold">Overall Progress</h4>
-                                  <span className="text-lg font-bold text-primary">{courseProgress.overall}%</span>
-                              </div>
-                              <Progress value={courseProgress.overall} />
-                            </div>
-                            <Separator />
-                            <div className="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
-                              {courseProgress.skills.map(skill => (
-                                <div key={skill.name}>
-                                  <div className="flex justify-between text-sm mb-1">
-                                    <span className="font-medium text-muted-foreground">{skill.name}</span>
-                                    <span className="font-semibold">{skill.value}%</span>
-                                  </div>
-                                  <Progress value={skill.value} className="h-2"/>
-                                </div>
-                              ))}
-                            </div>
-                          </CardContent>
-                          <CardFooter>
-                              <Button asChild variant="outline">
-                                  <Link href="/resources">Go to Course Materials <ChevronRight className="w-4 h-4 ml-2" /></Link>
-                              </Button>
-                          </CardFooter>
-                        </Card>
-
-                        {/* Recent Materials */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="font-headline">Recently Added Materials</CardTitle>
-                                <CardDescription>Catch up with the latest resources for your course.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <ul className="space-y-3">
-                                    {recentMaterials.map((item, index) => {
-                                        const Icon = item.icon;
-                                        return (
-                                        <li key={index} className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                                            <div className="flex items-center gap-4">
-                                                <Icon className="h-6 w-6 text-muted-foreground" />
-                                                <div>
-                                                    <p className="font-medium">{item.title}</p>
-                                                    <Badge variant="secondary">{item.type}</Badge>
-                                                </div>
-                                            </div>
-                                            <Button size="sm" variant="ghost">View</Button>
-                                        </li>
-                                        );
-                                    })}
-                                </ul>
-                            </CardContent>
-                        </Card>
-                      </div>
-
-                      {/* Schedule */}
-                      <div className="lg:col-span-1">
-                        <Card className="shadow-lg">
-                          <CardHeader>
-                            <CardTitle className="flex items-center gap-2 font-headline text-2xl">
-                                <Calendar className="text-primary" />
-                                Upcoming Schedule
-                            </CardTitle>
-                            <CardDescription>Your classes and tests for this week.</CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                            <ul className="space-y-4">
-                                {upcomingClasses.map((item, index) => (
-                                      <li key={index} className="flex gap-4">
-                                        <div className="flex flex-col items-center">
-                                            <span className="font-bold text-sm">{item.date}</span>
-                                            <span className="text-xs text-muted-foreground">{item.time}</span>
-                                        </div>
-                                        <div className="border-l pl-4 flex-1">
-                                            <p className="font-semibold">{item.title}</p>
-                                        </div>
-                                      </li>
-                                ))}
-                            </ul>
-                          </CardContent>
-                            <CardFooter>
-                              <Button className="w-full">View Full Schedule</Button>
-                          </CardFooter>
-                        </Card>
-                      </div>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {lmsFeatures.map((feature) => {
+                          const Icon = feature.icon;
+                          return (
+                            <Card key={feature.title} className="group shadow-lg hover:shadow-xl transition-shadow flex flex-col">
+                                <CardHeader className="flex-row items-center gap-4">
+                                    <div className="p-3 bg-primary/10 rounded-lg">
+                                        <Icon className="h-6 w-6 text-primary" />
+                                    </div>
+                                    <CardTitle className="font-headline text-xl">{feature.title}</CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex-grow">
+                                    <p className="text-muted-foreground">{feature.description}</p>
+                                </CardContent>
+                                <CardFooter>
+                                    <Button asChild variant="outline" className="w-full">
+                                        <Link href={feature.href}>
+                                            Go to {feature.title} <ChevronRight className="w-4 h-4 ml-2" />
+                                        </Link>
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                          );
+                      })}
                     </div>
                 </div>
               </section>
