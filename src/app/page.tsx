@@ -194,7 +194,7 @@ export default function Home() {
       {/* Founder Section */}
       <motion.section 
         id="founder" 
-        className="py-16 md:py-24"
+        className="py-16 md:py-24 bg-sky-100"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -240,7 +240,7 @@ export default function Home() {
       {/* Results Snapshot Section */}
       <motion.section 
         id="results" 
-        className="py-12"
+        className="py-12 bg-amber-100"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.5 }}
@@ -251,8 +251,8 @@ export default function Home() {
             {results.map((result) => (
               <motion.div key={result.label} variants={itemVariants}>
                 <div>
-                  <p className="text-4xl md:text-5xl font-headline font-bold">{result.number}</p>
-                  <p className="text-muted-foreground mt-2 uppercase tracking-widest text-sm">{result.label}</p>
+                  <p className="text-4xl md:text-5xl font-headline font-bold text-amber-800">{result.number}</p>
+                  <p className="text-amber-700 mt-2 uppercase tracking-widest text-sm">{result.label}</p>
                 </div>
               </motion.div>
             ))}
@@ -263,7 +263,7 @@ export default function Home() {
       {/* Services Section */}
       <motion.section 
         id="services" 
-        className="py-16 md:py-24"
+        className="py-16 md:py-24 bg-white"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -300,7 +300,7 @@ export default function Home() {
       {/* Why Choose Us Section */}
       <motion.section 
         id="why-choose-us" 
-        className="py-16 md:py-24"
+        className="py-16 md:py-24 bg-sky-100"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -334,14 +334,14 @@ export default function Home() {
       {/* Success Stories Carousel */}
       <motion.section
         id="success-stories"
-        className="py-16 md:py-24"
+        className="py-16 md:py-24 bg-amber-100"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
-            <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12">
+            <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12 text-amber-800">
                 Student Success Stories
             </motion.h2>
             <Carousel
@@ -353,9 +353,9 @@ export default function Home() {
                     {successStories.map((story, index) => (
                         <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                             <div className="p-1">
-                                <Card>
+                                <Card className="bg-white/80 backdrop-blur-sm">
                                     <CardContent className="flex items-center justify-center p-6 h-24">
-                                        <p className="text-center font-medium text-muted-foreground">{story.text}</p>
+                                        <p className="text-center font-medium text-amber-900">{story.text}</p>
                                     </CardContent>
                                 </Card>
                             </div>
@@ -369,7 +369,7 @@ export default function Home() {
       {/* Corporate Training Section */}
        <motion.section 
         id="corporate-training" 
-        className="py-16 md:py-24"
+        className="py-16 md:py-24 bg-white"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -415,7 +415,7 @@ export default function Home() {
       </motion.section>
       
       {/* CTA Section */}
-       <section className="py-16 md:py-24">
+       <section className="py-16 md:py-24 bg-sky-100">
         <div className="container mx-auto">
           <motion.div 
             className="text-center bg-card p-8 md:p-12 rounded-lg border"
@@ -438,7 +438,7 @@ export default function Home() {
       {/* Testimonials Section */}
       <motion.section 
         id="testimonials" 
-        className="py-16 md:py-24"
+        className="py-16 md:py-24 bg-white"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.2 }}
@@ -460,7 +460,7 @@ export default function Home() {
                         <div>
                             <p className="font-bold font-headline">{testimonial.name}</p>
                             <p className="text-xs text-muted-foreground">{testimonial.course}</p>
-                            <p className="text-sm font-semibold text-primary mt-2">{testimonial.achievement}</p>
+                            <Badge className="mt-2">{testimonial.achievement}</Badge>
                         </div>
                     </CardContent>
                 </Card>
