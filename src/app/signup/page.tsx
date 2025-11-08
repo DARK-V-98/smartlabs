@@ -45,8 +45,7 @@ const signupSchema = z.object({
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
-const ADMIN_EMAIL = "admin@smartlabs.com";
-const DEVELOPER_EMAIL = "thimira.vishwa2003@gmail.com";
+const ADMIN_EMAILS = ["admin@smartlabs.com", "thimira.vishwa2003@gmail.com"];
 
 export default function SignupPage() {
   const router = useRouter();
@@ -63,22 +62,22 @@ export default function SignupPage() {
       const userRef = doc(db, 'users', user.uid);
       const userDoc = await getDoc(userRef);
       let userRole = 'user';
+      const userEmail = user.email || '';
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
         userRole = userData.role || 'user';
-        if (user.email === DEVELOPER_EMAIL) {
-          userRole = 'developer';
+        if (ADMIN_EMAILS.includes(userEmail)) {
+           userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
         }
         await updateDoc(userRef, {
             lastLogin: new Date(),
             role: userRole,
+            displayName: user.displayName || userData.displayName,
         });
       } else {
-        if (user.email === DEVELOPER_EMAIL) {
-          userRole = 'developer';
-        } else if (user.email === ADMIN_EMAIL) {
-          userRole = 'admin';
+        if (ADMIN_EMAILS.includes(userEmail)) {
+           userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
         }
         await setDoc(userRef, {
           uid: user.uid,

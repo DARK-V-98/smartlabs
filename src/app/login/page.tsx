@@ -43,8 +43,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-const ADMIN_EMAIL = "admin@smartlabs.com";
-const DEVELOPER_EMAIL = "thimira.vishwa2003@gmail.com";
+const ADMIN_EMAILS = ["admin@smartlabs.com", "thimira.vishwa2003@gmail.com"];
 
 export default function LoginPage() {
   const router = useRouter();
@@ -60,24 +59,27 @@ export default function LoginPage() {
     try {
       const userRef = doc(db, 'users', user.uid);
       const userDoc = await getDoc(userRef);
+      
       let userRole = 'user';
+      const userEmail = user.email || '';
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
         userRole = userData.role || 'user';
-        // If developer logs in, ensure their role is updated
-        if (user.email === DEVELOPER_EMAIL) {
-            userRole = 'developer';
+        
+        // Ensure developers or admins are correctly identified even if role was different
+        if (ADMIN_EMAILS.includes(userEmail)) {
+           userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
         }
+
         await updateDoc(userRef, {
           lastLogin: new Date(),
-          role: userRole, // Persist developer role if it was just assigned
+          role: userRole,
         });
+
       } else {
-        if (user.email === DEVELOPER_EMAIL) {
-            userRole = 'developer';
-        } else if (user.email === ADMIN_EMAIL) {
-            userRole = 'admin';
+        if (ADMIN_EMAILS.includes(userEmail)) {
+            userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
         }
         await setDoc(userRef, {
           uid: user.uid,
@@ -107,10 +109,13 @@ export default function LoginPage() {
 
   const handleAuthError = (error: any) => {
     setIsLoading(false);
+    console.error("Login Error:", error);
     toast({
       variant: 'destructive',
       title: 'Uh oh! Something went wrong.',
-      description: 'Invalid email or password. Please try again.',
+      description: error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential'
+        ? 'Invalid email or password. Please try again.'
+        : 'An unexpected error occurred.',
     });
   };
 
