@@ -169,8 +169,7 @@ export default function Home() {
             <motion.div
                 className="max-w-4xl mx-auto text-center p-4 sm:p-8 flex flex-col items-center"
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ amount: 0.5 }}
+                animate="visible"
                 variants={sectionVariants}
             >
                 <motion.div variants={itemVariants} className="mb-4">
@@ -201,16 +200,12 @@ export default function Home() {
       </section>
 
       {/* Founder Section */}
-      <motion.section 
+      <section 
         id="founder" 
         className="py-16 md:py-24 bg-sky-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ amount: 0.3 }}
-        variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
-            <motion.div className="lg:col-span-2" variants={itemVariants}>
+            <div className="lg:col-span-2">
                 <div className="relative aspect-square rounded-xl overflow-hidden shadow-2xl mx-auto max-w-sm lg:max-w-none">
                     <Image
                       src="/la.png"
@@ -220,8 +215,8 @@ export default function Home() {
                       className="object-cover"
                     />
                 </div>
-            </motion.div>
-            <motion.div className="lg:col-span-3" variants={itemVariants}>
+            </div>
+            <div className="lg:col-span-3">
                 <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
                 <p className="mt-4 text-muted-foreground">
                     Our Founder and Director, Lahiruka Weeraratne, known in the industry as Laheer, is a distinguished expert trainer officially trained by Pearson UK. She specializes in PTE, IELTS, and CELPIP exams—the essential pathways for students and professionals seeking to study, migrate, or settle abroad. With over 6 years of professional experience, she has successfully trained more than 5,000 students, empowering them to achieve their global aspirations.
@@ -243,51 +238,43 @@ export default function Home() {
                       </li>
                   </ul>
                 </div>
-            </motion.div>
+            </div>
         </div>
-      </motion.section>
+      </section>
       
       {/* Results Snapshot Section */}
-      <motion.section 
+      <section 
         id="results" 
         className="py-12 bg-amber-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ amount: 0.5 }}
-        variants={sectionVariants}
       >
         <div className="container mx-auto">
           <div className="grid sm:grid-cols-3 gap-8 text-center">
             {results.map((result) => (
-              <motion.div key={result.label} variants={itemVariants}>
+              <div key={result.label}>
                 <div>
                   <p className="text-4xl md:text-5xl font-headline font-bold text-amber-800">{result.number}</p>
                   <p className="text-amber-700 mt-2 uppercase tracking-widest text-sm">{result.label}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Services Section */}
-      <motion.section 
+      <section 
         id="services" 
         className="py-16 md:py-24 bg-background"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ amount: 0.3 }}
-        variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
-          <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold mb-12">
+          <h2 className="text-3xl font-headline font-bold mb-12">
             Our Services
-          </motion.h2>
+          </h2>
            <div className="grid md:grid-cols-3 gap-8 mt-12">
             {services.map((service, index) => {
                 const Icon = service.icon;
                 return (
-                    <motion.div key={service.title} variants={itemVariants}>
+                    <div key={service.title}>
                         <Card className="text-center hover:shadow-xl transition-shadow h-full flex flex-col items-center p-6">
                           <div className="p-4 bg-secondary rounded-full mb-4">
                             <Icon className="h-8 w-8 text-primary" />
@@ -300,31 +287,27 @@ export default function Home() {
                               <Link href={service.href}>View Course Details</Link>
                            </Button>
                         </Card>
-                    </motion.div>
+                    </div>
                 );
             })}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Why Choose Us Section */}
-      <motion.section 
+      <section 
         id="why-choose-us" 
         className="py-16 md:py-24 bg-sky-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ amount: 0.3 }}
-        variants={sectionVariants}
       >
         <div className="container mx-auto">
-          <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12">
+          <h2 className="text-3xl font-headline font-bold text-center mb-12">
             Why Choose Smart Labs?
-          </motion.h2>
+          </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
             {whyChooseUs.map((feature) => {
               const Icon = feature.icon;
               return (
-                 <motion.div key={feature.title} variants={itemVariants}>
+                 <div key={feature.title}>
                      <Card className="text-center p-6 flex flex-col items-center h-full hover:shadow-xl transition-shadow">
                         <div className="text-primary mb-4">
                             <Icon className="h-10 w-10" />
@@ -334,26 +317,22 @@ export default function Home() {
                             <p className="text-muted-foreground text-sm mt-2">{feature.description}</p>
                         </div>
                      </Card>
-                 </motion.div>
+                 </div>
               );
             })}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Success Stories Carousel */}
-      <motion.section
+      <section
         id="success-stories"
         className="py-16 md:py-24 bg-amber-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ amount: 0.3 }}
-        variants={sectionVariants}
       >
         <div className="container mx-auto">
-            <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12 text-amber-800">
+            <h2 className="text-3xl font-headline font-bold text-center mb-12 text-amber-800">
                 Student Success Stories
-            </motion.h2>
+            </h2>
             <Carousel
                 opts={{ align: "start", loop: true }}
                 plugins={[Autoplay({ delay: 3000, stopOnInteraction: false })]}
@@ -374,19 +353,15 @@ export default function Home() {
                 </CarouselContent>
             </Carousel>
         </div>
-    </motion.section>
+    </section>
 
       {/* Corporate Training Section */}
-       <motion.section 
+       <section 
         id="corporate-training" 
         className="py-16 md:py-24 bg-background"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ amount: 0.3 }}
-        variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            <motion.div variants={itemVariants}>
+            <div>
                  <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg mx-auto max-w-lg lg:max-w-none">
                     <Image
                       src="https://picsum.photos/seed/corporate/800/450"
@@ -396,8 +371,8 @@ export default function Home() {
                       className="object-cover"
                     />
                 </div>
-            </motion.div>
-            <motion.div variants={itemVariants}>
+            </div>
+            <div>
                 <h2 className="text-3xl md:text-4xl font-headline font-bold">Your Goals, Our Expertise — Custom Workshops for Your Team.</h2>
                 <ul className="space-y-3 mt-6">
                     <li className="flex items-start">
@@ -420,19 +395,15 @@ export default function Home() {
                 <Button asChild size="lg" className="mt-8">
                     <Link href="/corporate-training">Request Corporate Training Proposal</Link>
                 </Button>
-            </motion.div>
+            </div>
         </div>
-      </motion.section>
+      </section>
       
       {/* CTA Section */}
        <section className="py-16 md:py-24 bg-sky-200">
         <div className="container mx-auto">
-          <motion.div 
+          <div 
             className="text-center bg-card p-8 md:p-12 rounded-lg border"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ amount: 0.5 }}
-            variants={sectionVariants}
           >
             <h2 className="text-2xl md:text-3xl font-headline font-bold mb-4">Ready to Start Your Score Journey?</h2>
             <p className="max-w-3xl mx-auto text-muted-foreground mb-6">
@@ -441,26 +412,22 @@ export default function Home() {
             <Button asChild size="lg">
                 <Link href="/contact">Book a Free Consultation</Link>
             </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
       
       {/* Testimonials Section */}
-      <motion.section 
+      <section 
         id="testimonials" 
         className="py-16 md:py-24 bg-background"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ amount: 0.2 }}
-        variants={sectionVariants}
       >
         <div className="container mx-auto">
-          <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12">
+          <h2 className="text-3xl font-headline font-bold text-center mb-12">
             What Our Students Say
-          </motion.h2>
+          </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <motion.div key={index} variants={itemVariants}>
+              <div key={index}>
                 <Card className="overflow-hidden h-full flex flex-col">
                     <div className="relative aspect-video">
                         <Image src={testimonial.image} alt={`Testimonial for ${testimonial.name}`} data-ai-hint="student testimonial" fill className="object-cover" />
@@ -474,11 +441,11 @@ export default function Home() {
                         </div>
                     </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
     </div>
   );
 }
