@@ -27,6 +27,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 
+const heroImages = [
+  { src: '/1.png', alt: 'Students learning in a classroom' },
+  { src: '/2.png', alt: 'Student writing notes' },
+  { src: '/3.png', alt: 'Teacher helping a student' },
+  { src: '/4.png', alt: 'Group of students collaborating' },
+  { src: '/5.png', alt: 'Student smiling with a laptop' },
+];
+
 const services = [
   {
     title: 'PTE Training Programs',
@@ -135,21 +143,34 @@ export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden bg-background text-foreground">
       <section className="relative h-[80vh] md:h-[90vh] w-full">
-        <Image
-            src="/1.png"
-            alt="Students learning in a classroom"
-            data-ai-hint="students classroom"
-            fill
-            className="object-cover"
-            priority
-        />
+        <Carousel
+          opts={{ align: 'start', loop: true }}
+          plugins={[Autoplay({ delay: 3000, stopOnInteraction: false })]}
+          className="w-full h-full"
+        >
+          <CarouselContent>
+            {heroImages.map((img, index) => (
+              <CarouselItem key={index}>
+                <div className="w-full h-[80vh] md:h-[90vh] relative">
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
         <div className="absolute inset-0 bg-black/60" />
         <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
                 className="max-w-4xl mx-auto text-center p-4 sm:p-8 flex flex-col items-center"
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: false, amount: 0.5 }}
+                viewport={{ amount: 0.5 }}
                 variants={sectionVariants}
             >
                 <motion.h1 variants={itemVariants} className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold text-white">
@@ -175,7 +196,7 @@ export default function Home() {
         className="py-16 md:py-24 bg-sky-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
@@ -222,7 +243,7 @@ export default function Home() {
         className="py-12 bg-amber-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.5 }}
+        viewport={{ amount: 0.5 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -245,7 +266,7 @@ export default function Home() {
         className="py-16 md:py-24 bg-background"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -282,7 +303,7 @@ export default function Home() {
         className="py-16 md:py-24 bg-sky-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -316,7 +337,7 @@ export default function Home() {
         className="py-16 md:py-24 bg-amber-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -351,7 +372,7 @@ export default function Home() {
         className="py-16 md:py-24 bg-background"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -400,7 +421,7 @@ export default function Home() {
             className="text-center bg-card p-8 md:p-12 rounded-lg border"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ amount: 0.5 }}
             variants={sectionVariants}
           >
             <h2 className="text-2xl md:text-3xl font-headline font-bold mb-4">Ready to Start Your Score Journey?</h2>
@@ -420,7 +441,7 @@ export default function Home() {
         className="py-16 md:py-24 bg-background"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
