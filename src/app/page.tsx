@@ -171,7 +171,7 @@ export default function Home() {
                 className="max-w-4xl mx-auto text-center p-4 sm:p-8 flex flex-col items-center"
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ amount: 0.5 }}
+                viewport={{ once: false, amount: 0.5 }}
                 variants={sectionVariants}
             >
                 <motion.h1 variants={itemVariants} className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold text-white">
