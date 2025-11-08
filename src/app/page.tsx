@@ -148,7 +148,7 @@ export default function Home() {
                 className="max-w-4xl mx-auto text-center p-4 sm:p-8 flex flex-col items-center"
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: 0.5 }}
+                viewport={{ amount: 0.5 }}
                 variants={sectionVariants}
             >
                 <motion.h1 variants={itemVariants('right')} className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold text-white">
@@ -173,7 +173,7 @@ export default function Home() {
         className="py-12 md:py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
@@ -218,7 +218,7 @@ export default function Home() {
         className="py-12 bg-amber-400"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ amount: 0.5 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -242,7 +242,7 @@ export default function Home() {
         className="py-12 md:py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -275,7 +275,7 @@ export default function Home() {
         className="py-12 md:py-20 bg-amber-400"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -308,7 +308,7 @@ export default function Home() {
         className="py-12 md:py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -369,7 +369,7 @@ export default function Home() {
         className="py-12 md:py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
