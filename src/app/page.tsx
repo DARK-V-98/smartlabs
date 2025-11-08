@@ -17,8 +17,6 @@ import {
   Globe,
   Star,
   BookCheck,
-  TrendingUp,
-  Goal,
   Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -109,9 +107,13 @@ const sectionVariants = {
   },
 };
 
-const itemVariants = (from: 'left' | 'right') => ({
-  hidden: { opacity: 0, x: from === 'left' ? -50 : 50 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
+const itemVariants = (from: 'left' | 'right' | 'top' | 'bottom') => ({
+  hidden: {
+    opacity: 0,
+    x: from === 'left' ? -50 : from === 'right' ? 50 : 0,
+    y: from === 'top' ? -50 : from === 'bottom' ? 50 : 0,
+  },
+  visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.5 } },
 });
 
 export default function Home() {
@@ -166,12 +168,16 @@ export default function Home() {
         </div>
       </section>
 
-      <section 
+      <motion.section 
         id="founder" 
         className="py-12 md:py-20 bg-sky-200"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
-            <div className="lg:col-span-2">
+            <motion.div className="lg:col-span-2" variants={itemVariants('left')}>
                 <div className="relative aspect-square rounded-xl overflow-hidden shadow-lg mx-auto max-w-sm lg:max-w-none">
                     <Image
                       src="/la.png"
@@ -180,8 +186,8 @@ export default function Home() {
                       className="object-cover"
                     />
                 </div>
-            </div>
-            <div className="lg:col-span-3">
+            </motion.div>
+            <motion.div className="lg:col-span-3" variants={itemVariants('right')}>
                 <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
                 <p className="mt-4 text-muted-foreground">
                     Our Founder and Director, Lahiruka Weeraratne, known in the industry as Laheer, is a distinguished expert trainer officially trained by Pearson UK. She specializes in PTE, IELTS, and CELPIP exams—the essential pathways for students and professionals seeking to study, migrate, or settle abroad. With over 6 years of professional experience, she has successfully trained more than 5,000 students, empowering them to achieve their global aspirations.
@@ -203,43 +209,51 @@ export default function Home() {
                       </li>
                   </ul>
                 </div>
-            </div>
+            </motion.div>
         </div>
-      </section>
+      </motion.section>
       
-       <section 
+       <motion.section 
         id="results" 
         className="py-12 bg-amber-400"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.5 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto">
           <div className="grid sm:grid-cols-3 gap-8 text-center">
             {results.map((result, index) => {
                 return (
-                     <div key={result.label}>
+                     <motion.div key={result.label} variants={itemVariants('bottom')}>
                         <div>
                             <p className="text-3xl md:text-4xl font-headline font-bold">{result.number}</p>
                             <p className="text-muted-foreground mt-2">{result.label}</p>
                         </div>
-                    </div>
+                    </motion.div>
                 )
             })}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section 
+      <motion.section 
         id="services" 
         className="py-12 md:py-20 bg-sky-200"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-headline font-bold mb-12">
+          <motion.h2 variants={itemVariants('bottom')} className="text-3xl font-headline font-bold mb-12">
             Our Services
-          </h2>
+          </motion.h2>
            <div className="grid md:grid-cols-3 gap-8 mt-12">
             {services.map((service, index) => {
                 const Icon = service.icon;
                 return (
-                    <div key={service.title}>
+                    <motion.div key={service.title} variants={itemVariants(index === 0 ? 'left' : index === 1 ? 'bottom' : 'right')}>
                         <Card className="text-center hover:shadow-lg transition-shadow p-6 h-full flex flex-col items-center">
                           <CardTitle className="font-headline pt-2 text-xl">{service.title}</CardTitle>
                           <CardContent className="pt-4 flex-grow">
@@ -249,26 +263,30 @@ export default function Home() {
                               <Link href={service.href}>View Course Details</Link>
                            </Button>
                         </Card>
-                    </div>
+                    </motion.div>
                 );
             })}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section 
+      <motion.section 
         id="why-choose-us" 
         className="py-12 md:py-20 bg-amber-400"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12">
+          <motion.h2 variants={itemVariants('bottom')} className="text-3xl font-headline font-bold text-center mb-12">
             Why Choose Smart Labs?
-          </h2>
+          </motion.h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
             {whyChooseUs.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                 <div key={feature.title}>
+                 <motion.div key={feature.title} variants={itemVariants('bottom')}>
                      <Card className="text-center p-6 flex flex-col items-center h-full">
                         <div className="text-primary mb-4">
                             <Icon className="h-10 w-10" />
@@ -278,19 +296,23 @@ export default function Home() {
                             <p className="text-muted-foreground text-sm mt-2">{feature.description}</p>
                         </div>
                      </Card>
-                 </div>
+                 </motion.div>
               );
             })}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-       <section 
+       <motion.section 
         id="corporate-training" 
         className="py-12 md:py-20 bg-sky-200"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div>
+            <motion.div variants={itemVariants('left')}>
                  <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg mx-auto max-w-lg lg:max-w-none">
                     <Image
                       src="https://picsum.photos/seed/corporate/800/450"
@@ -300,8 +322,8 @@ export default function Home() {
                       className="object-cover"
                     />
                 </div>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div variants={itemVariants('right')}>
                 <h2 className="text-3xl md:text-4xl font-headline font-bold">Your Goals, Our Expertise — Custom Workshops for Your Team.</h2>
                 <ul className="space-y-3 mt-6">
                     <li className="flex items-start">
@@ -324,9 +346,9 @@ export default function Home() {
                 <Button asChild size="lg" className="mt-8">
                     <Link href="/corporate-training">Request Corporate Training Proposal</Link>
                 </Button>
-            </div>
+            </motion.div>
         </div>
-      </section>
+      </motion.section>
       
        <section className="py-12 md:py-20 bg-amber-400">
         <div className="container mx-auto">
@@ -342,29 +364,31 @@ export default function Home() {
         </div>
       </section>
       
-      <section 
+      <motion.section 
         id="testimonials" 
         className="py-12 md:py-20 bg-sky-200"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12">
+          <motion.h2 variants={itemVariants('bottom')} className="text-3xl font-headline font-bold text-center mb-12">
             What Our Students Say
-          </h2>
+          </motion.h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index}>
+              <motion.div key={index} variants={itemVariants('bottom')}>
                 <Card className="overflow-hidden">
                     <div className="relative aspect-video">
                         <Image src={testimonial.image} alt={`Testimonial screenshot ${index + 1}`} data-ai-hint="student testimonial" fill className="object-cover" />
                     </div>
                 </Card>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }
-
-    
