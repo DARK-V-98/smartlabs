@@ -194,7 +194,7 @@ export default function Home() {
       {/* Founder Section */}
       <motion.section 
         id="founder" 
-        className="py-16 md:py-24 bg-sky-100"
+        className="py-16 md:py-24 bg-sky-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -240,7 +240,7 @@ export default function Home() {
       {/* Results Snapshot Section */}
       <motion.section 
         id="results" 
-        className="py-12 bg-amber-100"
+        className="py-12 bg-amber-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.5 }}
@@ -300,7 +300,7 @@ export default function Home() {
       {/* Why Choose Us Section */}
       <motion.section 
         id="why-choose-us" 
-        className="py-16 md:py-24 bg-sky-100"
+        className="py-16 md:py-24 bg-sky-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -334,7 +334,7 @@ export default function Home() {
       {/* Success Stories Carousel */}
       <motion.section
         id="success-stories"
-        className="py-16 md:py-24 bg-amber-100"
+        className="py-16 md:py-24 bg-amber-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -415,7 +415,7 @@ export default function Home() {
       </motion.section>
       
       {/* CTA Section */}
-       <section className="py-16 md:py-24 bg-sky-100">
+       <section className="py-16 md:py-24 bg-sky-200">
         <div className="container mx-auto">
           <motion.div 
             className="text-center bg-card p-8 md:p-12 rounded-lg border"
