@@ -87,7 +87,7 @@ const whyChooseUs = [
 const results = [
     { number: '5,000+', label: 'Students Trained' },
     { number: '95%', label: 'Success Rate' },
-    { number: '6-8 Weeks', label: 'Typical Target Achievement' },
+    { number: '6–8 Weeks', label: 'Typical Target Achievement' },
 ];
 
 const successStories = [
@@ -173,6 +173,16 @@ export default function Home() {
                 viewport={{ amount: 0.5 }}
                 variants={sectionVariants}
             >
+                <motion.div variants={itemVariants} className="mb-4">
+                  <Image
+                    src="/logo.png"
+                    alt="Smart Labs Logo"
+                    width={500}
+                    height={500}
+                    className="h-32 w-32 sm:h-48 sm:w-48"
+                    priority
+                  />
+                </motion.div>
                 <motion.h1 variants={itemVariants} className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold text-white">
                     Achieve Your Target Score with the Right Guidance.
                 </motion.h1>
