@@ -27,14 +27,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 
-const heroImages = [
-    { src: '/1.png', alt: 'Students learning in a classroom', 'data-ai-hint': 'students classroom' },
-    { src: '/2.png', alt: 'Student focused on learning material', 'data-ai-hint': 'student learning' },
-    { src: '/3.png', alt: 'Collaborative learning session', 'data-ai-hint': 'students collaborating' },
-    { src: '/4.png', alt: 'Teacher assisting a student', 'data-ai-hint': 'teacher student' },
-    { src: '/5.png', alt: 'Modern classroom environment', 'data-ai-hint': 'modern classroom' },
-];
-
 const services = [
   {
     title: 'PTE Training Programs',
@@ -143,26 +135,14 @@ export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden bg-background text-foreground">
       <section className="relative h-[80vh] md:h-[90vh] w-full">
-         <Carousel
-            className="w-full h-full"
-            plugins={[Autoplay({ delay: 5000, stopOnInteraction: false })]}
-            opts={{ loop: true }}
-        >
-            <CarouselContent className="-ml-0 h-full">
-            {heroImages.map((image, index) => (
-                <CarouselItem key={index} className="pl-0 h-full relative">
-                    <Image
-                        src={image.src}
-                        alt={image.alt}
-                        data-ai-hint={image['data-ai-hint']}
-                        fill
-                        className="object-cover"
-                        priority={index === 0}
-                    />
-                </CarouselItem>
-            ))}
-            </CarouselContent>
-        </Carousel>
+        <Image
+            src="/1.png"
+            alt="Students learning in a classroom"
+            data-ai-hint="students classroom"
+            fill
+            className="object-cover"
+            priority
+        />
         <div className="absolute inset-0 bg-black/60" />
         <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
