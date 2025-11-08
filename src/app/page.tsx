@@ -26,9 +26,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
 const heroImages = [
-    { src: 'https://picsum.photos/seed/hero-1/1600/900', alt: 'Students collaborating in a bright, modern classroom environment', 'data-ai-hint': 'students classroom' },
-    { src: 'https://picsum.photos/seed/hero-2/1600/900', alt: 'A focused student writing in a notebook during a seminar', 'data-ai-hint': 'student writing' },
-    { src: 'https://picsum.photos/seed/hero-3/1600/900', alt: 'A teacher guiding a small group of students at a desk', 'data-ai-hint': 'teacher students' },
+    { src: '/hero-1.jpg', alt: 'Students collaborating in a bright, modern classroom environment', 'data-ai-hint': 'students classroom' },
+    { src: '/hero-2.jpg', alt: 'A focused student writing in a notebook during a seminar', 'data-ai-hint': 'student writing' },
+    { src: '/hero-3.jpg', alt: 'A teacher guiding a small group of students at a desk', 'data-ai-hint': 'teacher students' },
 ];
 
 const services = [
