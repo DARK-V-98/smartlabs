@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { NAV_LINKS, courseData } from '@/lib/constants';
+import { NAV_LINKS } from '@/lib/constants';
 import { Phone } from 'lucide-react';
 
 const socialLinks = [
@@ -19,7 +19,7 @@ export default function Footer() {
               <Image src="/logo.png" alt="Smart Labs logo" width={128} height={128} className="h-24 w-24 sm:h-32 sm:w-32" />
             </Link>
             <p className="text-sm text-muted-foreground">
-              Empowering students to achieve their global academic and professional goals with PTE training in Colombo and IELTS tuition in Rajagiriya.
+             Your partner in achieving global academic and professional goals.
             </p>
             <div className="flex space-x-4 mt-6">
               {socialLinks.map((social) => (
@@ -48,13 +48,9 @@ export default function Footer() {
           <div className="col-span-1">
             <h3 className="font-headline font-semibold text-foreground tracking-wider uppercase">Courses</h3>
             <ul className="mt-4 space-y-2">
-              {courseData.map((course) => (
-                <li key={course.title}>
-                  <Link href="/courses" className="text-sm text-muted-foreground hover:text-foreground">
-                    {course.title}
-                  </Link>
-                </li>
-              ))}
+                <li><Link href="/pte" className="text-sm text-muted-foreground hover:text-foreground">PTE</Link></li>
+                <li><Link href="/ielts" className="text-sm text-muted-foreground hover:text-foreground">IELTS</Link></li>
+                <li><Link href="/celpip" className="text-sm text-muted-foreground hover:text-foreground">CELPIP</Link></li>
             </ul>
           </div>
 
@@ -71,6 +67,9 @@ export default function Footer() {
                         <Phone className="h-4 w-4" /> 077 453 3233
                     </a>
                 </div>
+                 <Button asChild className="mt-6">
+                    <Link href="/contact">Book a Free Consultation</Link>
+                </Button>
           </div>
         </div>
 
@@ -93,3 +92,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+    

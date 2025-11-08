@@ -10,84 +10,79 @@ import {
   CheckCircle,
   Globe,
   Star,
-  Target,
-  Users,
   BookCheck,
   TrendingUp,
   Goal,
+  Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { testimonials } from '@/lib/constants';
 import { motion } from 'framer-motion';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
-
-const heroImages = ['/1.png', '/2.png', '/3.png', '/4.png', '/5.png'];
 
 const services = [
   {
-    title: 'Test Preparation',
-    description: 'Expert-led classes for PTE, IELTS, and CELPIP with personalized feedback and proven strategies to help you succeed.',
+    title: 'PTE Training Programs',
+    description: 'Online Boostify classes + Physical weekend sessions.',
     icon: Award,
-    href: '/courses',
+    href: '/pte',
   },
   {
-    title: 'Corporate Training',
-    description: 'Customized communication and language training programs designed to enhance team performance and professionalism.',
-    icon: Briefcase,
-    href: '/corporate-training',
+    title: 'IELTS Training',
+    description: 'Weekend group classes with speaking and feedback support.',
+    icon: Award,
+    href: '/ielts',
   },
   {
-    title: 'Study & Migration Support',
-    description: 'Comprehensive guidance through your study visa or migration process, including documentation and consultation.',
-    icon: Globe,
-    href: '/contact',
+    title: 'CELPIP Preparation',
+    description: 'Self-paced practice with guided videos.',
+    icon: Award,
+    href: '/celpip',
   },
 ];
 
 const whyChooseUs = [
   {
-    title: 'Certified Trainers',
-    description: 'Our instructors are officially trained and certified by Pearson UK, ensuring the highest quality of education.',
+    title: 'Expert Trainers',
+    description: 'Trainers officially trained by Pearson UK.',
     icon: Users,
   },
   {
-    title: '5,000+ Students Guided',
-    description: 'We have a proven track record of successfully guiding thousands of students to achieve their academic and professional goals.',
+    title: 'Proven Track Record',
+    description: '5,000+ students guided across PTE / IELTS / CELPIP.',
     icon: CheckCircle,
   },
   {
-    title: 'Strategic Focus',
-    description: 'We emphasize strategy, time management, and confidence-building to maximize your performance on exam day.',
-    icon: Target,
+    title: 'Personalized Guidance',
+    description: 'Consistent personal feedback and guidance.',
+    icon: Star,
   },
   {
-    title: 'Personal Feedback',
-    description: 'Benefit from individual speaking practice sessions and personalized feedback to target your specific areas for improvement.',
-    icon: Star,
+    title: 'Flexible Learning',
+    description: 'Online and physical class options available.',
+    icon: Globe,
+  },
+   {
+    title: 'Continuous Support',
+    description: 'Updated learning materials and continuous support.',
+    icon: BookCheck,
   },
 ];
 
 const results = [
-    { number: '5,000+', label: 'Students Trained', icon: Users },
-    { number: '15+', label: 'Average Score Improvement', icon: TrendingUp },
-    { number: '95%', label: 'Success Rate in 6-8 Weeks', icon: Goal },
+    { number: '5,000+', label: 'Students Trained' },
+    { number: 'Online & Physical', label: 'Class Options' },
+    { number: 'Available', label: 'Live Class Recordings' },
 ];
 
-const successStories = [
-    { text: "Achieved PTE 79 in 6 weeks → Now studying in Australia." },
-    { text: "IELTS Band 8 achieved → Migration visa approved." },
-    { text: "CELPIP score secured → Canadian PR application successful." },
-    { text: "Scored 90 on PTE after 2 weeks of intensive coaching." },
+const testimonials = [
+    { image: 'https://picsum.photos/300/150?random=10' },
+    { image: 'https://picsum.photos/300/150?random=11' },
+    { image: 'https://picsum.photos/300/150?random=12' },
+     { image: 'https://picsum.photos/300/150?random=13' },
+    { image: 'https://picsum.photos/300/150?random=14' },
+    { image: 'https://picsum.photos/300/150?random=15' },
 ];
+
 
 const sectionVariants = {
   hidden: { opacity: 0 },
@@ -108,28 +103,17 @@ const itemVariants = (from: 'left' | 'right') => ({
 export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden">
-      <section className="relative h-[80vh] md:h-[90vh] w-full">
-        <Carousel
-          className="w-full h-full"
-          plugins={[Autoplay({ delay: 5000, stopOnInteraction: false })]}
-          opts={{ loop: true }}
-        >
-          <CarouselContent>
-            {heroImages.map((src, index) => (
-              <CarouselItem key={index}>
-                <div className="relative w-full h-[80vh] md:h-[90vh]">
-                  <Image
-                    src={src}
-                    alt={`Hero image ${index + 1}`}
-                    fill
-                    className="object-cover"
-                    priority={index === 0}
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+      <section className="relative h-[70vh] md:h-[80vh] w-full">
+         <div className="relative w-full h-full">
+            <Image
+                src="https://picsum.photos/seed/hero/1600/900"
+                alt="Students in a bright, modern classroom"
+                data-ai-hint="modern classroom students"
+                fill
+                className="object-cover"
+                priority
+            />
+        </div>
         <div className="absolute inset-0 bg-black/60" />
         <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
@@ -139,14 +123,11 @@ export default function Home() {
                 viewport={{ once: true, amount: 0.5 }}
                 variants={sectionVariants}
             >
-                <motion.div variants={itemVariants('left')} className="flex justify-center mb-4">
-                    <Image src="/logo.png" alt="Smart Labs Logo" width={500} height={500} className="w-48 h-48 sm:w-64 sm:h-64" />
-                </motion.div>
                 <motion.h1 variants={itemVariants('right')} className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold text-white">
-                    Achieve your target score with proven strategies, personal coaching, and guided practice.
+                    Achieve Your Target Score with the Right Guidance.
                 </motion.h1>
                 <motion.p variants={itemVariants('left')} className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-gray-200">
-                    PTE | IELTS | CELPIP Training by Certified Trainers.
+                    PTE, IELTS & CELPIP Training | Corporate English & Workplace Communication Workshops
                 </motion.p>
                 <motion.div variants={itemVariants('right')} className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto">
                     <Button asChild size="lg" className="w-full sm:w-auto">
@@ -161,25 +142,21 @@ export default function Home() {
       
        <motion.section 
         id="results" 
-        className="py-12 md:py-20 bg-sky-200"
+        className="py-12 bg-sky-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-3 gap-8 text-center">
             {results.map((result, index) => {
-                const Icon = result.icon;
                 return (
                      <motion.div key={result.label} variants={itemVariants(index % 2 === 0 ? 'left' : 'right')}>
-                        <Card className="text-center p-6">
-                             <div className="mx-auto bg-primary/20 text-primary p-4 rounded-full w-fit mb-4">
-                                <Icon className="h-8 w-8" />
-                            </div>
-                            <p className="text-4xl font-headline font-bold">{result.number}</p>
+                        <div>
+                            <p className="text-3xl md:text-4xl font-headline font-bold">{result.number}</p>
                             <p className="text-muted-foreground mt-2">{result.label}</p>
-                        </Card>
+                        </div>
                     </motion.div>
                 )
             })}
@@ -187,37 +164,9 @@ export default function Home() {
         </div>
       </motion.section>
 
-       <motion.section 
-        id="success-stories" 
-        className="py-12 bg-amber-400"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto">
-             <Carousel 
-                className="w-full max-w-4xl mx-auto"
-                plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
-             >
-                <CarouselContent>
-                    {successStories.map((story, index) => (
-                        <CarouselItem key={index}>
-                            <div className="text-center">
-                                <p className="text-lg md:text-xl font-semibold italic">"{story.text}"</p>
-                            </div>
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-                <CarouselPrevious className="hidden sm:flex" />
-                <CarouselNext className="hidden sm:flex" />
-            </Carousel>
-        </div>
-       </motion.section>
-
       <motion.section 
         id="services" 
-        className="py-12 md:py-20 bg-sky-200"
+        className="py-12 md:py-20 bg-amber-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -233,15 +182,12 @@ export default function Home() {
                 return (
                     <motion.div key={service.title} variants={itemVariants(index % 2 === 0 ? 'left' : 'right')}>
                         <Card className="text-center hover:shadow-lg transition-shadow p-6 h-full flex flex-col items-center">
-                          <div className="mx-auto bg-primary/20 text-primary p-4 rounded-full w-fit mb-4">
-                            <Icon className="h-8 w-8" />
-                          </div>
                           <CardTitle className="font-headline pt-2 text-xl">{service.title}</CardTitle>
                           <CardContent className="pt-4 flex-grow">
                             <p className="text-muted-foreground">{service.description}</p>
                           </CardContent>
                            <Button asChild variant="outline" className="mt-auto">
-                              <Link href={service.href}>Learn More</Link>
+                              <Link href={service.href}>View Course Details</Link>
                            </Button>
                         </Card>
                     </motion.div>
@@ -253,7 +199,7 @@ export default function Home() {
 
       <motion.section 
         id="why-choose-us" 
-        className="py-12 md:py-20 bg-amber-400"
+        className="py-12 md:py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -263,7 +209,7 @@ export default function Home() {
           <h2 className="text-3xl font-headline font-bold text-center mb-12">
             Why Choose Smart Labs?
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
             {whyChooseUs.map((feature, index) => {
               const Icon = feature.icon;
               return (
@@ -281,6 +227,53 @@ export default function Home() {
               );
             })}
           </div>
+        </div>
+      </motion.section>
+
+       <motion.section 
+        id="corporate-training" 
+        className="py-12 md:py-20 bg-amber-400"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
+      >
+        <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+            <motion.div variants={itemVariants('left')} >
+                 <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg mx-auto max-w-lg lg:max-w-none">
+                    <Image
+                      src="https://picsum.photos/seed/corporate/800/450"
+                      alt="Corporate training session"
+                      data-ai-hint="corporate training"
+                      fill
+                      className="object-cover"
+                    />
+                </div>
+            </motion.div>
+            <motion.div variants={itemVariants('right')}>
+                <h2 className="text-3xl md:text-4xl font-headline font-bold">Your Goals, Our Expertise — Custom Workshops for Your Team.</h2>
+                <ul className="space-y-3 mt-6">
+                    <li className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-muted-foreground">Upgrade English for workplace communication</span>
+                    </li>
+                    <li className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-muted-foreground">Professional etiquette and confidence development</span>
+                    </li>
+                    <li className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-muted-foreground">Practical use of AI tools for productivity</span>
+                    </li>
+                     <li className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-muted-foreground">Post-training evaluation and feedback reports</span>
+                    </li>
+                </ul>
+                <Button asChild size="lg" className="mt-8">
+                    <Link href="/corporate-training">Request Corporate Training Proposal</Link>
+                </Button>
+            </motion.div>
         </div>
       </motion.section>
       
@@ -310,33 +303,13 @@ export default function Home() {
           <h2 className="text-3xl font-headline font-bold text-center mb-12">
             What Our Students Say
           </h2>
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <motion.div key={testimonial.name} variants={itemVariants(index === 1 ? 'left' : 'right')}>
-                <Card className="flex flex-col h-full">
-                  <CardContent className="pt-6 flex-grow">
-                    <div className="flex mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="h-5 w-5 text-yellow-400 fill-current"
-                        />
-                      ))}
+              <motion.div key={index} variants={itemVariants(index === 1 ? 'left' : 'right')}>
+                <Card className="overflow-hidden">
+                    <div className="relative aspect-video">
+                        <Image src={testimonial.image} alt={`Testimonial screenshot ${index + 1}`} data-ai-hint="student testimonial" fill className="object-cover" />
                     </div>
-                    <p className="italic">"{testimonial.quote}"</p>
-                  </CardContent>
-                  <CardHeader className="flex-row items-center gap-4">
-                    <Avatar>
-                      <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                      <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-semibold">{testimonial.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {testimonial.course} - {testimonial.achievement}
-                      </p>
-                    </div>
-                  </CardHeader>
                 </Card>
               </motion.div>
             ))}
@@ -393,3 +366,5 @@ export default function Home() {
     </div>
   );
 }
+
+    

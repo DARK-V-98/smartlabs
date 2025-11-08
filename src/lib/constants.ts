@@ -6,11 +6,12 @@ type NavLink = {
 
 export const NAV_LINKS: NavLink[] = [
   { href: '/', label: 'Home' },
-  { href: '/courses', label: 'Courses' },
+  { href: '/about', label: 'About Us' },
+  { href: '/pte', label: 'PTE' },
+  { href: '/ielts', label: 'IELTS' },
+  { href: '/celpip', label: 'CELPIP' },
   { href: '/corporate-training', label: 'Corporate Training' },
-  { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
-  { href: '/enroll', label: 'Enroll Now' },
 ];
 
 export const courseData = [
@@ -99,3 +100,5 @@ export const resourceLibrary = [
     { type: 'video', title: 'IELTS Writing Task 1 Strategy', format: 'Video', icon: 'Video' },
     { type: 'test', title: 'OET Nursing - Sample Case Notes', format: 'PDF', icon: 'FileText' },
 ];
+
+    
