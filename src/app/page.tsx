@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -263,7 +262,7 @@ export default function Home() {
       {/* Services Section */}
       <motion.section 
         id="services" 
-        className="py-16 md:py-24 bg-white"
+        className="py-16 md:py-24 bg-background"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -369,7 +368,7 @@ export default function Home() {
       {/* Corporate Training Section */}
        <motion.section 
         id="corporate-training" 
-        className="py-16 md:py-24 bg-white"
+        className="py-16 md:py-24 bg-background"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -438,7 +437,7 @@ export default function Home() {
       {/* Testimonials Section */}
       <motion.section 
         id="testimonials" 
-        className="py-16 md:py-24 bg-white"
+        className="py-16 md:py-24 bg-background"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.2 }}
