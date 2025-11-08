@@ -7,6 +7,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import {
@@ -18,9 +20,14 @@ import {
   Star,
   BookCheck,
   Users,
+  Target,
+  Clock,
+  Heart,
+  BookOpen,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 
 const heroImages = [
@@ -54,45 +61,67 @@ const services = [
 
 const whyChooseUs = [
   {
-    title: 'Expert Trainers',
-    description: 'Trainers officially trained by Pearson UK.',
+    title: 'Certified Trainers',
+    description: 'Trainers directly trained under Pearson UK.',
+    icon: Award,
+  },
+  {
+    title: '5,000+ Students Guided',
+    description: 'A proven track record of success across all courses.',
     icon: Users,
   },
   {
-    title: 'Proven Track Record',
-    description: '5,000+ students guided across PTE / IELTS / CELPIP.',
-    icon: CheckCircle,
+    title: 'Strategic Focus',
+    description: 'Emphasis on strategy, time management, and confidence.',
+    icon: Target,
   },
   {
-    title: 'Personalized Guidance',
-    description: 'Consistent personal feedback and guidance.',
-    icon: Star,
-  },
-  {
-    title: 'Flexible Learning',
-    description: 'Online and physical class options available.',
-    icon: Globe,
+    title: 'Personal Feedback',
+    description: 'Individual speaking practice and personal feedback.',
+    icon: Heart,
   },
    {
-    title: 'Continuous Support',
-    description: 'Updated learning materials and continuous support.',
-    icon: BookCheck,
+    title: 'Flexible & Updated',
+    description: 'Online/physical classes with current materials.',
+    icon: BookOpen,
   },
 ];
 
 const results = [
     { number: '5,000+', label: 'Students Trained' },
-    { number: 'Online & Physical', label: 'Class Options' },
-    { number: 'Available', label: 'Live Class Recordings' },
+    { number: '95%', label: 'Success Rate' },
+    { number: '6-8 Weeks', label: 'Typical Target Achievement' },
+];
+
+const successStories = [
+    { text: "Achieved PTE 79 in 6 weeks -> Now studying in Australia." },
+    { text: "IELTS Band 8 achieved -> Migration visa approved for Canada." },
+    { text: "CELPIP Level 10 -> Permanent Residency secured." },
+    { text: "From Band 6.5 to 7.5 in IELTS Writing in one month." },
 ];
 
 const testimonials = [
-    { image: 'https://picsum.photos/300/150?random=10' },
-    { image: 'https://picsum.photos/300/150?random=11' },
-    { image: 'https://picsum.photos/300/150?random=12' },
-     { image: 'https://picsum.photos/300/150?random=13' },
-    { image: 'https://picsum.photos/300/150?random=14' },
-    { image: 'https://picsum.photos/300/150?random=15' },
+    {
+        image: 'https://picsum.photos/300/150?random=10',
+        name: 'Rochelle T.',
+        course: 'PTE Academic',
+        achievement: 'Achieved 79+ Overall',
+        quote: 'The strategies were spot on. I finally got the score I needed for my visa!'
+    },
+    {
+        image: 'https://picsum.photos/300/150?random=11',
+        name: 'Sahan P.',
+        course: 'IELTS General',
+        achievement: 'Scored Band 8.0',
+        quote: 'The individual feedback on my speaking made all the difference.'
+    },
+    {
+        image: 'https://picsum.photos/300/150?random=12',
+        name: 'Fathima S.',
+        course: 'PTE Academic',
+        achievement: 'From 58 to 75 in 4 Weeks',
+        quote: 'Smart Labs helped me understand my mistakes and improve quickly.'
+    },
 ];
 
 
@@ -148,7 +177,7 @@ export default function Home() {
                 className="max-w-4xl mx-auto text-center p-4 sm:p-8 flex flex-col items-center"
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ amount: 0.5 }}
+                viewport={{ amount: 0.5, once: false }}
                 variants={sectionVariants}
             >
                 <motion.h1 variants={itemVariants('right')} className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold text-white">
@@ -173,7 +202,7 @@ export default function Home() {
         className="py-12 md:py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ amount: 0.3, once: false }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
@@ -213,26 +242,24 @@ export default function Home() {
         </div>
       </motion.section>
       
-       <motion.section 
+      <motion.section 
         id="results" 
         className="py-12 bg-amber-400"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.5 }}
+        viewport={{ amount: 0.5, once: false }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
           <div className="grid sm:grid-cols-3 gap-8 text-center">
-            {results.map((result, index) => {
-                return (
-                     <motion.div key={result.label} variants={itemVariants('bottom')}>
-                        <div>
-                            <p className="text-3xl md:text-4xl font-headline font-bold">{result.number}</p>
-                            <p className="text-muted-foreground mt-2">{result.label}</p>
-                        </div>
-                    </motion.div>
-                )
-            })}
+            {results.map((result) => (
+              <motion.div key={result.label} variants={itemVariants('bottom')}>
+                <div>
+                  <p className="text-3xl md:text-4xl font-headline font-bold">{result.number}</p>
+                  <p className="text-muted-foreground mt-2">{result.label}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </motion.section>
@@ -242,7 +269,7 @@ export default function Home() {
         className="py-12 md:py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ amount: 0.3, once: false }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -251,7 +278,6 @@ export default function Home() {
           </motion.h2>
            <div className="grid md:grid-cols-3 gap-8 mt-12">
             {services.map((service, index) => {
-                const Icon = service.icon;
                 return (
                     <motion.div key={service.title} variants={itemVariants(index === 0 ? 'left' : index === 1 ? 'bottom' : 'right')}>
                         <Card className="text-center hover:shadow-lg transition-shadow p-6 h-full flex flex-col items-center">
@@ -275,7 +301,7 @@ export default function Home() {
         className="py-12 md:py-20 bg-amber-400"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ amount: 0.3, once: false }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -283,11 +309,11 @@ export default function Home() {
             Why Choose Smart Labs?
           </motion.h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {whyChooseUs.map((feature, index) => {
+            {whyChooseUs.map((feature) => {
               const Icon = feature.icon;
               return (
                  <motion.div key={feature.title} variants={itemVariants('bottom')}>
-                     <Card className="text-center p-6 flex flex-col items-center h-full">
+                     <Card className="text-center p-6 flex flex-col items-center h-full shadow-lg">
                         <div className="text-primary mb-4">
                             <Icon className="h-10 w-10" />
                         </div>
@@ -303,12 +329,46 @@ export default function Home() {
         </div>
       </motion.section>
 
-       <motion.section 
-        id="corporate-training" 
+      <motion.section
+        id="success-stories"
         className="py-12 md:py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ amount: 0.3, once: false }}
+        variants={sectionVariants}
+      >
+        <div className="container mx-auto">
+            <motion.h2 variants={itemVariants('bottom')} className="text-3xl font-headline font-bold text-center mb-12">
+                Student Success Stories
+            </motion.h2>
+            <Carousel
+                opts={{ align: "start", loop: true }}
+                plugins={[Autoplay({ delay: 3000, stopOnInteraction: false })]}
+                className="w-full"
+            >
+                <CarouselContent>
+                    {successStories.map((story, index) => (
+                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                            <div className="p-1">
+                                <Card>
+                                    <CardContent className="flex items-center justify-center p-6">
+                                        <p className="text-center font-medium">{story.text}</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+            </Carousel>
+        </div>
+    </motion.section>
+
+       <motion.section 
+        id="corporate-training" 
+        className="py-12 md:py-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.3, once: false }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -369,7 +429,7 @@ export default function Home() {
         className="py-12 md:py-20 bg-sky-200"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.2 }}
+        viewport={{ amount: 0.2, once: false }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -379,10 +439,18 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <motion.div key={index} variants={itemVariants('bottom')}>
-                <Card className="overflow-hidden">
+                <Card className="overflow-hidden h-full flex flex-col">
                     <div className="relative aspect-video">
-                        <Image src={testimonial.image} alt={`Testimonial screenshot ${index + 1}`} data-ai-hint="student testimonial" fill className="object-cover" />
+                        <Image src={testimonial.image} alt={`Testimonial for ${testimonial.name}`} data-ai-hint="student testimonial" fill className="object-cover" />
                     </div>
+                    <CardContent className="p-6 flex flex-col flex-grow">
+                        <p className="text-muted-foreground text-sm mb-4 flex-grow">"{testimonial.quote}"</p>
+                        <div>
+                            <p className="font-bold font-headline">{testimonial.name}</p>
+                            <p className="text-xs text-muted-foreground">{testimonial.course}</p>
+                            <Badge variant="secondary" className="mt-2">{testimonial.achievement}</Badge>
+                        </div>
+                    </CardContent>
                 </Card>
               </motion.div>
             ))}
