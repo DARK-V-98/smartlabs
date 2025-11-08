@@ -181,7 +181,7 @@ export default function Home() {
                     PTE, IELTS & CELPIP Training | Corporate English & Workplace Communication Workshops
                 </motion.p>
                 <motion.div variants={itemVariants} className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto">
-                    <Button asChild size="lg" className="w-full sm:w-auto bg-white/90 text-background hover:bg-white">
+                    <Button asChild size="lg">
                         <Link href="/contact">
                             Book a Free Consultation <ArrowRight className="ml-2" />
                         </Link>
@@ -194,7 +194,7 @@ export default function Home() {
       {/* Founder Section */}
       <motion.section 
         id="founder" 
-        className="py-16 md:py-24"
+        className="py-16 md:py-24 bg-sky-100"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -202,7 +202,7 @@ export default function Home() {
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
             <motion.div className="lg:col-span-2" variants={itemVariants}>
-                <div className="relative aspect-square rounded-xl overflow-hidden shadow-2xl mx-auto max-w-sm lg:max-w-none border-2 border-white/10">
+                <div className="relative aspect-square rounded-xl overflow-hidden shadow-2xl mx-auto max-w-sm lg:max-w-none">
                     <Image
                       src="/la.png"
                       alt="Lahiruka Weeraratne (Laheer) - Founder of Smart Labs"
@@ -212,23 +212,23 @@ export default function Home() {
                 </div>
             </motion.div>
             <motion.div className="lg:col-span-3" variants={itemVariants}>
-                <h2 className="text-3xl md:text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
+                <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
                 <p className="mt-4 text-muted-foreground">
                     Our Founder and Director, Lahiruka Weeraratne, known in the industry as Laheer, is a distinguished expert trainer officially trained by Pearson UK. She specializes in PTE, IELTS, and CELPIP exams—the essential pathways for students and professionals seeking to study, migrate, or settle abroad. With over 6 years of professional experience, she has successfully trained more than 5,000 students, empowering them to achieve their global aspirations.
                 </p>
                 <div className="mt-8">
-                  <h3 className="font-headline font-semibold text-xl mb-4 text-gray-200">Areas of Expertise</h3>
+                  <h3 className="font-headline font-semibold text-xl mb-4">Areas of Expertise</h3>
                    <ul className="space-y-3">
                       <li className="flex items-start">
-                        <BookCheck className="h-5 w-5 text-purple-400 mr-3 mt-1 flex-shrink-0" />
+                        <BookCheck className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
                         <span className="text-muted-foreground">Competency Test Training: PTE, IELTS, CELPIP</span>
                       </li>
                        <li className="flex items-start">
-                        <Briefcase className="h-5 w-5 text-purple-400 mr-3 mt-1 flex-shrink-0" />
+                        <Briefcase className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
                         <span className="text-muted-foreground">Corporate Language & Communication Development</span>
                       </li>
                        <li className="flex items-start">
-                        <Globe className="h-5 w-5 text-purple-400 mr-3 mt-1 flex-shrink-0" />
+                        <Globe className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
                         <span className="text-muted-foreground">Study Abroad & Migration Guidance</span>
                       </li>
                   </ul>
@@ -240,7 +240,7 @@ export default function Home() {
       {/* Results Snapshot Section */}
       <motion.section 
         id="results" 
-        className="py-12 bg-black/20"
+        className="py-12 bg-amber-400"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.5 }}
@@ -251,7 +251,7 @@ export default function Home() {
             {results.map((result) => (
               <motion.div key={result.label} variants={itemVariants}>
                 <div>
-                  <p className="text-4xl md:text-5xl font-headline font-bold text-white">{result.number}</p>
+                  <p className="text-4xl md:text-5xl font-headline font-bold">{result.number}</p>
                   <p className="text-muted-foreground mt-2 uppercase tracking-widest text-sm">{result.label}</p>
                 </div>
               </motion.div>
@@ -270,19 +270,23 @@ export default function Home() {
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
-          <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold mb-12 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+          <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold mb-12">
             Our Services
           </motion.h2>
            <div className="grid md:grid-cols-3 gap-8 mt-12">
             {services.map((service, index) => {
+                const Icon = service.icon;
                 return (
                     <motion.div key={service.title} variants={itemVariants}>
-                        <Card className="text-center bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/20 transition-all duration-300 h-full flex flex-col items-center p-6">
-                          <CardTitle className="font-headline pt-2 text-xl text-gray-100">{service.title}</CardTitle>
+                        <Card className="text-center hover:shadow-xl transition-shadow h-full flex flex-col items-center p-6">
+                          <div className="p-4 bg-sky-100 rounded-full mb-4">
+                            <Icon className="h-8 w-8 text-primary" />
+                          </div>
+                          <CardTitle className="font-headline pt-2 text-xl">{service.title}</CardTitle>
                           <CardContent className="pt-4 flex-grow">
                             <p className="text-muted-foreground">{service.description}</p>
                           </CardContent>
-                           <Button asChild variant="outline" className="mt-auto bg-transparent hover:bg-white/10 border-white/20">
+                           <Button asChild variant="outline" className="mt-auto">
                               <Link href={service.href}>View Course Details</Link>
                            </Button>
                         </Card>
@@ -296,14 +300,14 @@ export default function Home() {
       {/* Why Choose Us Section */}
       <motion.section 
         id="why-choose-us" 
-        className="py-16 md:py-24 bg-black/20"
+        className="py-16 md:py-24 bg-sky-100"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
-          <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+          <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12">
             Why Choose Smart Labs?
           </motion.h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
@@ -311,12 +315,12 @@ export default function Home() {
               const Icon = feature.icon;
               return (
                  <motion.div key={feature.title} variants={itemVariants}>
-                     <Card className="text-center p-6 flex flex-col items-center h-full bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/20 transition-all duration-300">
-                        <div className="text-purple-400 mb-4">
+                     <Card className="text-center p-6 flex flex-col items-center h-full hover:shadow-xl transition-shadow">
+                        <div className="text-primary mb-4">
                             <Icon className="h-10 w-10" />
                         </div>
                         <div>
-                            <h3 className="font-headline text-lg font-semibold text-gray-100">{feature.title}</h3>
+                            <h3 className="font-headline text-lg font-semibold">{feature.title}</h3>
                             <p className="text-muted-foreground text-sm mt-2">{feature.description}</p>
                         </div>
                      </Card>
@@ -337,7 +341,7 @@ export default function Home() {
         variants={sectionVariants}
       >
         <div className="container mx-auto">
-            <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+            <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12">
                 Student Success Stories
             </motion.h2>
             <Carousel
@@ -349,9 +353,9 @@ export default function Home() {
                     {successStories.map((story, index) => (
                         <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                             <div className="p-1">
-                                <Card className="bg-white/5 backdrop-blur-md border border-white/10">
+                                <Card>
                                     <CardContent className="flex items-center justify-center p-6 h-24">
-                                        <p className="text-center font-medium text-gray-300">{story.text}</p>
+                                        <p className="text-center font-medium text-muted-foreground">{story.text}</p>
                                     </CardContent>
                                 </Card>
                             </div>
@@ -365,7 +369,7 @@ export default function Home() {
       {/* Corporate Training Section */}
        <motion.section 
         id="corporate-training" 
-        className="py-16 md:py-24"
+        className="py-16 md:py-24 bg-sky-100"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -373,7 +377,7 @@ export default function Home() {
       >
         <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <motion.div variants={itemVariants}>
-                 <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl mx-auto max-w-lg lg:max-w-none border-2 border-white/10">
+                 <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg mx-auto max-w-lg lg:max-w-none">
                     <Image
                       src="https://picsum.photos/seed/corporate/800/450"
                       alt="Corporate training session"
@@ -384,26 +388,26 @@ export default function Home() {
                 </div>
             </motion.div>
             <motion.div variants={itemVariants}>
-                <h2 className="text-3xl md:text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Your Goals, Our Expertise — Custom Workshops for Your Team.</h2>
+                <h2 className="text-3xl md:text-4xl font-headline font-bold">Your Goals, Our Expertise — Custom Workshops for Your Team.</h2>
                 <ul className="space-y-3 mt-6">
                     <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-purple-400 mr-3 mt-1 flex-shrink-0" />
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
                         <span className="text-muted-foreground">Upgrade English for workplace communication</span>
                     </li>
                     <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-purple-400 mr-3 mt-1 flex-shrink-0" />
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
                         <span className="text-muted-foreground">Professional etiquette and confidence development</span>
                     </li>
                     <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-purple-400 mr-3 mt-1 flex-shrink-0" />
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
                         <span className="text-muted-foreground">Practical use of AI tools for productivity</span>
                     </li>
                      <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-purple-400 mr-3 mt-1 flex-shrink-0" />
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
                         <span className="text-muted-foreground">Post-training evaluation and feedback reports</span>
                     </li>
                 </ul>
-                <Button asChild size="lg" className="mt-8 bg-white/90 text-background hover:bg-white">
+                <Button asChild size="lg" className="mt-8">
                     <Link href="/corporate-training">Request Corporate Training Proposal</Link>
                 </Button>
             </motion.div>
@@ -411,20 +415,20 @@ export default function Home() {
       </motion.section>
       
       {/* CTA Section */}
-       <section className="py-16 md:py-24">
+       <section className="py-16 md:py-24 bg-amber-400">
         <div className="container mx-auto">
           <motion.div 
-            className="text-center bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-md p-8 md:p-12 rounded-lg border border-white/10"
+            className="text-center bg-sky-100 p-8 md:p-12 rounded-lg"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, amount: 0.5 }}
             variants={sectionVariants}
           >
-            <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-4">Ready to Start Your Score Journey?</h2>
+            <h2 className="text-2xl md:text-3xl font-headline font-bold mb-4">Ready to Start Your Score Journey?</h2>
             <p className="max-w-3xl mx-auto text-muted-foreground mb-6">
                 Talk to one of our certified trainers to find the perfect program for you. Your initial consultation is free.
             </p>
-            <Button asChild size="lg" className="bg-white/90 text-background hover:bg-white">
+            <Button asChild size="lg">
                 <Link href="/contact">Book a Free Consultation</Link>
             </Button>
           </motion.div>
@@ -441,22 +445,22 @@ export default function Home() {
         variants={sectionVariants}
       >
         <div className="container mx-auto">
-          <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+          <motion.h2 variants={itemVariants} className="text-3xl font-headline font-bold text-center mb-12">
             What Our Students Say
           </motion.h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <motion.div key={index} variants={itemVariants}>
-                <Card className="overflow-hidden h-full flex flex-col bg-white/5 backdrop-blur-md border border-white/10">
+                <Card className="overflow-hidden h-full flex flex-col">
                     <div className="relative aspect-video">
                         <Image src={testimonial.image} alt={`Testimonial for ${testimonial.name}`} data-ai-hint="student testimonial" fill className="object-cover" />
                     </div>
                     <CardContent className="p-6 flex flex-col flex-grow">
                         <p className="text-muted-foreground text-sm mb-4 flex-grow italic">"{testimonial.quote}"</p>
                         <div>
-                            <p className="font-bold font-headline text-gray-100">{testimonial.name}</p>
+                            <p className="font-bold font-headline">{testimonial.name}</p>
                             <p className="text-xs text-muted-foreground">{testimonial.course}</p>
-                            <Badge variant="secondary" className="mt-2 bg-purple-500/20 text-purple-300 border-none">{testimonial.achievement}</Badge>
+                            <Badge variant="secondary" className="mt-2">{testimonial.achievement}</Badge>
                         </div>
                     </CardContent>
                 </Card>
@@ -468,5 +472,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
