@@ -200,12 +200,16 @@ export default function Home() {
       </section>
 
       {/* Founder Section */}
-      <section 
+      <motion.section 
         id="founder" 
         className="py-16 md:py-24 bg-sky-200"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
-            <div className="lg:col-span-2">
+            <motion.div className="lg:col-span-2" variants={itemVariants}>
                 <div className="relative aspect-square rounded-xl overflow-hidden shadow-2xl mx-auto max-w-sm lg:max-w-none">
                     <Image
                       src="/la.png"
@@ -215,8 +219,8 @@ export default function Home() {
                       className="object-cover"
                     />
                 </div>
-            </div>
-            <div className="lg:col-span-3">
+            </motion.div>
+            <motion.div className="lg:col-span-3" variants={itemVariants}>
                 <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
                 <p className="mt-4 text-muted-foreground">
                     Our Founder and Director, Lahiruka Weeraratne, known in the industry as Laheer, is a distinguished expert trainer officially trained by Pearson UK. She specializes in PTE, IELTS, and CELPIP exams—the essential pathways for students and professionals seeking to study, migrate, or settle abroad. With over 6 years of professional experience, she has successfully trained more than 5,000 students, empowering them to achieve their global aspirations.
@@ -238,33 +242,41 @@ export default function Home() {
                       </li>
                   </ul>
                 </div>
-            </div>
+            </motion.div>
         </div>
-      </section>
+      </motion.section>
       
       {/* Results Snapshot Section */}
-      <section 
+      <motion.section 
         id="results" 
         className="py-12 bg-amber-200"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.5 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto">
           <div className="grid sm:grid-cols-3 gap-8 text-center">
             {results.map((result) => (
-              <div key={result.label}>
+              <motion.div key={result.label} variants={itemVariants}>
                 <div>
                   <p className="text-4xl md:text-5xl font-headline font-bold text-amber-800">{result.number}</p>
                   <p className="text-amber-700 mt-2 uppercase tracking-widest text-sm">{result.label}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Services Section */}
-      <section 
+      <motion.section 
         id="services" 
         className="py-16 md:py-24 bg-background"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-headline font-bold mb-12">
@@ -274,7 +286,7 @@ export default function Home() {
             {services.map((service, index) => {
                 const Icon = service.icon;
                 return (
-                    <div key={service.title}>
+                    <motion.div key={service.title} variants={itemVariants}>
                         <Card className="text-center hover:shadow-xl transition-shadow h-full flex flex-col items-center p-6">
                           <div className="p-4 bg-secondary rounded-full mb-4">
                             <Icon className="h-8 w-8 text-primary" />
@@ -287,17 +299,21 @@ export default function Home() {
                               <Link href={service.href}>View Course Details</Link>
                            </Button>
                         </Card>
-                    </div>
+                    </motion.div>
                 );
             })}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Why Choose Us Section */}
-      <section 
+      <motion.section 
         id="why-choose-us" 
         className="py-16 md:py-24 bg-sky-200"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto">
           <h2 className="text-3xl font-headline font-bold text-center mb-12">
@@ -307,7 +323,7 @@ export default function Home() {
             {whyChooseUs.map((feature) => {
               const Icon = feature.icon;
               return (
-                 <div key={feature.title}>
+                 <motion.div key={feature.title} variants={itemVariants}>
                      <Card className="text-center p-6 flex flex-col items-center h-full hover:shadow-xl transition-shadow">
                         <div className="text-primary mb-4">
                             <Icon className="h-10 w-10" />
@@ -317,12 +333,12 @@ export default function Home() {
                             <p className="text-muted-foreground text-sm mt-2">{feature.description}</p>
                         </div>
                      </Card>
-                 </div>
+                 </motion.div>
               );
             })}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Success Stories Carousel */}
       <section
@@ -356,12 +372,16 @@ export default function Home() {
     </section>
 
       {/* Corporate Training Section */}
-       <section 
+       <motion.section 
         id="corporate-training" 
         className="py-16 md:py-24 bg-background"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div>
+            <motion.div variants={itemVariants}>
                  <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg mx-auto max-w-lg lg:max-w-none">
                     <Image
                       src="https://picsum.photos/seed/corporate/800/450"
@@ -371,8 +391,8 @@ export default function Home() {
                       className="object-cover"
                     />
                 </div>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div variants={itemVariants}>
                 <h2 className="text-3xl md:text-4xl font-headline font-bold">Your Goals, Our Expertise — Custom Workshops for Your Team.</h2>
                 <ul className="space-y-3 mt-6">
                     <li className="flex items-start">
@@ -395,9 +415,9 @@ export default function Home() {
                 <Button asChild size="lg" className="mt-8">
                     <Link href="/corporate-training">Request Corporate Training Proposal</Link>
                 </Button>
-            </div>
+            </motion.div>
         </div>
-      </section>
+      </motion.section>
       
       {/* CTA Section */}
        <section className="py-16 md:py-24 bg-sky-200">
@@ -417,9 +437,13 @@ export default function Home() {
       </section>
       
       {/* Testimonials Section */}
-      <section 
+      <motion.section 
         id="testimonials" 
         className="py-16 md:py-24 bg-background"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionVariants}
       >
         <div className="container mx-auto">
           <h2 className="text-3xl font-headline font-bold text-center mb-12">
@@ -427,7 +451,7 @@ export default function Home() {
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index}>
+              <motion.div key={index} variants={itemVariants}>
                 <Card className="overflow-hidden h-full flex flex-col">
                     <div className="relative aspect-video">
                         <Image src={testimonial.image} alt={`Testimonial for ${testimonial.name}`} data-ai-hint="student testimonial" fill className="object-cover" />
@@ -441,11 +465,11 @@ export default function Home() {
                         </div>
                     </CardContent>
                 </Card>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }
