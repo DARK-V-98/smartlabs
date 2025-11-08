@@ -2,7 +2,6 @@
 type NavLink = {
   href: string;
   label: string;
-  authRequired?: boolean;
 };
 
 export const NAV_LINKS: NavLink[] = [
@@ -10,7 +9,6 @@ export const NAV_LINKS: NavLink[] = [
   { href: '/courses', label: 'Courses' },
   { href: '/corporate-training', label: 'Corporate Training' },
   { href: '/contact', label: 'Contact' },
-  { href: '/dashboard', label: 'Dashboard', authRequired: true },
 ];
 
 export const courseData = [
@@ -40,18 +38,21 @@ export const testimonials = [
         course: 'IELTS Student',
         quote: 'The personalized study plan was a game-changer! I improved my score by 1.5 bands in just 6 weeks. The instructors at Smart Labs are fantastic.',
         avatar: 'https://picsum.photos/100/100?random=1',
+        achievement: 'Score 8.0'
     },
     {
         name: 'John Adebayo',
         course: 'OET Student',
         quote: 'As a doctor, the OET course was perfectly tailored to my needs. The role-playing sessions gave me the confidence I needed for the speaking test.',
         avatar: 'https://picsum.photos/100/100?random=2',
+        achievement: 'Grade A'
     },
     {
         name: 'Chen Wei',
         course: 'PTE Student',
         quote: 'I needed a good PTE score quickly for my university application, and Smart Labs delivered. The strategies and AI-scored tests were incredibly helpful.',
         avatar: 'https://picsum.photos/100/100?random=3',
+        achievement: 'Score 79+'
     },
 ];
 

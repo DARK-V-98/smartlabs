@@ -21,12 +21,6 @@ export function MobileNav() {
   const [open, setOpen] = useState(false);
   const [user] = useAuthState(auth);
 
-  const navLinks = NAV_LINKS.filter(link => {
-      if (link.authRequired === true && !user) return false;
-      if (link.authRequired === false && user) return false;
-      return true;
-  });
-
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -44,7 +38,7 @@ export function MobileNav() {
           </SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-4 py-8">
-          {navLinks.map((link) => (
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -54,6 +48,15 @@ export function MobileNav() {
               {link.label}
             </Link>
           ))}
+           {user && (
+             <Link
+              href={'/dashboard'}
+              onClick={() => setOpen(false)}
+              className="text-lg font-medium text-foreground/80 hover:text-foreground"
+            >
+              Dashboard
+            </Link>
+           )}
         </div>
         {!user && (
             <div className="flex flex-col gap-2">

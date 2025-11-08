@@ -69,12 +69,6 @@ export default function Header() {
     await signOut(auth);
   };
 
-  const navLinks = NAV_LINKS.filter(link => {
-      if (link.authRequired === true && !user) return false;
-      if (link.authRequired === false && user) return false;
-      return true;
-  });
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center">
@@ -82,7 +76,7 @@ export default function Header() {
           <Image src="/logo.png" alt="Smart Labs logo" width={96} height={96} className="h-20 w-20 sm:h-24 sm:w-24" />
         </Link>
         <nav className="hidden items-center gap-4 lg:gap-6 text-sm font-medium md:flex">
-          {navLinks.map((link) => (
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}

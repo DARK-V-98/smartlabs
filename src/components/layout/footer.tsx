@@ -2,9 +2,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { NAV_LINKS, courseData } from '@/lib/constants';
-import { Facebook, Send, MessageCircle, Phone, Mail } from 'lucide-react';
+import { Phone } from 'lucide-react';
 
 const socialLinks = [
   { icon: '/facebook.png', href: 'https://www.facebook.com/lahirukaweeraratne', 'aria-label': 'Facebook profile' },
@@ -20,14 +19,9 @@ export default function Footer() {
               <Image src="/logo.png" alt="Smart Labs logo" width={128} height={128} className="h-24 w-24 sm:h-32 sm:w-32" />
             </Link>
             <p className="text-sm text-muted-foreground">
-              Empowering students to achieve their global academic and professional goals.
+              Empowering students to achieve their global academic and professional goals with PTE training in Colombo and IELTS tuition in Rajagiriya.
             </p>
             <div className="flex space-x-4 mt-6">
-                <Button variant="outline" size="icon" asChild>
-                    <a href="https://wa.me/94766914650" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-                        <Image src="/whatsapp.png" alt="WhatsApp" width={20} height={20} className="h-5 w-5" />
-                    </a>
-                </Button>
               {socialLinks.map((social) => (
                 <Button key={social['aria-label']} variant="outline" size="icon" asChild>
                   <a href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social['aria-label']}>
@@ -87,6 +81,15 @@ export default function Footer() {
           </p>
         </div>
       </div>
+      <a
+        href="https://wa.me/94766914650"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat on WhatsApp"
+        className="fixed bottom-6 right-6 z-50 p-3 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-colors"
+       >
+        <Image src="/whatsapp.png" alt="WhatsApp" width={28} height={28} />
+      </a>
     </footer>
   );
 }
