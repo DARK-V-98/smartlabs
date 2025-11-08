@@ -139,163 +139,6 @@ export default function Home() {
             </motion.div>
         </div>
       </section>
-      
-       <section 
-        id="results" 
-        className="py-12 bg-sky-200"
-      >
-        <div className="container mx-auto">
-          <div className="grid sm:grid-cols-3 gap-8 text-center">
-            {results.map((result, index) => {
-                return (
-                     <div key={result.label}>
-                        <div>
-                            <p className="text-3xl md:text-4xl font-headline font-bold">{result.number}</p>
-                            <p className="text-muted-foreground mt-2">{result.label}</p>
-                        </div>
-                    </div>
-                )
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section 
-        id="services" 
-        className="py-12 md:py-20 bg-amber-400"
-      >
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-headline font-bold mb-12">
-            Our Services
-          </h2>
-           <div className="grid md:grid-cols-3 gap-8 mt-12">
-            {services.map((service, index) => {
-                const Icon = service.icon;
-                return (
-                    <div key={service.title}>
-                        <Card className="text-center hover:shadow-lg transition-shadow p-6 h-full flex flex-col items-center">
-                          <CardTitle className="font-headline pt-2 text-xl">{service.title}</CardTitle>
-                          <CardContent className="pt-4 flex-grow">
-                            <p className="text-muted-foreground">{service.description}</p>
-                          </CardContent>
-                           <Button asChild variant="outline" className="mt-auto">
-                              <Link href={service.href}>View Course Details</Link>
-                           </Button>
-                        </Card>
-                    </div>
-                );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section 
-        id="why-choose-us" 
-        className="py-12 md:py-20 bg-sky-200"
-      >
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12">
-            Why Choose Smart Labs?
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {whyChooseUs.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                 <div key={feature.title}>
-                     <Card className="text-center p-6 flex flex-col items-center h-full">
-                        <div className="text-primary mb-4">
-                            <Icon className="h-10 w-10" />
-                        </div>
-                        <div>
-                            <h3 className="font-headline text-lg font-semibold">{feature.title}</h3>
-                            <p className="text-muted-foreground text-sm mt-2">{feature.description}</p>
-                        </div>
-                     </Card>
-                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-       <section 
-        id="corporate-training" 
-        className="py-12 md:py-20 bg-amber-400"
-      >
-        <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div>
-                 <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg mx-auto max-w-lg lg:max-w-none">
-                    <Image
-                      src="https://picsum.photos/seed/corporate/800/450"
-                      alt="Corporate training session"
-                      data-ai-hint="corporate training"
-                      fill
-                      className="object-cover"
-                    />
-                </div>
-            </div>
-            <div>
-                <h2 className="text-3xl md:text-4xl font-headline font-bold">Your Goals, Our Expertise — Custom Workshops for Your Team.</h2>
-                <ul className="space-y-3 mt-6">
-                    <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Upgrade English for workplace communication</span>
-                    </li>
-                    <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Professional etiquette and confidence development</span>
-                    </li>
-                    <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Practical use of AI tools for productivity</span>
-                    </li>
-                     <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Post-training evaluation and feedback reports</span>
-                    </li>
-                </ul>
-                <Button asChild size="lg" className="mt-8">
-                    <Link href="/corporate-training">Request Corporate Training Proposal</Link>
-                </Button>
-            </div>
-        </div>
-      </section>
-      
-       <section className="py-12 md:py-20 bg-sky-200">
-        <div className="container mx-auto">
-          <div className="text-center bg-sky-100 p-8 md:p-10 rounded-lg">
-            <h2 className="text-2xl md:text-3xl font-headline font-bold mb-4">Ready to Start Your Score Journey?</h2>
-            <p className="max-w-3xl mx-auto text-muted-foreground mb-6">
-                Talk to one of our certified trainers to find the perfect program for you. Your initial consultation is free.
-            </p>
-            <Button asChild size="lg">
-                <Link href="/contact">Book a Free Consultation</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-      
-      <section 
-        id="testimonials" 
-        className="py-12 md:py-20 bg-amber-400"
-      >
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12">
-            What Our Students Say
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index}>
-                <Card className="overflow-hidden">
-                    <div className="relative aspect-video">
-                        <Image src={testimonial.image} alt={`Testimonial screenshot ${index + 1}`} data-ai-hint="student testimonial" fill className="object-cover" />
-                    </div>
-                </Card>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section 
         id="founder" 
@@ -338,7 +181,165 @@ export default function Home() {
             </div>
         </div>
       </section>
+      
+       <section 
+        id="results" 
+        className="py-12 bg-amber-400"
+      >
+        <div className="container mx-auto">
+          <div className="grid sm:grid-cols-3 gap-8 text-center">
+            {results.map((result, index) => {
+                return (
+                     <div key={result.label}>
+                        <div>
+                            <p className="text-3xl md:text-4xl font-headline font-bold">{result.number}</p>
+                            <p className="text-muted-foreground mt-2">{result.label}</p>
+                        </div>
+                    </div>
+                )
+            })}
+          </div>
+        </div>
+      </section>
 
+      <section 
+        id="services" 
+        className="py-12 md:py-20 bg-sky-200"
+      >
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-headline font-bold mb-12">
+            Our Services
+          </h2>
+           <div className="grid md:grid-cols-3 gap-8 mt-12">
+            {services.map((service, index) => {
+                const Icon = service.icon;
+                return (
+                    <div key={service.title}>
+                        <Card className="text-center hover:shadow-lg transition-shadow p-6 h-full flex flex-col items-center">
+                          <CardTitle className="font-headline pt-2 text-xl">{service.title}</CardTitle>
+                          <CardContent className="pt-4 flex-grow">
+                            <p className="text-muted-foreground">{service.description}</p>
+                          </CardContent>
+                           <Button asChild variant="outline" className="mt-auto">
+                              <Link href={service.href}>View Course Details</Link>
+                           </Button>
+                        </Card>
+                    </div>
+                );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section 
+        id="why-choose-us" 
+        className="py-12 md:py-20 bg-amber-400"
+      >
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-headline font-bold text-center mb-12">
+            Why Choose Smart Labs?
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
+            {whyChooseUs.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                 <div key={feature.title}>
+                     <Card className="text-center p-6 flex flex-col items-center h-full">
+                        <div className="text-primary mb-4">
+                            <Icon className="h-10 w-10" />
+                        </div>
+                        <div>
+                            <h3 className="font-headline text-lg font-semibold">{feature.title}</h3>
+                            <p className="text-muted-foreground text-sm mt-2">{feature.description}</p>
+                        </div>
+                     </Card>
+                 </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+       <section 
+        id="corporate-training" 
+        className="py-12 md:py-20 bg-sky-200"
+      >
+        <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div>
+                 <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg mx-auto max-w-lg lg:max-w-none">
+                    <Image
+                      src="https://picsum.photos/seed/corporate/800/450"
+                      alt="Corporate training session"
+                      data-ai-hint="corporate training"
+                      fill
+                      className="object-cover"
+                    />
+                </div>
+            </div>
+            <div>
+                <h2 className="text-3xl md:text-4xl font-headline font-bold">Your Goals, Our Expertise — Custom Workshops for Your Team.</h2>
+                <ul className="space-y-3 mt-6">
+                    <li className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-muted-foreground">Upgrade English for workplace communication</span>
+                    </li>
+                    <li className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-muted-foreground">Professional etiquette and confidence development</span>
+                    </li>
+                    <li className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-muted-foreground">Practical use of AI tools for productivity</span>
+                    </li>
+                     <li className="flex items-start">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-muted-foreground">Post-training evaluation and feedback reports</span>
+                    </li>
+                </ul>
+                <Button asChild size="lg" className="mt-8">
+                    <Link href="/corporate-training">Request Corporate Training Proposal</Link>
+                </Button>
+            </div>
+        </div>
+      </section>
+      
+       <section className="py-12 md:py-20 bg-amber-400">
+        <div className="container mx-auto">
+          <div className="text-center bg-sky-100 p-8 md:p-10 rounded-lg">
+            <h2 className="text-2xl md:text-3xl font-headline font-bold mb-4">Ready to Start Your Score Journey?</h2>
+            <p className="max-w-3xl mx-auto text-muted-foreground mb-6">
+                Talk to one of our certified trainers to find the perfect program for you. Your initial consultation is free.
+            </p>
+            <Button asChild size="lg">
+                <Link href="/contact">Book a Free Consultation</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+      
+      <section 
+        id="testimonials" 
+        className="py-12 md:py-20 bg-sky-200"
+      >
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-headline font-bold text-center mb-12">
+            What Our Students Say
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index}>
+                <Card className="overflow-hidden">
+                    <div className="relative aspect-video">
+                        <Image src={testimonial.image} alt={`Testimonial screenshot ${index + 1}`} data-ai-hint="student testimonial" fill className="object-cover" />
+                    </div>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
+
+    
