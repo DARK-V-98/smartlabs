@@ -4,6 +4,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
+import {
   ArrowRight,
   Award,
   Briefcase,
@@ -18,6 +24,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
+
+const heroImages = [
+    { src: 'https://picsum.photos/seed/hero-1/1600/900', alt: 'Students collaborating in a bright, modern classroom environment', 'data-ai-hint': 'students classroom' },
+    { src: 'https://picsum.photos/seed/hero-2/1600/900', alt: 'A focused student writing in a notebook during a seminar', 'data-ai-hint': 'student writing' },
+    { src: 'https://picsum.photos/seed/hero-3/1600/900', alt: 'A teacher guiding a small group of students at a desk', 'data-ai-hint': 'teacher students' },
+];
 
 const services = [
   {
@@ -104,16 +116,28 @@ export default function Home() {
   return (
     <div className="flex flex-col overflow-x-hidden">
       <section className="relative h-[70vh] md:h-[80vh] w-full">
-         <div className="relative w-full h-full">
-            <Image
-                src="https://picsum.photos/seed/hero/1600/900"
-                alt="Students in a bright, modern classroom"
-                data-ai-hint="modern classroom students"
-                fill
-                className="object-cover"
-                priority
-            />
-        </div>
+         <Carousel
+            className="w-full h-full"
+            plugins={[Autoplay({ delay: 5000, stopOnInteraction: false })]}
+            opts={{ loop: true }}
+        >
+            <CarouselContent className="-ml-0 h-full">
+            {heroImages.map((image) => (
+                <CarouselItem key={image.src} className="pl-0 h-full">
+                <div className="relative w-full h-full">
+                    <Image
+                        src={image.src}
+                        alt={image.alt}
+                        data-ai-hint={image['data-ai-hint']}
+                        fill
+                        className="object-cover"
+                        priority
+                    />
+                </div>
+                </CarouselItem>
+            ))}
+            </CarouselContent>
+        </Carousel>
         <div className="absolute inset-0 bg-black/60" />
         <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
             <motion.div
@@ -341,5 +365,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
