@@ -124,7 +124,7 @@ export default function Home() {
             opts={{ loop: true }}
         >
             <CarouselContent className="-ml-0 h-full">
-            {heroImages.map((image) => (
+            {heroImages.map((image, index) => (
                 <CarouselItem key={image.src} className="pl-0 h-full">
                 <div className="relative w-full h-full">
                     <Image
@@ -133,7 +133,7 @@ export default function Home() {
                         data-ai-hint={image['data-ai-hint']}
                         fill
                         className="object-cover"
-                        priority
+                        priority={index === 0}
                     />
                 </div>
                 </CarouselItem>
@@ -176,8 +176,7 @@ export default function Home() {
                     <Image
                       src="/la.png"
                       alt="Lahiruka Weeraratne (Laheer) - Founder of Smart Labs"
-                      width={600}
-                      height={600}
+                      fill
                       className="object-cover"
                     />
                 </div>
