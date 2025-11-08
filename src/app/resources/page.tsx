@@ -17,7 +17,7 @@ export default function ResourcesPage() {
 
   return (
     <div className="w-full">
-      <section className="bg-amber-400 py-12 md:py-20">
+      <section className="py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-headline font-bold">Resource Library</h1>
@@ -95,7 +95,7 @@ function ResourceCard({ item }: { item: ResourceItem }) {
     <Card className="flex flex-col shadow-lg hover:shadow-xl transition-shadow">
       <CardHeader className="flex-grow">
         <div className="flex items-start gap-4">
-            <div className="p-3 bg-sky-100 rounded-lg">
+            <div className="p-3 bg-secondary rounded-lg">
                 <Icon className="h-6 w-6 text-primary" />
             </div>
             <div>

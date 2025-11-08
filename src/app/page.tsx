@@ -194,7 +194,7 @@ export default function Home() {
       {/* Founder Section */}
       <motion.section 
         id="founder" 
-        className="py-16 md:py-24 bg-sky-100"
+        className="py-16 md:py-24"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -240,7 +240,7 @@ export default function Home() {
       {/* Results Snapshot Section */}
       <motion.section 
         id="results" 
-        className="py-12 bg-amber-400"
+        className="py-12"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.5 }}
@@ -279,7 +279,7 @@ export default function Home() {
                 return (
                     <motion.div key={service.title} variants={itemVariants}>
                         <Card className="text-center hover:shadow-xl transition-shadow h-full flex flex-col items-center p-6">
-                          <div className="p-4 bg-sky-100 rounded-full mb-4">
+                          <div className="p-4 bg-secondary rounded-full mb-4">
                             <Icon className="h-8 w-8 text-primary" />
                           </div>
                           <CardTitle className="font-headline pt-2 text-xl">{service.title}</CardTitle>
@@ -300,7 +300,7 @@ export default function Home() {
       {/* Why Choose Us Section */}
       <motion.section 
         id="why-choose-us" 
-        className="py-16 md:py-24 bg-sky-100"
+        className="py-16 md:py-24"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -369,7 +369,7 @@ export default function Home() {
       {/* Corporate Training Section */}
        <motion.section 
         id="corporate-training" 
-        className="py-16 md:py-24 bg-sky-100"
+        className="py-16 md:py-24"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -415,10 +415,10 @@ export default function Home() {
       </motion.section>
       
       {/* CTA Section */}
-       <section className="py-16 md:py-24 bg-amber-400">
+       <section className="py-16 md:py-24">
         <div className="container mx-auto">
           <motion.div 
-            className="text-center bg-sky-100 p-8 md:p-12 rounded-lg"
+            className="text-center bg-card p-8 md:p-12 rounded-lg border"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, amount: 0.5 }}
@@ -460,7 +460,7 @@ export default function Home() {
                         <div>
                             <p className="font-bold font-headline">{testimonial.name}</p>
                             <p className="text-xs text-muted-foreground">{testimonial.course}</p>
-                            <Badge variant="secondary" className="mt-2">{testimonial.achievement}</Badge>
+                            <p className="text-sm font-semibold text-primary mt-2">{testimonial.achievement}</p>
                         </div>
                     </CardContent>
                 </Card>

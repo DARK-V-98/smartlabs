@@ -8,8 +8,8 @@ import Link from 'next/link';
 export default function PTEPage() {
   return (
     <div className="w-full">
-      <section className="relative bg-sky-200 py-20 md:py-32">
-        <div className="absolute inset-0">
+      <section className="relative py-20 md:py-32">
+        <div className="absolute inset-0 bg-primary/10">
             <Image 
                 src="https://picsum.photos/seed/pte-hero/1600/500"
                 alt="Student studying for PTE exam"
@@ -112,7 +112,7 @@ export default function PTEPage() {
           </div>
       </section>
 
-      <section className="bg-amber-400 py-12 md:py-20">
+      <section className="py-12 md:py-20">
         <div className="container mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-headline font-bold">Ready to Ace Your PTE Exam?</h2>
             <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
@@ -126,5 +126,3 @@ export default function PTEPage() {
     </div>
   );
 }
-
-    

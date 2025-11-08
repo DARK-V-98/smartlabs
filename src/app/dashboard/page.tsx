@@ -72,7 +72,7 @@ export default function DashboardPage() {
 
   if (loading || !user) {
     return (
-      <div className="flex h-screen items-center justify-center bg-sky-200">
+      <div className="flex h-screen items-center justify-center">
         <div className="text-center">
             <p className="text-lg font-semibold">Loading...</p>
             <p className="text-sm text-muted-foreground">Please wait while we load your dashboard.</p>
@@ -133,7 +133,7 @@ export default function DashboardPage() {
             </div>
         </Sidebar>
         <SidebarInset>
-            <div className="w-full bg-sky-200 min-h-screen">
+            <div className="w-full min-h-screen">
               <section className="py-8 md:py-12">
                 <div className="container mx-auto">
                     <header className="flex items-center justify-between mb-8 gap-4">
@@ -199,7 +199,7 @@ export default function DashboardPage() {
                                     {recentMaterials.map((item, index) => {
                                         const Icon = item.icon;
                                         return (
-                                        <li key={index} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                                        <li key={index} className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
                                             <div className="flex items-center gap-4">
                                                 <Icon className="h-6 w-6 text-muted-foreground" />
                                                 <div>

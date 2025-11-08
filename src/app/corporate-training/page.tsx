@@ -15,8 +15,8 @@ const corporateFeatures = [
 export default function CorporateTrainingPage() {
   return (
     <div className="w-full">
-      <section className="relative bg-amber-400 py-20 md:py-32">
-        <div className="absolute inset-0">
+      <section className="relative py-20 md:py-32">
+        <div className="absolute inset-0 bg-primary/10">
             <Image 
                 src="https://picsum.photos/seed/corp-hero/1600/500"
                 alt="Professional team in a meeting"
@@ -44,7 +44,7 @@ export default function CorporateTrainingPage() {
                   No two organizations are the same. That’s why our programs are fully customized based on a Skill Gap Analysis, your Organizational Culture, and your Business Goals. This approach ensures that every session is relevant, practical, and impactful.
               </p>
             </div>
-            <Card className="shadow-lg bg-sky-100">
+            <Card className="shadow-lg">
                 <CardHeader>
                     <CardTitle className="font-headline">Key Training Areas</CardTitle>
                 </CardHeader>
@@ -60,9 +60,9 @@ export default function CorporateTrainingPage() {
           </div>
       </section>
       
-      <section className="bg-amber-400 py-12 md:py-20">
+      <section className="py-12 md:py-20">
         <div className="container mx-auto">
-          <div className="text-center bg-sky-100 p-8 md:p-12 rounded-lg shadow-lg">
+          <div className="text-center bg-card p-8 md:p-12 rounded-lg shadow-lg border">
             <h2 className="text-2xl md:text-3xl font-headline font-bold mb-4">Partner with Smart Labs</h2>
             <p className="max-w-3xl mx-auto text-muted-foreground mb-6">
                 Investing in your team’s communication and professional skills is investing in your company’s future growth and success. Let Smart Labs help you create a high-performing, confident, and collaborative workforce.
@@ -76,5 +76,3 @@ export default function CorporateTrainingPage() {
     </div>
   );
 }
-
-    

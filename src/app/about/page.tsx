@@ -8,8 +8,8 @@ import Image from 'next/image';
 export default function AboutPage() {
   return (
     <div className="w-full">
-       <section className="relative bg-amber-400 py-20 md:py-32">
-        <div className="absolute inset-0">
+       <section className="relative py-20 md:py-32">
+        <div className="absolute inset-0 bg-primary/10">
             <Image 
                 src="https://picsum.photos/seed/about-hero/1600/500"
                 alt="Smart Labs office interior"
@@ -28,7 +28,7 @@ export default function AboutPage() {
       
       <section 
         id="founder" 
-        className="py-12 md:py-20 bg-sky-200"
+        className="py-12 md:py-20"
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
             <div className="lg:col-span-2">
@@ -67,9 +67,9 @@ export default function AboutPage() {
         </div>
       </section>
       
-       <section className="bg-amber-400 py-12 md:py-20">
+       <section className="py-12 md:py-20">
         <div className="container mx-auto">
-          <div className="text-center bg-sky-100 p-8 md:p-12 rounded-lg">
+          <div className="text-center bg-card p-8 md:p-12 rounded-lg border">
             <h2 className="text-2xl md:text-3xl font-headline font-bold mb-4">Join Our Community</h2>
             <p className="max-w-3xl mx-auto text-muted-foreground mb-6">
                 Ready to take the next step in your journey? Talk to one of our certified trainers to find the perfect program for you.
@@ -83,5 +83,3 @@ export default function AboutPage() {
     </div>
   );
 }
-
-    

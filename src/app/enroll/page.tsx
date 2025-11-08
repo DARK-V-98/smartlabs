@@ -98,7 +98,7 @@ export default function EnrollPage() {
 
   return (
     <div className="w-full">
-      <section className="bg-amber-400 py-12 md:py-20">
+      <section className="py-12 md:py-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-headline font-bold">Enroll Now</h1>
@@ -204,7 +204,7 @@ export default function EnrollPage() {
                         </FormItem>
                       )}
                     />
-                    <div className="rounded-lg border bg-gray-50 p-4">
+                    <div className="rounded-lg border bg-muted/50 p-4">
                         <h3 className="font-semibold flex items-center gap-2"><CreditCard className="w-5 h-5" /> Secure Payment</h3>
                         <p className="text-sm text-muted-foreground mt-2">
                             After submitting, you will be redirected to our secure payment gateway. For free demos, no payment is required.

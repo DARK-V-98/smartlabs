@@ -8,8 +8,8 @@ import Link from 'next/link';
 export default function CELPIPPage() {
   return (
     <div className="w-full">
-      <section className="relative bg-amber-400 py-20 md:py-32">
-        <div className="absolute inset-0">
+      <section className="relative py-20 md:py-32">
+        <div className="absolute inset-0 bg-primary/10">
             <Image 
                 src="https://picsum.photos/seed/celpip-hero/1600/500"
                 alt="Canadian flag and cityscape"
@@ -73,7 +73,7 @@ export default function CELPIPPage() {
           </div>
       </section>
 
-      <section className="bg-sky-200 py-12 md:py-20">
+      <section className="py-12 md:py-20">
         <div className="container mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-headline font-bold">Your Pathway to Canada Starts Here</h2>
             <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
@@ -87,5 +87,3 @@ export default function CELPIPPage() {
     </div>
   );
 }
-
-    

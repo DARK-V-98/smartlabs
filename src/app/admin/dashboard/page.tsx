@@ -61,7 +61,7 @@ export default function AdminDashboardPage() {
 
   if (loading || !isAdmin) {
     return (
-      <div className="flex h-screen items-center justify-center bg-amber-400">
+      <div className="flex h-screen items-center justify-center">
         <div className="text-center">
             <p className="text-lg font-semibold">Loading...</p>
             <p className="text-sm text-muted-foreground">Please wait while we verify your credentials.</p>
@@ -71,7 +71,7 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="w-full bg-sky-200 min-h-screen">
+    <div className="w-full min-h-screen">
       <section className="py-8 md:py-12">
         <div className="container mx-auto">
           <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
