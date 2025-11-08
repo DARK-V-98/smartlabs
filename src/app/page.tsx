@@ -197,7 +197,7 @@ export default function Home() {
         className="py-16 md:py-24"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
@@ -243,7 +243,7 @@ export default function Home() {
         className="py-12 bg-black/20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.5 }}
+        viewport={{ once: false, amount: 0.5 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -266,7 +266,7 @@ export default function Home() {
         className="py-16 md:py-24"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto text-center">
@@ -299,7 +299,7 @@ export default function Home() {
         className="py-16 md:py-24 bg-black/20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -333,7 +333,7 @@ export default function Home() {
         className="py-16 md:py-24"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -368,7 +368,7 @@ export default function Home() {
         className="py-16 md:py-24"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -417,7 +417,7 @@ export default function Home() {
             className="text-center bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-md p-8 md:p-12 rounded-lg border border-white/10"
             initial="hidden"
             whileInView="visible"
-            viewport={{ amount: 0.5 }}
+            viewport={{ once: false, amount: 0.5 }}
             variants={sectionVariants}
           >
             <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-4">Ready to Start Your Score Journey?</h2>
@@ -437,7 +437,7 @@ export default function Home() {
         className="py-16 md:py-24"
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.2 }}
+        viewport={{ once: false, amount: 0.2 }}
         variants={sectionVariants}
       >
         <div className="container mx-auto">
@@ -468,3 +468,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
