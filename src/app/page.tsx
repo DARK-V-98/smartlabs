@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -149,8 +150,7 @@ export default function Home() {
         >
             <CarouselContent className="-ml-0 h-full">
             {heroImages.map((image, index) => (
-                <CarouselItem key={index} className="pl-0 h-full">
-                <div className="relative w-full h-full">
+                <CarouselItem key={index} className="pl-0 h-full relative">
                     <Image
                         src={image.src}
                         alt={image.alt}
@@ -159,7 +159,6 @@ export default function Home() {
                         className="object-cover"
                         priority={index === 0}
                     />
-                </div>
                 </CarouselItem>
             ))}
             </CarouselContent>
@@ -206,6 +205,7 @@ export default function Home() {
                       src="/la.png"
                       alt="Lahiruka Weeraratne (Laheer) - Founder of Smart Labs"
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-cover"
                     />
                 </div>
