@@ -137,6 +137,6 @@ export default function SettingsPage() {
             </form>
           </CardContent>
         </Card>
-      </div>
+    </div>
   );
 }
