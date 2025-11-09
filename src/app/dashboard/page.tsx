@@ -3,9 +3,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUser, useAuth } from '@/firebase';
+import { useUser, useAuth, useFirebase } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { getFirestore } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 
 import {
@@ -19,10 +18,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, ChevronRight, Video, FileText, LogOut, BookOpen, BarChart3, Settings, MessageSquare, ListVideo } from 'lucide-react';
+import { Calendar, ChevronRight, ListVideo, FileText, LogOut, BookOpen, BarChart3, Settings, MessageSquare, Briefcase } from 'lucide-react';
 import Link from 'next/link';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
-import { useFirebase } from '@/firebase';
 
 const lmsFeatures = [
     { title: 'Class Recordings', description: 'Access recordings of all your past classes.', href: '/dashboard/recordings', icon: ListVideo },
@@ -48,15 +46,22 @@ export default function DashboardPage() {
         const userRef = doc(firestore, 'users', user.uid);
         getDoc(userRef).then(userDoc => {
             if (userDoc.exists()) {
-                setUserRole(userDoc.data().role);
+                const userData = userDoc.data();
+                setUserRole(userData.role);
+                // Redirect admins/devs away from student dashboard
+                if (userData.role === 'admin' || userData.role === 'developer') {
+                    router.push('/admin/dashboard');
+                }
             }
         });
     }
   }, [user, isUserLoading, router, firestore]);
   
   const handleLogout = async () => {
-    await signOut(auth);
-    router.push('/login');
+    if (auth) {
+        await signOut(auth);
+        router.push('/login');
+    }
   };
 
   if (isUserLoading || !user) {
@@ -74,15 +79,14 @@ export default function DashboardPage() {
     <SidebarProvider>
         <Sidebar>
             <SidebarHeader>
-                 <div className="flex items-center gap-2">
+                 <div className="flex items-center gap-3">
                     <Avatar>
                         <AvatarImage src={user.photoURL || undefined} alt={user.displayName || ''} />
                         <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
                     </Avatar>
-                    <div className="flex flex-col">
-                        <span className="text-sm font-semibold">{user.displayName || 'Student'}</span>
-                        <span className="text-xs text-muted-foreground">{user.email}</span>
-                         {userRole && <Badge variant="outline" className="capitalize mt-1 w-fit">{userRole}</Badge>}
+                    <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-semibold truncate">{user.displayName || 'Student'}</span>
+                        <span className="text-xs text-muted-foreground truncate">{user.email}</span>
                     </div>
                 </div>
             </SidebarHeader>
@@ -94,6 +98,14 @@ export default function DashboardPage() {
                             Dashboard
                         </SidebarMenuButton>
                     </SidebarMenuItem>
+                    {userRole === 'admin' || userRole === 'developer' ? (
+                        <SidebarMenuItem>
+                            <SidebarMenuButton href="/admin/dashboard">
+                                <Briefcase />
+                                Admin Panel
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    ) : null}
                      <SidebarMenuItem>
                         <SidebarMenuButton href="/dashboard/recordings">
                             <ListVideo />
@@ -144,6 +156,7 @@ export default function DashboardPage() {
                                 <h1 className="text-2xl md:text-3xl font-headline font-bold">Student Dashboard</h1>
                                 <p className="text-md text-muted-foreground mt-1">Welcome back, {user.displayName}!</p>
                             </div>
+                             {userRole && <Badge variant="outline" className="capitalize">{userRole}</Badge>}
                         </div>
                          <Button asChild variant="outline">
                             <Link href="/courses">Explore New Courses</Link>

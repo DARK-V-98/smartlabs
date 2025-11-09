@@ -1,71 +1,90 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUser, useAuth, useFirebase } from '@/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { useUser, useAuth, useFirebase, useCollection, useMemoFirebase } from '@/firebase';
+import { doc, getDoc, collection, updateDoc } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
-import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal } from 'lucide-react';
+import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal, Shield, UserCheck, UserX, UserCog } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
-
-const ADMIN_EMAILS = ["admin@smartlabs.com", "thimira.vishwa2003@gmail.com"];
-
-const sampleUsers = [
-    { name: 'Priya Sharma', email: 'priya.sharma@example.com', course: 'IELTS', date: '2024-10-26', avatar: 'https://picsum.photos/100/100?random=1' },
-    { name: 'John Adebayo', email: 'john.adebayo@example.com', course: 'OET', date: '2024-10-25', avatar: 'https://picsum.photos/100/100?random=2' },
-    { name: 'Chen Wei', email: 'chen.wei@example.com', course: 'PTE', date: '2024-10-25', avatar: 'https://picsum.photos/100/100?random=3' },
-    { name: 'Emily White', email: 'emily.white@example.com', course: 'IELTS', date: '2024-10-24', avatar: 'https://picsum.photos/100/100?random=6' },
-];
+import { useToast } from '@/hooks/use-toast';
 
 
 export default function AdminDashboardPage() {
-  const { user, isUserLoading } = useUser();
+  const { user: currentUser, isUserLoading } = useUser();
   const auth = useAuth();
   const { firestore } = useFirebase();
   const router = useRouter();
+  const { toast } = useToast();
+
   const [isAdmin, setIsAdmin] = useState(false);
-  const [userRole, setUserRole] = useState('');
+  const [currentUserRole, setCurrentUserRole] = useState('');
+
+  // Fetch all users from the 'users' collection
+  const usersQuery = useMemoFirebase(() => 
+    firestore ? collection(firestore, 'users') : null, 
+    [firestore]
+  );
+  const { data: users, isLoading: usersLoading } = useCollection(usersQuery);
 
   useEffect(() => {
-    if (!isUserLoading && user && firestore) {
-      const userRef = doc(firestore, 'users', user.uid);
+    if (!isUserLoading && currentUser && firestore) {
+      const userRef = doc(firestore, 'users', currentUser.uid);
       getDoc(userRef).then(userDoc => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
           const role = userData.role;
-          setUserRole(role);
+          setCurrentUserRole(role);
           if (role === 'admin' || role === 'developer') {
             setIsAdmin(true);
           } else {
-            router.push('/login');
+            router.push('/dashboard'); // Redirect non-admins to student dashboard
           }
         } else {
-          router.push('/login');
+          router.push('/login'); // If user doc doesn't exist, they shouldn't be here
         }
       });
-    } else if (!isUserLoading && !user) {
+    } else if (!isUserLoading && !currentUser) {
       router.push('/login');
     }
-  }, [user, isUserLoading, router, firestore]);
-  
+  }, [currentUser, isUserLoading, router, firestore]);
+
   const handleLogout = async () => {
     await signOut(auth);
     router.push('/login');
+  };
+
+  const handleRoleChange = async (userId: string, newRole: 'user' | 'teacher' | 'admin') => {
+    if (!firestore) return;
+    const userRef = doc(firestore, 'users', userId);
+    try {
+        await updateDoc(userRef, { role: newRole });
+        toast({
+            title: 'Success!',
+            description: `User role has been updated to ${newRole}.`,
+        });
+    } catch (error) {
+        console.error("Error updating user role:", error);
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Could not update user role.',
+        });
+    }
   };
 
   if (isUserLoading || !isAdmin) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
-            <p className="text-lg font-semibold">Loading...</p>
-            <p className="text-sm text-muted-foreground">Please wait while we verify your credentials.</p>
+            <p className="text-lg font-semibold">Verifying Access...</p>
+            <p className="text-sm text-muted-foreground">Please wait while we check your credentials.</p>
         </div>
       </div>
     );
@@ -79,9 +98,9 @@ export default function AdminDashboardPage() {
             <div className="flex items-center gap-4">
                 <div>
                     <h1 className="text-3xl md:text-4xl font-headline font-bold">Admin Dashboard</h1>
-                    <p className="text-md text-muted-foreground mt-1">Welcome back, {user?.displayName || 'Admin'}!</p>
+                    <p className="text-md text-muted-foreground mt-1">Welcome back, {currentUser?.displayName || 'Admin'}!</p>
                 </div>
-                {userRole && <Badge variant="outline" className="capitalize">{userRole}</Badge>}
+                {currentUserRole && <Badge variant="destructive" className="capitalize">{currentUserRole}</Badge>}
             </div>
             <Button onClick={handleLogout} variant="outline">
                 <LogOut className="mr-2 h-4 w-4" />
@@ -96,8 +115,8 @@ export default function AdminDashboardPage() {
                     <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">1,254</div>
-                    <p className="text-xs text-muted-foreground">+20.1% from last month</p>
+                    <div className="text-2xl font-bold">{users?.length ?? 0}</div>
+                    <p className="text-xs text-muted-foreground">Live count of registered users.</p>
                 </CardContent>
             </Card>
             <Card>
@@ -107,7 +126,7 @@ export default function AdminDashboardPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">+235</div>
-                    <p className="text-xs text-muted-foreground">+180.1% from last month</p>
+                    <p className="text-xs text-muted-foreground">(Sample Data)</p>
                 </CardContent>
             </Card>
             <Card>
@@ -117,60 +136,63 @@ export default function AdminDashboardPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">12,389</div>
-                    <p className="text-xs text-muted-foreground">+19% from last month</p>
+                    <p className="text-xs text-muted-foreground">(Sample Data)</p>
                 </CardContent>
             </Card>
           </div>
           
           <Card>
             <CardHeader>
-                <CardTitle>Recent User Activity</CardTitle>
-                <CardDescription>An overview of the newest members and their chosen courses.</CardDescription>
+                <CardTitle>User Management</CardTitle>
+                <CardDescription>View, manage roles, and monitor all users on the platform.</CardDescription>
             </CardHeader>
             <CardContent>
+                {usersLoading ? <p>Loading users...</p> : (
                 <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead>User</TableHead>
-                            <TableHead>Course</TableHead>
-                            <TableHead className="hidden md:table-cell">Registration Date</TableHead>
+                            <TableHead>Email</TableHead>
+                            <TableHead>Role</TableHead>
                             <TableHead>
                                 <span className="sr-only">Actions</span>
                             </TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {sampleUsers.map((user) => (
-                            <TableRow key={user.email}>
+                        {users && users.map((user) => (
+                            <TableRow key={user.id}>
                                 <TableCell>
                                     <div className="flex items-center gap-3">
                                         <Avatar className="hidden h-9 w-9 sm:flex">
-                                            <AvatarImage src={user.avatar} alt="Avatar" />
-                                            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                                            <AvatarImage src={user.photoURL || `https://picsum.photos/seed/${user.id}/100/100`} alt="Avatar" />
+                                            <AvatarFallback>{user.displayName?.charAt(0) || user.email.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div className="grid gap-1">
-                                            <p className="text-sm font-medium leading-none">{user.name}</p>
-                                            <p className="text-xs text-muted-foreground md:hidden">{user.email}</p>
+                                            <p className="text-sm font-medium leading-none">{user.displayName || 'No Name'}</p>
                                         </div>
                                     </div>
                                 </TableCell>
+                                <TableCell>{user.email}</TableCell>
                                 <TableCell>
-                                    <Badge variant="outline">{user.course}</Badge>
+                                    <Badge variant={user.role === 'admin' || user.role === 'developer' ? 'destructive' : user.role === 'teacher' ? 'secondary' : 'outline'} className="capitalize">{user.role || 'user'}</Badge>
                                 </TableCell>
-                                <TableCell className="hidden md:table-cell">{user.date}</TableCell>
                                 <TableCell>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
-                                            <Button aria-haspopup="true" size="icon" variant="ghost">
+                                            <Button aria-haspopup="true" size="icon" variant="ghost" disabled={user.id === currentUser?.uid}>
                                                 <MoreHorizontal className="h-4 w-4" />
                                                 <span className="sr-only">Toggle menu</span>
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                            <DropdownMenuItem>View User</DropdownMenuItem>
-                                            <DropdownMenuItem>Edit Course</DropdownMenuItem>
-                                            <DropdownMenuItem className="text-red-600">Suspend</DropdownMenuItem>
+                                            <DropdownMenuLabel>Manage User</DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'teacher')}><UserCog className="mr-2 h-4 w-4" /> Make Teacher</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'admin')}><Shield className="mr-2 h-4 w-4" /> Make Admin</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'user')}><UserCheck className="mr-2 h-4 w-4" /> Make Student</DropdownMenuItem>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem className="text-red-600 focus:text-red-500"><UserX className="mr-2 h-4 w-4" /> Suspend User</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>
@@ -178,6 +200,7 @@ export default function AdminDashboardPage() {
                         ))}
                     </TableBody>
                 </Table>
+                )}
             </CardContent>
           </Card>
         </div>

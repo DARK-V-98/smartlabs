@@ -1,218 +1,124 @@
+
 /**
  * @file Firestore Security Rules
  * @description This ruleset enforces a strict user-ownership model for private user data while allowing public access to courses and blog posts.
+ * It also defines roles for 'admin' and 'developer' with broader access permissions.
  *
  * Data Structure:
- * - /users/{userId}: Stores user profiles. Only the user can read/write their own profile.
- * - /courses/{courseId}: Stores course information. Accessible to all users.
- * - /users/{userId}/study_plans/{studyPlanId}: Stores study plans for each user. Only the user can access their own study plans.
- * - /users/{userId}/enrollments/{enrollmentId}: Stores enrollment information for each user. Only the user can access their own enrollment records.
- * - /courses/{courseId}/resources/{resourceId}: Stores resources for each course. Accessible to all users.
- * - /blog_posts/{blogPostId}: Stores blog posts. Accessible to all users.
- * - /courses/{courseId}/practice_tests/{practiceTestId}: Stores practice tests for each course. Accessible to all users.
- * - /courses/{courseId}/practice_tests/{practiceTestId}/questions/{questionId}: Stores questions for each practice test. Accessible to all users.
- * - /users/{userId}/test_results/{userTestResultId}: Stores test results for each user. Only the user can access their own test results.
+ * - /users/{userId}: Stores user profiles and roles.
+ * - /courses/{courseId}: Stores course information.
+ * - /users/{userId}/study_plans/{studyPlanId}: Stores user-specific study plans.
+ * ... and other collections as defined in backend.json
  *
  * Key Security Decisions:
- * - User data is strictly controlled, with only the user having access to their own data.
- * - Courses, blog posts, practice tests, and questions are publicly readable.
- * - Listing of user documents is allowed only to the user themselves.
- *
- * Denormalization for Authorization:
- * - The 'userId' is denormalized into StudyPlan, Enrollment, and UserTestResult documents to avoid extra reads during authorization.
+ * - User data is strictly controlled; users can manage their own data.
+ * - Admins and Developers can read all user data for management purposes.
+ * - Public content like courses and blog posts is readable by anyone.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /**
-     * @description Allows a user to read and write their own profile data.
-     * @path /users/{userId}
-     * @allow (create) User with ID 'user123' can create their profile. { "id": "user123", "email": "test@example.com", "firstName": "Test", "lastName": "User" } with auth.uid == 'user123'
-     * @allow (get) User with ID 'user123' can read their profile. auth.uid == 'user123'
-     * @allow (update) User with ID 'user123' can update their profile. auth.uid == 'user123'
-     * @allow (delete) User with ID 'user123' can delete their profile. auth.uid == 'user123'
-     * @deny (create) User with ID 'user123' cannot create a profile with a mismatched auth.uid. { "id": "user456", "email": "test@example.com", "firstName": "Test", "lastName": "User" } with auth.uid == 'user123'
-     * @deny (get) User with ID 'user456' cannot read user 'user123' profile. auth.uid == 'user456'
-     * @principle Enforces document ownership for all operations.  Validates relational integrity for user ID.
-     */
-    match /users/{userId} {
-      function isOwner(userId) {
-        return request.auth.uid == userId;
-      }
-      function isExistingOwner(userId) {
-          return isOwner(userId) && resource != null;
-      }
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
-      allow delete: if isExistingOwner(userId);
+    // Helper functions for role-based access control
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+    
+    function getUserRole(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data.role;
+    }
+
+    function isAdmin() {
+      return getUserRole(request.auth.uid) == 'admin';
+    }
+
+    function isDeveloper() {
+        return getUserRole(request.auth.uid) == 'developer';
+    }
+
+    function isAdminOrDeveloper() {
+        return isAdmin() || isDeveloper();
     }
 
     /**
-     * @description Allows anyone to read course information.
-     * @path /courses/{courseId}
-     * @allow (get) Any user can read course information.
-     * @allow (list) Any user can list course information.
-     * @deny (create) No one can create courses. // TODO: Add admin role check if course creation should be restricted.
-     * @deny (update) No one can update courses. // TODO: Add admin role check if course updates should be restricted.
-     * @deny (delete) No one can delete courses. // TODO: Add admin role check if course deletion should be restricted.
-     * @principle Grants public read access while restricting write access.
+     * @description Rules for the 'users' collection.
+     * Allows users to manage their own profile.
+     * Allows admins/developers to read any user profile and update roles.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdminOrDeveloper();
+      allow list: if isAdminOrDeveloper();
+      allow create: if isOwner(userId) && request.resource.data.uid == userId;
+      allow update: if (isExistingOwner(userId) && request.resource.data.uid == resource.data.uid) || 
+                       (isAdminOrDeveloper() && request.resource.data.keys().hasOnly(['role', 'lastLogin', 'displayName', 'photoURL']));
+      allow delete: if isExistingOwner(userId) || isAdminOrDeveloper();
+    }
+
+    /**
+     * @description Publicly readable course information.
+     * Write access is restricted (e.g., to admins, not implemented here).
      */
     match /courses/{courseId} {
       allow get: if true;
       allow list: if true;
-      allow create: if false; // TODO: Add admin role check if course creation should be restricted.
-      allow update: if false; // TODO: Add admin role check if course updates should be restricted.
-      allow delete: if false; // TODO: Add admin role check if course deletion should be restricted.
+      allow write: if false; // TODO: Add admin role check
     }
 
     /**
-     * @description Allows a user to manage their own study plans.
-     * @path /users/{userId}/study_plans/{studyPlanId}
-     * @allow (create) User with ID 'user123' can create a study plan. auth.uid == 'user123'
-     * @allow (get) User with ID 'user123' can read their study plan. auth.uid == 'user123'
-     * @allow (update) User with ID 'user123' can update their study plan. auth.uid == 'user123'
-     * @allow (delete) User with ID 'user123' can delete their study plan. auth.uid == 'user123'
-     * @deny (create) User with ID 'user456' cannot create a study plan for user 'user123'. auth.uid == 'user456'
-     * @deny (get) User with ID 'user456' cannot read user 'user123' study plan. auth.uid == 'user456'
-     * @principle Enforces document ownership for all operations.
+     * @description User-specific study plans. Only accessible by the owner.
      */
     match /users/{userId}/study_plans/{studyPlanId} {
-      function isOwner(userId) {
-        return request.auth.uid == userId;
-      }
-      function isExistingOwner(userId) {
-          return isOwner(userId) && resource != null;
-      }
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-      allow create: if isOwner(userId) && request.resource.data.userId == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
-      allow delete: if isExistingOwner(userId);
+      allow read, write: if isOwner(userId);
     }
 
     /**
-     * @description Allows a user to manage their own enrollment records.
-     * @path /users/{userId}/enrollments/{enrollmentId}
-     * @allow (create) User with ID 'user123' can create an enrollment record. auth.uid == 'user123'
-     * @allow (get) User with ID 'user123' can read their enrollment record. auth.uid == 'user123'
-     * @allow (update) User with ID 'user123' can update their enrollment record. auth.uid == 'user123'
-     * @allow (delete) User with ID 'user123' can delete their enrollment record. auth.uid == 'user123'
-     * @deny (create) User with ID 'user456' cannot create an enrollment record for user 'user123'. auth.uid == 'user456'
-     * @deny (get) User with ID 'user456' cannot read user 'user123' enrollment record. auth.uid == 'user456'
-     * @principle Enforces document ownership for all operations.
+     * @description User-specific enrollment records. Only accessible by the owner.
      */
     match /users/{userId}/enrollments/{enrollmentId} {
-      function isOwner(userId) {
-        return request.auth.uid == userId;
-      }
-      function isExistingOwner(userId) {
-          return isOwner(userId) && resource != null;
-      }
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-      allow create: if isOwner(userId) && request.resource.data.userId == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
-      allow delete: if isExistingOwner(userId);
+      allow read, write: if isOwner(userId);
     }
 
     /**
-     * @description Allows anyone to read course resources.
-     * @path /courses/{courseId}/resources/{resourceId}
-     * @allow (get) Any user can read course resources.
-     * @allow (list) Any user can list course resources.
-     * @deny (create) No one can create course resources. // TODO: Add admin role check if resource creation should be restricted.
-     * @deny (update) No one can update course resources. // TODO: Add admin role check if resource updates should be restricted.
-     * @deny (delete) No one can delete course resources. // TODO: Add admin role check if resource deletion should be restricted.
-     * @principle Grants public read access while restricting write access.
+     * @description Publicly readable course resources.
      */
     match /courses/{courseId}/resources/{resourceId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if false; // TODO: Add admin role check if resource creation should be restricted.
-      allow update: if false; // TODO: Add admin role check if resource updates should be restricted.
-      allow delete: if false; // TODO: Add admin role check if resource deletion should be restricted.
+      allow get, list: if true;
+      allow write: if false; // TODO: Add admin role check
     }
 
     /**
-     * @description Allows anyone to read blog posts.
-     * @path /blog_posts/{blogPostId}
-     * @allow (get) Any user can read blog posts.
-     * @allow (list) Any user can list blog posts.
-     * @deny (create) No one can create blog posts. // TODO: Add admin/author role check if blog post creation should be restricted.
-     * @deny (update) No one can update blog posts. // TODO: Add admin/author role check if blog post updates should be restricted.
-     * @deny (delete) No one can delete blog posts. // TODO: Add admin/author role check if blog post deletion should be restricted.
-     * @principle Grants public read access while restricting write access.
+     * @description Publicly readable blog posts.
      */
     match /blog_posts/{blogPostId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if false; // TODO: Add admin/author role check if blog post creation should be restricted.
-      allow update: if false; // TODO: Add admin/author role check if blog post updates should be restricted.
-      allow delete: if false; // TODO: Add admin/author role check if blog post deletion should be restricted.
+      allow get, list: if true;
+      allow write: if false; // TODO: Add admin/author role check
     }
 
     /**
-     * @description Allows anyone to read practice tests for a course.
-     * @path /courses/{courseId}/practice_tests/{practiceTestId}
-     * @allow (get) Any user can read practice tests.
-     * @allow (list) Any user can list practice tests.
-     * @deny (create) No one can create practice tests. // TODO: Add admin role check if practice test creation should be restricted.
-     * @deny (update) No one can update practice tests. // TODO: Add admin role check if practice test updates should be restricted.
-     * @deny (delete) No one can delete practice tests. // TODO: Add admin role check if practice test deletion should be restricted.
-     * @principle Grants public read access while restricting write access.
+     * @description Publicly readable practice tests.
      */
     match /courses/{courseId}/practice_tests/{practiceTestId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if false; // TODO: Add admin role check if practice test creation should be restricted.
-      allow update: if false; // TODO: Add admin role check if practice test updates should be restricted.
-      allow delete: if false; // TODO: Add admin role check if practice test deletion should be restricted.
+      allow get, list: if true;
+      allow write: if false; // TODO: Add admin role check
+      
+      /**
+       * @description Publicly readable questions within a practice test.
+       */
+      match /questions/{questionId} {
+        allow get, list: if true;
+        allow write: if false; // TODO: Add admin role check
+      }
     }
 
     /**
-     * @description Allows anyone to read questions for a practice test.
-     * @path /courses/{courseId}/practice_tests/{practiceTestId}/questions/{questionId}
-     * @allow (get) Any user can read questions.
-     * @allow (list) Any user can list questions.
-     * @deny (create) No one can create questions. // TODO: Add admin role check if question creation should be restricted.
-     * @deny (update) No one can update questions. // TODO: Add admin role check if question updates should be restricted.
-     * @deny (delete) No one can delete questions. // TODO: Add admin role check if question deletion should be restricted.
-     * @principle Grants public read access while restricting write access.
-     */
-    match /courses/{courseId}/practice_tests/{practiceTestId}/questions/{questionId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if false; // TODO: Add admin role check if question creation should be restricted.
-      allow update: if false; // TODO: Add admin role check if question updates should be restricted.
-      allow delete: if false; // TODO: Add admin role check if question deletion should be restricted.
-    }
-
-    /**
-     * @description Allows a user to manage their own test results.
-     * @path /users/{userId}/test_results/{userTestResultId}
-     * @allow (create) User with ID 'user123' can create a test result. auth.uid == 'user123'
-     * @allow (get) User with ID 'user123' can read their test result. auth.uid == 'user123'
-     * @allow (update) User with ID 'user123' can update their test result. auth.uid == 'user123'
-     * @allow (delete) User with ID 'user123' can delete their test result. auth.uid == 'user123'
-     * @deny (create) User with ID 'user456' cannot create a test result for user 'user123'. auth.uid == 'user456'
-     * @deny (get) User with ID 'user456' cannot read user 'user123' test result. auth.uid == 'user456'
-     * @principle Enforces document ownership for all operations.
+     * @description User-specific test results. Only accessible by the owner.
      */
     match /users/{userId}/test_results/{userTestResultId} {
-      function isOwner(userId) {
-        return request.auth.uid == userId;
-      }
-      function isExistingOwner(userId) {
-          return isOwner(userId) && resource != null;
-      }
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-      allow create: if isOwner(userId) && request.resource.data.userId == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
-      allow delete: if isExistingOwner(userId);
+      allow read, write: if isOwner(userId);
     }
   }
 }

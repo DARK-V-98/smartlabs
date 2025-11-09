@@ -59,12 +59,18 @@ export default function SignupPage() {
     defaultValues: { displayName: '', email: '', password: '' },
   });
 
-  const handleAuthSuccess = async (user: User, displayName?: string | null) => {
+  const handleAuthSuccess = async (user: User, displayNameFromForm?: string) => {
+    if (!firestore) {
+        handleAuthError(new Error("Firestore is not initialized."));
+        return;
+    }
     try {
       const userRef = doc(firestore, 'users', user.uid);
       const userDoc = await getDoc(userRef);
+      
       let userRole = 'user';
       const userEmail = user.email || '';
+      const finalDisplayName = displayNameFromForm || user.displayName;
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
@@ -75,7 +81,8 @@ export default function SignupPage() {
         await updateDoc(userRef, {
             lastLogin: new Date(),
             role: userRole,
-            displayName: user.displayName || userData.displayName,
+            displayName: finalDisplayName || userData.displayName,
+            photoURL: user.photoURL || userData.photoURL,
         });
       } else {
         if (ADMIN_EMAILS.includes(userEmail)) {
@@ -84,7 +91,8 @@ export default function SignupPage() {
         await setDoc(userRef, {
           uid: user.uid,
           email: user.email,
-          displayName: displayName || user.displayName,
+          displayName: finalDisplayName,
+          photoURL: user.photoURL,
           role: userRole,
           createdAt: new Date(),
           lastLogin: new Date(),
@@ -119,6 +127,7 @@ export default function SignupPage() {
   };
 
   const onSubmit = async (data: SignupFormValues) => {
+    if (!auth) return;
     setIsLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
@@ -132,6 +141,7 @@ export default function SignupPage() {
   };
 
   const handleGoogleSignIn = async () => {
+    if (!auth) return;
     setIsLoading(true);
     const provider = new GoogleAuthProvider();
     try {

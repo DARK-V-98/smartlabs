@@ -58,6 +58,10 @@ export default function LoginPage() {
   });
 
   const handleAuthSuccess = async (user: User) => {
+    if (!firestore) {
+      handleAuthError(new Error("Firestore is not initialized."));
+      return;
+    }
     try {
       const userRef = doc(firestore, 'users', user.uid);
       const userDoc = await getDoc(userRef);
@@ -69,14 +73,13 @@ export default function LoginPage() {
         const userData = userDoc.data();
         userRole = userData.role || 'user';
         
-        if (ADMIN_EMAILS.includes(userEmail)) {
-           userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
-        }
+        let roleUpdate: { lastLogin: Date, role?: string } = { lastLogin: new Date() };
 
-        await updateDoc(userRef, {
-          lastLogin: new Date(),
-          role: userRole,
-        });
+        if (ADMIN_EMAILS.includes(userEmail) && userRole !== 'developer' && userRole !== 'admin') {
+            userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
+            roleUpdate.role = userRole;
+        }
+        await updateDoc(userRef, roleUpdate);
 
       } else {
         if (ADMIN_EMAILS.includes(userEmail)) {
@@ -86,6 +89,7 @@ export default function LoginPage() {
           uid: user.uid,
           email: user.email,
           displayName: user.displayName,
+          photoURL: user.photoURL,
           role: userRole,
           createdAt: new Date(),
           lastLogin: new Date(),
@@ -95,7 +99,7 @@ export default function LoginPage() {
       setIsLoading(false);
       toast({
         title: 'Login Successful!',
-        description: `Welcome back!`,
+        description: `Welcome back, ${user.displayName || user.email}!`,
       });
 
       if (userRole === 'admin' || userRole === 'developer') {
@@ -121,6 +125,7 @@ export default function LoginPage() {
   };
 
   const onSubmit = async (data: LoginFormValues) => {
+    if (!auth) return;
     setIsLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
@@ -131,6 +136,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = async () => {
+    if (!auth) return;
     setIsLoading(true);
     const provider = new GoogleAuthProvider();
     try {
