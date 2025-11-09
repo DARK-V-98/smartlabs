@@ -46,7 +46,7 @@ export default function WelcomePage() {
     <div className="w-full bg-muted/30">
       <div className="container mx-auto flex min-h-screen items-center justify-center py-12">
         <div className="w-full max-w-4xl text-center">
-          <Image src="/logo.png" alt="Smart Labs Logo" width={128} height={128} className="mx-auto mb-6" />
+          <Image src="/logo.png" alt="Smart Labs Logo" width={500} height={500} className="mx-auto mb-6 h-32 w-32 sm:h-48 sm:w-48" />
           <h1 className="text-3xl md:text-4xl font-headline font-bold">Welcome to Smart Labs, {user.displayName}!</h1>
           <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
             Your journey to success starts now. What would you like to do first?
