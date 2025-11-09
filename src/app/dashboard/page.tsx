@@ -48,10 +48,6 @@ export default function DashboardPage() {
             if (userDoc.exists()) {
                 const userData = userDoc.data();
                 setUserRole(userData.role);
-                // Redirect admins/devs away from student dashboard
-                if (userData.role === 'admin' || userData.role === 'developer') {
-                    router.push('/admin/dashboard');
-                }
             }
         });
     }
