@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "User": {
@@ -194,21 +195,34 @@
       "type": "object",
       "description": "Represents a blog post on the Smart Labs platform.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the blog post."
-        },
         "title": {
           "type": "string",
           "description": "Title of the blog post."
         },
+        "slug": {
+          "type": "string",
+          "description": "URL-friendly slug for the blog post."
+        },
         "content": {
           "type": "string",
-          "description": "Content of the blog post."
+          "description": "Content of the blog post in HTML format."
+        },
+        "excerpt": {
+          "type": "string",
+          "description": "A short summary of the blog post."
+        },
+        "image": {
+          "type": "string",
+          "description": "URL for the blog post's feature image.",
+          "format": "uri"
         },
         "authorId": {
           "type": "string",
           "description": "Reference to User (assumed to be the author). (Relationship: User 1:N BlogPost)"
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the blog post (e.g., IELTS, PTE)."
         },
         "publishDate": {
           "type": "string",
@@ -217,10 +231,13 @@
         }
       },
       "required": [
-        "id",
         "title",
+        "slug",
         "content",
+        "excerpt",
+        "image",
         "authorId",
+        "category",
         "publishDate"
       ]
     },
