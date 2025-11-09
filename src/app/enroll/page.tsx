@@ -1,10 +1,13 @@
 
 'use client';
 
-import { useEffect, useActionState, useState } from 'react';
+import { useEffect, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { getApp } from 'firebase/app';
+import { getFirestore as getClientFirestore, doc as clientDoc, updateDoc as clientUpdateDoc } from 'firebase/firestore';
+
 
 import { Button } from '@/components/ui/button';
 import {
@@ -35,12 +38,11 @@ import { useToast } from '@/hooks/use-toast';
 import { CreditCard, UserPlus } from 'lucide-react';
 import Image from 'next/image';
 import { useFirebase, useUser } from '@/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
 import { payhereConfig, coursePrices } from '@/lib/payhere';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
-  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  email: z.string().email({ message: 'Please enter a valid email address.' }).optional().or(z.literal('')),
   phone: z.string().min(10, { message: 'Please enter a valid phone number.' }),
   course: z.string({ required_error: 'Please select a course.' }),
   freeDemo: z.boolean().default(false),
@@ -64,23 +66,25 @@ const detailedCourseData = [
 // This is a client-side function that will be called inside the server action
 const updateUserRole = async (firestore: any, userId: string) => {
     if (!firestore || !userId) return;
-    const userRef = doc(firestore, 'users', userId);
-    await updateDoc(userRef, { role: 'student' });
+    const userRef = clientDoc(firestore, 'users', userId);
+    await clientUpdateDoc(userRef, { role: 'student' });
 };
 
 async function enrollAction(prevState: ServerActionState, formData: FormData): Promise<ServerActionState> {
   const formValues = {
     fullName: formData.get('fullName') as string,
-    email: formData.get('email') as string,
+    email: formData.get('email') as string | null,
     phone: formData.get('phone') as string,
     course: formData.get('course') as string,
     freeDemo: formData.get('freeDemo') === 'on',
     userId: formData.get('userId') as string,
   };
   
+  const userEmail = formValues.email;
+
   console.log('Preparing enrollment for user:', formValues);
   
-  if (formValues.email.includes('fail')) {
+  if (userEmail && userEmail.includes('fail')) {
     return { success: false, message: 'This email address is blocked.' };
   }
   
@@ -101,7 +105,7 @@ async function enrollAction(prevState: ServerActionState, formData: FormData): P
     currency: 'LKR',
     first_name: formValues.fullName.split(' ')[0],
     last_name: formValues.fullName.split(' ').slice(1).join(' ') || formValues.fullName.split(' ')[0],
-    email: formValues.email,
+    email: userEmail,
     phone: formValues.phone,
     address: 'N/A',
     city: 'N/A',
@@ -137,8 +141,9 @@ export default function EnrollPage() {
                     window.payhere.onCompleted = async (orderId: string) => {
                         console.log("Payment completed. OrderID:" + orderId);
                         toast({ title: 'Payment Successful!', description: 'Your enrollment is complete.' });
-                        if (firestore && user) {
-                            await updateUserRole(firestore, user.uid);
+                        const clientFirestore = getClientFirestore(getApp());
+                        if (clientFirestore && user) {
+                            await updateUserRole(clientFirestore, user.uid);
                             // Redirect or update UI
                         }
                     };
@@ -211,6 +216,7 @@ export default function EnrollPage() {
                 <Form {...form}>
                   <form action={formAction} className="space-y-6">
                     {user?.uid && <input type="hidden" name="userId" value={user.uid} />}
+                    {user?.email && <input type="hidden" name="email" value={user.email} />}
                     <FormField
                       control={form.control}
                       name="fullName"
@@ -311,4 +317,3 @@ export default function EnrollPage() {
     </div>
   );
 }
-
