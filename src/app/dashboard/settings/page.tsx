@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Settings, User as UserIcon } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { updateProfile } from 'firebase/auth';
 
 const settingsSchema = z.object({
@@ -58,10 +58,8 @@ export default function SettingsPage() {
     try {
       const userRef = doc(firestore, 'users', user.uid);
       
-      // Update Firestore document
       await updateDoc(userRef, { displayName: data.displayName });
       
-      // Update Firebase Auth profile
       if (auth.currentUser) {
         await updateProfile(auth.currentUser, { displayName: data.displayName });
       }
