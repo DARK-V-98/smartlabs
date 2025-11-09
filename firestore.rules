@@ -39,9 +39,17 @@ service cloud.firestore {
     function isDeveloper() {
         return getUserRole(request.auth.uid) == 'developer';
     }
+    
+    function isTeacher() {
+      return getUserRole(request.auth.uid) == 'teacher';
+    }
 
     function isAdminOrDeveloper() {
         return isAdmin() || isDeveloper();
+    }
+    
+    function isSupportStaff() {
+        return isAdminOrDeveloper() || isTeacher();
     }
     
     function isAuthenticated() {
@@ -69,7 +77,7 @@ service cloud.firestore {
     match /courses/{courseId} {
       allow get: if true;
       allow list: if true;
-      allow write: if false; // TODO: Add admin role check
+      allow write: if isSupportStaff(); 
     }
 
     /**
@@ -91,7 +99,7 @@ service cloud.firestore {
      */
     match /resources/{resourceId} {
       allow get, list: if isAuthenticated();
-      allow write: if false; // TODO: Add admin role check
+      allow write: if isSupportStaff(); 
     }
 
     /**
@@ -99,7 +107,7 @@ service cloud.firestore {
      */
     match /blog_posts/{blogPostId} {
       allow get, list: if true;
-      allow write: if false; // TODO: Add admin/author role check
+      allow write: if isSupportStaff(); 
     }
 
     /**
@@ -107,14 +115,14 @@ service cloud.firestore {
      */
     match /courses/{courseId}/practice_tests/{practiceTestId} {
       allow get, list: if true;
-      allow write: if false; // TODO: Add admin role check
+      allow write: if isSupportStaff();
       
       /**
        * @description Publicly readable questions within a practice test.
        */
       match /questions/{questionId} {
         allow get, list: if true;
-        allow write: if false; // TODO: Add admin role check
+        allow write: if isSupportStaff(); 
       }
     }
 
@@ -124,5 +132,27 @@ service cloud.firestore {
     match /users/{userId}/test_results/{userTestResultId} {
       allow read, write: if isOwner(userId);
     }
+    
+    /**
+     * @description Support chat threads.
+     * Users can create and read their own threads. Support staff can read/write all threads.
+     */
+    match /support_chats/{userId} {
+      allow get: if isOwner(userId) || isSupportStaff();
+      allow list: if isSupportStaff();
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) || isSupportStaff();
+
+      /**
+       * @description Messages within a support chat.
+       * Users can write to their own thread. Support staff can write to any thread.
+       */
+      match /messages/{messageId} {
+        allow read, list: if isOwner(userId) || isSupportStaff();
+        allow create: if (isOwner(userId) && request.resource.data.senderId == userId) || isSupportStaff();
+      }
+    }
   }
 }
+
+    

@@ -8,12 +8,13 @@ import { doc, getDoc, collection, updateDoc } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
-import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal, Shield, UserCheck, UserX, UserCog } from 'lucide-react';
+import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal, Shield, UserCheck, UserX, UserCog, MessageSquare } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 
 export default function AdminDashboardPage() {
@@ -41,10 +42,10 @@ export default function AdminDashboardPage() {
           const userData = userDoc.data();
           const role = userData.role;
           setCurrentUserRole(role);
-          if (role === 'admin' || role === 'developer') {
+          if (role === 'admin' || role === 'developer' || role === 'teacher') {
             setIsAdmin(true);
           } else {
-            router.push('/dashboard'); // Redirect non-admins to student dashboard
+            router.push('/dashboard'); // Redirect non-admins/teachers to student dashboard
           }
         } else {
           router.push('/login'); // If user doc doesn't exist, they shouldn't be here
@@ -56,6 +57,7 @@ export default function AdminDashboardPage() {
   }, [currentUser, isUserLoading, router, firestore]);
 
   const handleLogout = async () => {
+    if (!auth) return;
     await signOut(auth);
     router.push('/login');
   };
@@ -108,7 +110,7 @@ export default function AdminDashboardPage() {
             </Button>
           </header>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -138,6 +140,18 @@ export default function AdminDashboardPage() {
                     <div className="text-2xl font-bold">12,389</div>
                     <p className="text-xs text-muted-foreground">(Sample Data)</p>
                 </CardContent>
+            </Card>
+             <Card className="hover:bg-muted/50 transition-colors">
+                <Link href="/admin/dashboard/support">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Support Center</CardTitle>
+                        <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">Open</div>
+                        <p className="text-xs text-muted-foreground">Manage student queries.</p>
+                    </CardContent>
+                </Link>
             </Card>
           </div>
           
@@ -208,3 +222,5 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
+    

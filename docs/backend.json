@@ -358,6 +358,67 @@
         "submissionDate",
         "answers"
       ]
+    },
+     "SupportThread": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SupportThread",
+      "type": "object",
+      "description": "Represents a support chat thread between a user and support staff.",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who initiated the chat."
+        },
+        "userName": {
+          "type": "string",
+          "description": "The name of the user."
+        },
+        "userEmail": {
+          "type": "string",
+          "description": "The email of the user."
+        },
+        "lastMessage": {
+          "type": "string",
+          "description": "A snippet of the last message sent in the thread."
+        },
+        "lastMessageTimestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the last message."
+        },
+         "isReadByAdmin": {
+          "type": "boolean",
+          "description": "Indicates if the last message has been read by an admin."
+        }
+      },
+      "required": ["userId", "userName", "lastMessage", "lastMessageTimestamp"]
+    },
+    "ChatMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChatMessage",
+      "type": "object",
+      "description": "Represents a single message within a support chat thread.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The content of the chat message."
+        },
+        "senderId": {
+          "type": "string",
+          "description": "The ID of the user or admin who sent the message."
+        },
+        "senderRole": {
+          "type": "string",
+          "enum": ["user", "admin", "teacher"],
+          "description": "The role of the sender."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time the message was sent."
+        }
+      },
+      "required": ["text", "senderId", "senderRole", "timestamp"]
     }
   },
   "auth": {
@@ -441,7 +502,7 @@
         }
       },
       {
-        "path": "/courses/{courseId}/resources/{resourceId}",
+        "path": "/resources/{resourceId}",
         "definition": {
           "entityName": "Resource",
           "schema": {
@@ -449,10 +510,6 @@
           },
           "description": "Stores resources for each course. Accessible to all users. Includes denormalized 'courseId' for easy access by course.",
           "params": [
-            {
-              "name": "courseId",
-              "description": "The unique identifier of the course."
-            },
             {
               "name": "resourceId",
               "description": "The unique identifier of the resource."
@@ -539,8 +596,33 @@
             }
           ]
         }
+      },
+       {
+        "path": "/support_chats/{userId}",
+        "definition": {
+          "entityName": "SupportThread",
+          "schema": { "$ref": "#/backend/entities/SupportThread" },
+          "description": "Top-level collection for support chat threads. Document ID is the user's UID.",
+          "params": [
+            { "name": "userId", "description": "The user's unique ID." }
+          ]
+        }
+      },
+      {
+        "path": "/support_chats/{userId}/messages/{messageId}",
+        "definition": {
+          "entityName": "ChatMessage",
+          "schema": { "$ref": "#/backend/entities/ChatMessage" },
+          "description": "Sub-collection for messages within a support thread.",
+           "params": [
+            { "name": "userId", "description": "The user's unique ID." },
+            { "name": "messageId", "description": "The message's unique ID." }
+          ]
+        }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to support the Smart Labs platform, focusing on user data, courses, study plans, resources, blog posts, and practice tests. The structure emphasizes authorization independence, clarity, and security. \n\n**Authorization Independence (Denormalization):**\n\n*   `StudyPlan`, `Enrollment`, `Resource`, and `UserTestResult` collections are created as subcollections under `/users/{userId}`. This approach denormalizes the `userId` into each of these documents, avoiding the need for `get()` calls to the parent `User` document during security rule evaluation. This ensures atomic operations and simplifies security rules. For collaborative entities (none are explicitly specified, but could apply to shared study plans in the future), the 'members' map approach would be used, denormalizing relevant access control data into the document.\n\n**Structural Segregation:**\n\n*   `BlogPost` are stored in a separate top-level collection (`/blog_posts`) to allow public access. Private user-generated content (if any) would be stored under the `/users/{userId}` hierarchy.\n*   `Course` data is stored in the top-level `/courses` collection to be accessible by all users.\n\n**Access Modeling:**\n\n*   Private user data (study plans, enrollments, test results) is stored under `/users/{userId}` to ensure that only the user has access.\n*   Courses and blog posts are stored in top-level collections to allow broader access.\n\n**QAPs (Rules are not Filters):**\n\n*   The structure enables secure `list` operations by segregating data based on access requirements. Listing courses or blog posts can be done securely at the collection level. User-specific data listing is secured via path-based rules under the `/users/{userId}` hierarchy.\n\n**Example Scenario (User's Practice Tests):**\n\n*   A user's practice test results are stored in `/users/{userId}/test_results/{resultId}`. The security rules can directly check if `request.auth.uid == userId` to allow access, without needing to fetch any parent document.  The practice tests themselves are stored under /courses/{courseId}/practice_tests/{testId} so they can be accessed to all users enrolled in a particular course.\n"
+    "reasoning": "The Firestore data structure is designed to support the Smart Labs platform, focusing on user data, courses, study plans, resources, blog posts, practice tests and support chat. The structure emphasizes authorization independence, clarity, and security. \n\n**Authorization Independence (Denormalization):**\n\n*   `StudyPlan`, `Enrollment`, `UserTestResult`, and `SupportChat` collections are created with user-specific data. This approach denormalizes the `userId` into each of these documents, avoiding the need for `get()` calls to the parent `User` document during security rule evaluation. This ensures atomic operations and simplifies security rules. For collaborative entities (none are explicitly specified, but could apply to shared study plans in the future), the 'members' map approach would be used, denormalizing relevant access control data into the document.\n\n**Structural Segregation:**\n\n*   `BlogPost` and `Resource` are stored in separate top-level collections to allow public access. Private user-generated content (if any) would be stored under the `/users/{userId}` hierarchy.\n*   `Course` data is stored in the top-level `/courses` collection to be accessible by all users.\n*   `SupportChat` is a top-level collection where each document represents a user's thread, secured by rules.\n\n**Access Modeling:**\n\n*   Private user data (study plans, enrollments, test results) is stored under `/users/{userId}` to ensure that only the user has access.\n*   Courses and blog posts are stored in top-level collections to allow broader access.\n*   Support chat is designed so users can only access their own thread, while admins/teachers can access all threads.\n\n**QAPs (Rules are not Filters):**\n\n*   The structure enables secure `list` operations by segregating data based on access requirements. Listing courses or blog posts can be done securely at the collection level. User-specific data listing is secured via path-based rules under the `/users/{userId}` hierarchy. Admin listing of support chats is enabled at the collection level with role-based rules.\n"
   }
 }
+
+    
