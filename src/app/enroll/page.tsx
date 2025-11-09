@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useActionState } from 'react';
+import { useEffect, useActionState, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -37,6 +37,7 @@ import { CreditCard, UserPlus } from 'lucide-react';
 import Image from 'next/image';
 import { useFirebase, useUser } from '@/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
+import { payhereConfig, coursePrices } from '@/lib/payhere';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
@@ -51,6 +52,7 @@ type FormValues = z.infer<typeof formSchema>;
 type ServerActionState = {
     success: boolean;
     message: string;
+    payment?: any; // To hold payment details for Payhere
 }
 
 // This is a client-side function that will be called inside the server action
@@ -60,20 +62,39 @@ const updateUserRole = async (firestore: any, userId: string) => {
     await updateDoc(userRef, { role: 'student' });
 };
 
-// The server action now accepts the firestore and user objects
 async function enrollAction(prevState: ServerActionState, data: {formValues: FormValues, userId: string | undefined}): Promise<ServerActionState> {
-  console.log('Enrolling user:', data.formValues);
-  // In a real app, you would process payment here.
+  const { formValues, userId } = data;
+  console.log('Preparing enrollment for user:', formValues);
   
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  if (data.formValues.email.includes('fail')) {
+  if (formValues.email.includes('fail')) {
     return { success: false, message: 'This email address is blocked.' };
   }
+  
+  if (formValues.freeDemo) {
+      return { success: true, message: 'Free demo requested! We will contact you shortly.' };
+  }
 
-  // After successful 'payment', we can assume enrollment is complete.
-  // The role update will happen on the client after this action returns successfully.
-  return { success: true, message: 'Enrollment successful! We will contact you shortly.' };
+  const amount = coursePrices[formValues.course] || 0;
+  if (amount === 0) {
+      return { success: false, message: 'Invalid course selected for payment.' };
+  }
+
+  const paymentDetails = {
+    ...payhereConfig,
+    order_id: `SL-${userId?.slice(0, 5)}-${Date.now()}`,
+    items: formValues.course,
+    amount: amount.toFixed(2),
+    currency: 'LKR',
+    first_name: formValues.fullName.split(' ')[0],
+    last_name: formValues.fullName.split(' ').slice(1).join(' ') || formValues.fullName.split(' ')[0],
+    email: formValues.email,
+    phone: formValues.phone,
+    address: 'N/A',
+    city: 'N/A',
+    country: 'Sri Lanka',
+  };
+
+  return { success: true, message: 'Proceeding to payment...', payment: paymentDetails };
 }
 
 
@@ -95,37 +116,46 @@ export default function EnrollPage() {
 
   useEffect(() => {
     if (state.message) {
-      if (state.success) {
-        toast({
-          title: 'Success!',
-          description: state.message,
-        });
+        if (state.success) {
+            if (state.payment) {
+                // Payment details are available, trigger Payhere
+                if(window.payhere) {
+                    window.payhere.onCompleted = async (orderId: string) => {
+                        console.log("Payment completed. OrderID:" + orderId);
+                        toast({ title: 'Payment Successful!', description: 'Your enrollment is complete.' });
+                        if (firestore && user) {
+                            await updateUserRole(firestore, user.uid);
+                            // Redirect or update UI
+                        }
+                    };
+                    window.payhere.onDismissed = () => {
+                        console.log("Payment dismissed");
+                        toast({ variant: 'destructive', title: 'Payment Canceled', description: 'Your payment process was canceled.' });
+                    };
+                    window.payhere.onError = (error: string) => {
+                        console.log("Payhere Error:" + error);
+                        toast({ variant: 'destructive', title: 'Payment Error', description: error });
+                    };
+                    window.payhere.startPayment(state.payment);
+                } else {
+                     toast({ variant: 'destructive', title: 'Error', description: 'Payment gateway could not be loaded.' });
+                }
 
-        // If action was successful, update the user's role to 'student'
-        if (firestore && user) {
-            updateUserRole(firestore, user.uid)
-                .then(() => {
-                    console.log("User role updated to student.");
-                     // Optionally redirect or give further instructions
-                })
-                .catch(err => {
-                    console.error("Failed to update user role:", err);
-                    toast({
-                        variant: 'destructive',
-                        title: 'Role update failed',
-                        description: 'Could not update your role. Please contact support.',
-                    });
+            } else {
+                // This handles the free demo success case
+                 toast({
+                    title: 'Success!',
+                    description: state.message,
                 });
+                form.reset();
+            }
+        } else {
+            toast({
+            variant: 'destructive',
+            title: 'Uh oh! Something went wrong.',
+            description: state.message,
+            });
         }
-
-        form.reset();
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: state.message,
-        });
-      }
     }
   }, [state, toast, form, firestore, user]);
 
@@ -156,7 +186,7 @@ export default function EnrollPage() {
             <div className="relative aspect-[4/3] lg:aspect-auto h-64 lg:h-full w-full max-w-lg mx-auto lg:max-w-none">
                 <Image 
                     src="/enr.png"
-                    alt="Enrollment illustration"
+                    alt="Students enrolling in Smart Labs courses"
                     fill
                     className="rounded-xl object-cover"
                 />
@@ -189,7 +219,7 @@ export default function EnrollPage() {
                         <FormItem>
                           <FormLabel>Email Address</FormLabel>
                           <FormControl>
-                            <Input type="email" placeholder="you@example.com" {...field} />
+                            <Input type="email" placeholder="you@example.com" {...field} disabled={!!user?.email}/>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -202,7 +232,7 @@ export default function EnrollPage() {
                         <FormItem>
                           <FormLabel>Phone Number</FormLabel>
                           <FormControl>
-                            <Input type="tel" placeholder="+1 234 567 890" {...field} />
+                            <Input type="tel" placeholder="+94 123 456 789" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -223,7 +253,7 @@ export default function EnrollPage() {
                             <SelectContent>
                               {courseData.map((course) => (
                                 <SelectItem key={course.title} value={course.title}>
-                                  {course.title}
+                                  {course.title} - LKR {coursePrices[course.title]?.toLocaleString() || 'N/A'}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -243,7 +273,7 @@ export default function EnrollPage() {
                           <div className="space-y-1 leading-none">
                             <FormLabel>Request a Free Demo Class</FormLabel>
                             <p className="text-sm text-muted-foreground">
-                                Check this box to schedule a free trial class before you commit.
+                                Check this box to schedule a free trial class before you commit. No payment required.
                             </p>
                           </div>
                         </FormItem>
@@ -257,7 +287,7 @@ export default function EnrollPage() {
                     </div>
                     <Button type="submit" className="w-full" size="lg" disabled={form.formState.isSubmitting}>
                       <UserPlus className="mr-2 h-4 w-4" />
-                      {form.formState.isSubmitting ? 'Processing...' : 'Submit & Proceed to Payment'}
+                      {form.getValues("freeDemo") ? 'Request Free Demo' : form.formState.isSubmitting ? 'Processing...' : 'Submit & Proceed to Payment'}
                     </Button>
                   </form>
                 </Form>

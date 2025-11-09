@@ -6,6 +6,7 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { FirebaseClientProvider } from '@/firebase';
 import './globals.css';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Smart Labs - Your Partner in Test Preparation',
@@ -46,6 +47,7 @@ export default function RootLayout({
           <Footer />
           <Toaster />
         </FirebaseClientProvider>
+        <Script type="text/javascript" src="https://sandbox.payhere.lk/lib/payhere.js"></Script>
       </body>
     </html>
   );
