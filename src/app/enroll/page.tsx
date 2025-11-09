@@ -73,7 +73,7 @@ const updateUserRole = async (firestore: any, userId: string) => {
 async function enrollAction(prevState: ServerActionState, formData: FormData): Promise<ServerActionState> {
   const formValues = {
     fullName: formData.get('fullName') as string,
-    email: formData.get('email') as string | null,
+    email: formData.get('email') as string,
     phone: formData.get('phone') as string,
     course: formData.get('course') as string,
     freeDemo: formData.get('freeDemo') === 'on',
@@ -84,7 +84,11 @@ async function enrollAction(prevState: ServerActionState, formData: FormData): P
 
   console.log('Preparing enrollment for user:', formValues);
   
-  if (userEmail && userEmail.includes('fail')) {
+  if (!userEmail) {
+      return { success: false, message: 'User email not found. Please try logging in again.' };
+  }
+  
+  if (userEmail.includes('fail')) {
     return { success: false, message: 'This email address is blocked.' };
   }
   
