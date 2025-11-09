@@ -115,12 +115,18 @@ export default function LoginPage() {
   const handleAuthError = (error: any) => {
     setIsLoading(false);
     console.error("Login Error:", error);
+    
+    let description = 'An unexpected error occurred.';
+    const invalidCredentialCodes = ['auth/wrong-password', 'auth/user-not-found', 'auth/invalid-credential'];
+
+    if (invalidCredentialCodes.includes(error.code)) {
+        description = 'Invalid email or password. Please try again.';
+    }
+
     toast({
       variant: 'destructive',
       title: 'Uh oh! Something went wrong.',
-      description: error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential'
-        ? 'Invalid email or password. Please try again.'
-        : 'An unexpected error occurred.',
+      description: description,
     });
   };
 
