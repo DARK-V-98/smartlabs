@@ -51,7 +51,7 @@ export default function SettingsPage() {
   }, [user, isUserLoading, router, form]);
 
   const onSubmit = async (data: SettingsFormValues) => {
-    if (!user || !firestore || !auth.currentUser) return;
+    if (!user || !firestore || !auth?.currentUser) return;
     
     setIsLoading(true);
     
