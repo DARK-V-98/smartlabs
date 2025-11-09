@@ -3,9 +3,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, db } from '@/lib/firebase';
+import { useUser, useAuth } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 
 import {
@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, ChevronRight, Video, FileText, LogOut, BookOpen, BarChart3, Settings, MessageSquare, ListVideo } from 'lucide-react';
 import Link from 'next/link';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
+import { useFirebase } from '@/firebase';
 
 const lmsFeatures = [
     { title: 'Class Recordings', description: 'Access recordings of all your past classes.', href: '/dashboard/recordings', icon: ListVideo },
@@ -34,29 +35,31 @@ const lmsFeatures = [
 
 
 export default function DashboardPage() {
-  const [user, loading] = useAuthState(auth);
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+  const { firestore } = useFirebase();
   const router = useRouter();
   const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!isUserLoading && !user) {
       router.push('/login');
-    } else if (user) {
-        const userRef = doc(db, 'users', user.uid);
+    } else if (user && firestore) {
+        const userRef = doc(firestore, 'users', user.uid);
         getDoc(userRef).then(userDoc => {
             if (userDoc.exists()) {
                 setUserRole(userDoc.data().role);
             }
         });
     }
-  }, [user, loading, router]);
+  }, [user, isUserLoading, router, firestore]);
   
   const handleLogout = async () => {
     await signOut(auth);
     router.push('/login');
   };
 
-  if (loading || !user) {
+  if (isUserLoading || !user) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">

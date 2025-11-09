@@ -12,7 +12,7 @@ import {
   GoogleAuthProvider,
   User,
 } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase';
+import { useAuth, useFirebase } from '@/firebase';
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; 
 import { Button } from '@/components/ui/button';
 import {
@@ -49,6 +49,8 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const auth = useAuth();
+  const { firestore } = useFirebase();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -57,7 +59,7 @@ export default function LoginPage() {
 
   const handleAuthSuccess = async (user: User) => {
     try {
-      const userRef = doc(db, 'users', user.uid);
+      const userRef = doc(firestore, 'users', user.uid);
       const userDoc = await getDoc(userRef);
       
       let userRole = 'user';
@@ -67,7 +69,6 @@ export default function LoginPage() {
         const userData = userDoc.data();
         userRole = userData.role || 'user';
         
-        // Ensure developers or admins are correctly identified even if role was different
         if (ADMIN_EMAILS.includes(userEmail)) {
            userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
         }

@@ -3,8 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, db } from '@/lib/firebase';
+import { useUser, useAuth, useFirebase } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,14 +26,16 @@ const sampleUsers = [
 
 
 export default function AdminDashboardPage() {
-  const [user, loading] = useAuthState(auth);
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+  const { firestore } = useFirebase();
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
   const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
-    if (!loading && user) {
-      const userRef = doc(db, 'users', user.uid);
+    if (!isUserLoading && user && firestore) {
+      const userRef = doc(firestore, 'users', user.uid);
       getDoc(userRef).then(userDoc => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
@@ -49,17 +50,17 @@ export default function AdminDashboardPage() {
           router.push('/login');
         }
       });
-    } else if (!loading && !user) {
+    } else if (!isUserLoading && !user) {
       router.push('/login');
     }
-  }, [user, loading, router]);
+  }, [user, isUserLoading, router, firestore]);
   
   const handleLogout = async () => {
     await signOut(auth);
     router.push('/login');
   };
 
-  if (loading || !isAdmin) {
+  if (isUserLoading || !isAdmin) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">

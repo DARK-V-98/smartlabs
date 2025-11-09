@@ -13,7 +13,7 @@ import {
   updateProfile,
   User,
 } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase';
+import { useAuth, useFirebase } from '@/firebase';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import {
@@ -51,6 +51,8 @@ export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const auth = useAuth();
+  const { firestore } = useFirebase();
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -59,7 +61,7 @@ export default function SignupPage() {
 
   const handleAuthSuccess = async (user: User, displayName?: string | null) => {
     try {
-      const userRef = doc(db, 'users', user.uid);
+      const userRef = doc(firestore, 'users', user.uid);
       const userDoc = await getDoc(userRef);
       let userRole = 'user';
       const userEmail = user.email || '';

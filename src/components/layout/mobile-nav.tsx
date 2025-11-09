@@ -14,12 +14,11 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { NAV_LINKS } from '@/lib/constants';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/lib/firebase';
+import { useUser } from '@/firebase';
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
-  const [user] = useAuthState(auth);
+  const { user } = useUser();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

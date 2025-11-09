@@ -1,4 +1,8 @@
-// Import the functions you need from the SDKs you need
+
+// This file is retained for legacy compatibility but is no longer the primary
+// entry point for Firebase services. Please use the provider and hooks
+// from '@//firebase' for all new development.
+
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";

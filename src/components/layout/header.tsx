@@ -9,8 +9,7 @@ import { Button } from '@/components/ui/button';
 import { MobileNav } from '@/components/layout/mobile-nav';
 import { NAV_LINKS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/lib/firebase';
+import { useUser, useAuth } from '@/firebase';
 import { User, Download } from 'lucide-react';
 import {
   DropdownMenu,
@@ -33,7 +32,8 @@ interface BeforeInstallPromptEvent extends Event {
 
 export default function Header() {
   const pathname = usePathname();
-  const [user, loading] = useAuthState(auth);
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
 
@@ -98,7 +98,7 @@ export default function Header() {
               Install
             </Button>
           )}
-          {loading ? null : user ? (
+          {isUserLoading ? null : user ? (
              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="secondary" size="icon" className="rounded-full">
