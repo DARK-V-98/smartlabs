@@ -155,9 +155,8 @@ export default function EnrollPage() {
           <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-start">
             <div className="relative aspect-[4/3] lg:aspect-auto h-64 lg:h-full w-full max-w-lg mx-auto lg:max-w-none">
                 <Image 
-                    src="https://picsum.photos/seed/enroll/800/800"
-                    alt="Student enrolling online"
-                    data-ai-hint="student online"
+                    src="/enr.png"
+                    alt="Enrollment illustration"
                     fill
                     className="rounded-xl object-cover"
                 />
@@ -270,5 +269,3 @@ export default function EnrollPage() {
     </div>
   );
 }
-
-    
