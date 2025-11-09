@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useUser, useAuth, useFirebase } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
@@ -15,12 +15,12 @@ import {
   CardTitle,
   CardFooter
 } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, ChevronRight, ListVideo, FileText, LogOut, BookOpen, BarChart3, Settings, MessageSquare, Briefcase } from 'lucide-react';
+import { Calendar, ChevronRight, ListVideo, FileText, LogOut, BookOpen, BarChart3, Settings, MessageSquare, Briefcase, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
-import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+
 
 const lmsFeatures = [
     { title: 'Class Recordings', description: 'Access recordings of all your past classes.', href: '/dashboard/recordings', icon: ListVideo },
@@ -31,12 +31,22 @@ const lmsFeatures = [
     { title: 'Support Chat', description: 'Get help from your teacher or our support team.', href: '/dashboard/support', icon: MessageSquare },
 ];
 
+const navItems = [
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/dashboard/recordings", label: "Recordings", icon: ListVideo },
+    { href: "/resources", label: "Materials", icon: FileText },
+    { href: "/dashboard/practice-tests", label: "Practice", icon: BookOpen },
+    { href: "/dashboard/progress", label: "Progress", icon: BarChart3 },
+    { href: "/dashboard/settings", label: "Settings", icon: Settings },
+];
+
 
 export default function DashboardPage() {
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
   const { firestore } = useFirebase();
   const router = useRouter();
+  const pathname = usePathname();
   const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
@@ -72,92 +82,50 @@ export default function DashboardPage() {
   }
 
   return (
-    <SidebarProvider>
-        <Sidebar>
-            <SidebarHeader>
-                 <div className="flex items-center gap-3">
-                    <Avatar>
-                        <AvatarImage src={user.photoURL || undefined} alt={user.displayName || ''} />
-                        <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col overflow-hidden">
-                        <span className="text-sm font-semibold truncate">{user.displayName || 'Student'}</span>
-                        <span className="text-xs text-muted-foreground truncate">{user.email}</span>
-                    </div>
+    <div className="w-full min-h-screen">
+      <section className="py-8 md:py-12">
+        <div className="container mx-auto">
+            <header className="flex items-center justify-between mb-8 gap-4">
+                <div>
+                    <h1 className="text-2xl md:text-3xl font-headline font-bold">Student Dashboard</h1>
+                    <p className="text-md text-muted-foreground mt-1">Welcome back, {user.displayName}!</p>
                 </div>
-            </SidebarHeader>
-            <SidebarContent>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton href="/dashboard" isActive>
-                            <BookOpen />
-                            Dashboard
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
+                 <div className="flex items-center gap-4">
+                    {userRole && <Badge variant="outline" className="capitalize">{userRole}</Badge>}
+                    <Button onClick={handleLogout} variant="outline" size="sm">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                    </Button>
+                </div>
+            </header>
+            
+            <Tabs value={pathname} className="w-full">
+                <TabsList className="grid w-full grid-cols-3 sm:grid-cols-4 md:grid-cols-6 mb-8 h-auto">
+                    {navItems.map((item) => (
+                        <TabsTrigger key={item.href} value={item.href} asChild>
+                             <Link href={item.href} className="flex flex-col sm:flex-row items-center gap-2 p-2">
+                                <item.icon className="h-5 w-5" />
+                                <span>{item.label}</span>
+                            </Link>
+                        </TabsTrigger>
+                    ))}
+                </TabsList>
+                <TabsContent value={pathname}>
                     {userRole === 'admin' || userRole === 'developer' ? (
-                        <SidebarMenuItem>
-                            <SidebarMenuButton href="/admin/dashboard">
-                                <Briefcase />
-                                Admin Panel
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
+                        <Card className="mb-8 border-amber-500 bg-amber-500/10">
+                            <CardHeader className="flex-row items-center justify-between">
+                                <div>
+                                    <CardTitle>Admin Access</CardTitle>
+                                    <CardDescription>Manage users and content from the admin panel.</CardDescription>
+                                </div>
+                                <Button asChild>
+                                    <Link href="/admin/dashboard" className="flex items-center gap-2">
+                                        <Briefcase /> Go to Admin
+                                    </Link>
+                                </Button>
+                            </CardHeader>
+                        </Card>
                     ) : null}
-                     <SidebarMenuItem>
-                        <SidebarMenuButton href="/dashboard/recordings">
-                            <ListVideo />
-                            Recordings
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton href="/resources">
-                            <FileText />
-                            Materials
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton href="/dashboard/practice-tests">
-                            <BookOpen />
-                            Practice Tests
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton href="/dashboard/progress">
-                            <BarChart3 />
-                            Progress
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton href="#">
-                            <Settings />
-                            Settings
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarContent>
-             <div className="p-2 mt-auto">
-                <Button onClick={handleLogout} variant="ghost" className="w-full justify-start">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                </Button>
-            </div>
-        </Sidebar>
-        <SidebarInset>
-            <div className="w-full min-h-screen">
-              <section className="py-8 md:py-12">
-                <div className="container mx-auto">
-                    <header className="flex items-center justify-between mb-8 gap-4">
-                        <div className="flex items-center gap-4">
-                             <SidebarTrigger className="md:hidden" />
-                            <div>
-                                <h1 className="text-2xl md:text-3xl font-headline font-bold">Student Dashboard</h1>
-                                <p className="text-md text-muted-foreground mt-1">Welcome back, {user.displayName}!</p>
-                            </div>
-                             {userRole && <Badge variant="outline" className="capitalize">{userRole}</Badge>}
-                        </div>
-                         <Button asChild variant="outline">
-                            <Link href="/courses">Explore New Courses</Link>
-                        </Button>
-                    </header>
                     
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {lmsFeatures.map((feature) => {
@@ -184,10 +152,10 @@ export default function DashboardPage() {
                           );
                       })}
                     </div>
-                </div>
-              </section>
-            </div>
-        </SidebarInset>
-    </SidebarProvider>
+                </TabsContent>
+            </Tabs>
+        </div>
+      </section>
+    </div>
   );
 }
