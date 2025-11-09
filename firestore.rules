@@ -49,7 +49,7 @@ service cloud.firestore {
     }
     
     function isSupportStaff() {
-        return isAdminOrDeveloper() || isTeacher();
+        return isAdmin() || isDeveloper() || isTeacher();
     }
     
     function isAuthenticated() {
@@ -154,5 +154,3 @@ service cloud.firestore {
     }
   }
 }
-
-    
