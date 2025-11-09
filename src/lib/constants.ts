@@ -60,12 +60,10 @@ export const testimonials = [
 ];
 
 export const resourceLibrary = [
-    { type: 'test', title: 'IELTS Academic - Sample Test', format: 'PDF', icon: 'FileText' },
-    { type: 'test', title: 'PTE Academic - Full-length Mock Test', format: 'PDF', icon: 'FileText' },
-    { type: 'video', title: 'OET Speaking Role-play Example', format: 'Video', icon: 'Video' },
-    { type: 'list', title: 'TOEFL Vocabulary List', format: 'PDF', icon: 'FileText' },
-    { type: 'video', title: 'IELTS Writing Task 1 Strategy', format: 'Video', icon: 'Video' },
-    { type: 'test', title: 'OET Nursing - Sample Case Notes', format: 'PDF', icon: 'FileText' },
+    { id: '1', type: 'test', title: 'IELTS Academic - Sample Test', format: 'PDF', icon: 'FileText', url: '#' },
+    { id: '2', type: 'test', title: 'PTE Academic - Full-length Mock Test', format: 'PDF', icon: 'FileText', url: '#' },
+    { id: '3', type: 'video', title: 'OET Speaking Role-play Example', format: 'Video', icon: 'Video', url: '#' },
+    { id: '4', type: 'list', title: 'TOEFL Vocabulary List', format: 'PDF', icon: 'FileText', url: '#' },
+    { id: '5', type: 'video', title: 'IELTS Writing Task 1 Strategy', format: 'Video', icon: 'Video', url: '#' },
+    { id: '6', type: 'test', title: 'OET Nursing - Sample Case Notes', format: 'PDF', icon: 'FileText', url: '#' },
 ];
-
-    

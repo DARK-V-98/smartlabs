@@ -1,10 +1,13 @@
 
+'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { resourceLibrary } from '@/lib/constants';
+import { useFirebase, useCollection, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
 import { FileText, Video, Download } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const iconMap = {
   FileText: FileText,
@@ -12,8 +15,34 @@ const iconMap = {
 };
 
 export default function ResourcesPage() {
-  const testsAndLists = resourceLibrary.filter(r => r.type === 'test' || r.type === 'list');
-  const videos = resourceLibrary.filter(r => r.type === 'video');
+  const { firestore } = useFirebase();
+  
+  const resourcesQuery = useMemoFirebase(() => 
+    firestore ? collection(firestore, 'resources') : null,
+    [firestore]
+  );
+  
+  const { data: resourceLibrary, isLoading } = useCollection(resourcesQuery);
+
+  const testsAndLists = resourceLibrary?.filter(r => r.type === 'test' || r.type === 'list');
+  const videos = resourceLibrary?.filter(r => r.type === 'video');
+
+  const renderSkeleton = () => (
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {[...Array(3)].map((_, i) => (
+        <Card key={i}>
+          <CardHeader>
+            <Skeleton className="h-8 w-8" />
+            <Skeleton className="h-6 w-3/4 mt-2" />
+            <Skeleton className="h-4 w-1/4 mt-1" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
 
   return (
     <div className="w-full">
@@ -32,27 +61,32 @@ export default function ResourcesPage() {
               <TabsTrigger value="documents">Documents</TabsTrigger>
               <TabsTrigger value="videos">Videos</TabsTrigger>
             </TabsList>
-            <TabsContent value="all">
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {resourceLibrary.map((item, index) => (
-                  <ResourceCard key={index} item={item} />
-                ))}
-              </div>
-            </TabsContent>
-            <TabsContent value="documents">
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {testsAndLists.map((item, index) => (
-                  <ResourceCard key={index} item={item} />
-                ))}
-              </div>
-            </TabsContent>
-            <TabsContent value="videos">
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {videos.map((item, index) => (
-                  <ResourceCard key={index} item={item} />
-                ))}
-              </div>
-            </TabsContent>
+            
+            {isLoading ? renderSkeleton() : (
+              <>
+                <TabsContent value="all">
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {resourceLibrary?.map((item) => (
+                      <ResourceCard key={item.id} item={item} />
+                    ))}
+                  </div>
+                </TabsContent>
+                <TabsContent value="documents">
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {testsAndLists?.map((item) => (
+                      <ResourceCard key={item.id} item={item} />
+                    ))}
+                  </div>
+                </TabsContent>
+                <TabsContent value="videos">
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {videos?.map((item) => (
+                      <ResourceCard key={item.id} item={item} />
+                    ))}
+                  </div>
+                </TabsContent>
+              </>
+            )}
           </Tabs>
         </div>
       </section>
@@ -60,33 +94,33 @@ export default function ResourcesPage() {
   );
 }
 
-type ResourceItem = typeof resourceLibrary[0];
-
-function ResourceCard({ item }: { item: ResourceItem }) {
+function ResourceCard({ item }: { item: any }) {
   const Icon = iconMap[item.icon as keyof typeof iconMap] || FileText;
 
   if (item.type === 'video') {
     return (
         <Card className="overflow-hidden group shadow-lg hover:shadow-xl transition-shadow">
-            <div className="relative aspect-video">
-                <Image 
-                    src={`https://picsum.photos/400/225?random=${item.title}`}
-                    alt={item.title}
-                    data-ai-hint="lesson video"
-                    fill
-                    className="w-full object-cover transition-transform group-hover:scale-105"
-                />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <Video className="h-12 w-12 sm:h-16 sm:w-16 text-white/80" />
-                </div>
-            </div>
-            <CardHeader>
-                <CardTitle className="font-headline">{item.title}</CardTitle>
-                <CardDescription>{item.format}</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Button className="w-full">Watch Now</Button>
-            </CardContent>
+            <a href={item.url || '#'} target="_blank" rel="noopener noreferrer">
+              <div className="relative aspect-video">
+                  <Image 
+                      src={`https://picsum.photos/seed/${item.id}/400/225`}
+                      alt={item.title}
+                      data-ai-hint="lesson video"
+                      fill
+                      className="w-full object-cover transition-transform group-hover:scale-105"
+                  />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <Video className="h-12 w-12 sm:h-16 sm:w-16 text-white/80" />
+                  </div>
+              </div>
+              <CardHeader>
+                  <CardTitle className="font-headline">{item.title}</CardTitle>
+                  <CardDescription>{item.format}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <Button className="w-full">Watch Now</Button>
+              </CardContent>
+            </a>
         </Card>
     );
   }
@@ -105,9 +139,11 @@ function ResourceCard({ item }: { item: ResourceItem }) {
         </div>
       </CardHeader>
       <CardContent>
-        <Button className="w-full">
-          <Download className="mr-2 h-4 w-4" />
-          Download
+        <Button asChild className="w-full">
+          <a href={item.url || '#'} target="_blank" rel="noopener noreferrer">
+            <Download className="mr-2 h-4 w-4" />
+            Download
+          </a>
         </Button>
       </CardContent>
     </Card>

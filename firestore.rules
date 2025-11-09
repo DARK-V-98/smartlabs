@@ -43,6 +43,10 @@ service cloud.firestore {
     function isAdminOrDeveloper() {
         return isAdmin() || isDeveloper();
     }
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
 
     /**
      * @description Rules for the 'users' collection.
@@ -83,10 +87,10 @@ service cloud.firestore {
     }
 
     /**
-     * @description Publicly readable course resources.
+     * @description Course resources are readable by any authenticated user.
      */
-    match /courses/{courseId}/resources/{resourceId} {
-      allow get, list: if true;
+    match /resources/{resourceId} {
+      allow get, list: if isAuthenticated();
       allow write: if false; // TODO: Add admin role check
     }
 
