@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useActionState } from 'react';
@@ -34,6 +35,8 @@ import { useToast } from '@/hooks/use-toast';
 import { courseData } from '@/lib/constants';
 import { CreditCard, UserPlus } from 'lucide-react';
 import Image from 'next/image';
+import { useFirebase, useUser } from '@/firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
@@ -45,29 +48,46 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-async function enrollAction(prevState: any, data: FormValues) {
-  // Here you would typically process the enrollment and payment
-  console.log('Enrolling user:', data);
+type ServerActionState = {
+    success: boolean;
+    message: string;
+}
 
-  // Simulate a delay
+// This is a client-side function that will be called inside the server action
+const updateUserRole = async (firestore: any, userId: string) => {
+    if (!firestore || !userId) return;
+    const userRef = doc(firestore, 'users', userId);
+    await updateDoc(userRef, { role: 'student' });
+};
+
+// The server action now accepts the firestore and user objects
+async function enrollAction(prevState: ServerActionState, data: {formValues: FormValues, userId: string | undefined}): Promise<ServerActionState> {
+  console.log('Enrolling user:', data.formValues);
+  // In a real app, you would process payment here.
+  
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  if (data.email.includes('fail')) {
+  if (data.formValues.email.includes('fail')) {
     return { success: false, message: 'This email address is blocked.' };
   }
 
+  // After successful 'payment', we can assume enrollment is complete.
+  // The role update will happen on the client after this action returns successfully.
   return { success: true, message: 'Enrollment successful! We will contact you shortly.' };
 }
 
+
 export default function EnrollPage() {
   const { toast } = useToast();
+  const { firestore } = useFirebase();
+  const { user } = useUser();
   const [state, formAction] = useActionState(enrollAction, { success: false, message: '' });
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: '',
-      email: '',
+      fullName: user?.displayName || '',
+      email: user?.email || '',
       phone: '',
       freeDemo: false,
     },
@@ -80,6 +100,24 @@ export default function EnrollPage() {
           title: 'Success!',
           description: state.message,
         });
+
+        // If action was successful, update the user's role to 'student'
+        if (firestore && user) {
+            updateUserRole(firestore, user.uid)
+                .then(() => {
+                    console.log("User role updated to student.");
+                     // Optionally redirect or give further instructions
+                })
+                .catch(err => {
+                    console.error("Failed to update user role:", err);
+                    toast({
+                        variant: 'destructive',
+                        title: 'Role update failed',
+                        description: 'Could not update your role. Please contact support.',
+                    });
+                });
+        }
+
         form.reset();
       } else {
         toast({
@@ -89,10 +127,19 @@ export default function EnrollPage() {
         });
       }
     }
-  }, [state, toast, form]);
+  }, [state, toast, form, firestore, user]);
+
+  useEffect(() => {
+    if(user) {
+        form.reset({
+            fullName: user.displayName || '',
+            email: user.email || '',
+        })
+    }
+  }, [user, form]);
 
   const onSubmit = (data: FormValues) => {
-    formAction(data);
+    formAction({ formValues: data, userId: user?.uid });
   };
 
   return (
@@ -223,3 +270,5 @@ export default function EnrollPage() {
     </div>
   );
 }
+
+    

@@ -58,6 +58,12 @@ export default function DashboardPage() {
             if (userDoc.exists()) {
                 const userData = userDoc.data();
                 setUserRole(userData.role);
+                // Redirect if user role is 'user'
+                if(userData.role === 'user') {
+                    router.push('/welcome');
+                }
+            } else {
+                 router.push('/login');
             }
         });
     }
@@ -70,7 +76,7 @@ export default function DashboardPage() {
     }
   };
 
-  if (isUserLoading || !user) {
+  if (isUserLoading || !user || !userRole || userRole === 'user') {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
@@ -80,6 +86,8 @@ export default function DashboardPage() {
       </div>
     );
   }
+
+  const isAdminOrDev = userRole === 'admin' || userRole === 'developer';
 
   return (
     <div className="w-full min-h-screen">
@@ -91,7 +99,7 @@ export default function DashboardPage() {
                     <p className="text-md text-muted-foreground mt-1">Welcome back, {user.displayName}!</p>
                 </div>
                  <div className="flex items-center gap-4">
-                    {userRole && <Badge variant="outline" className="capitalize">{userRole}</Badge>}
+                    {userRole && <Badge variant={isAdminOrDev ? "destructive" : "outline"} className="capitalize">{userRole}</Badge>}
                     <Button onClick={handleLogout} variant="outline" size="sm">
                         <LogOut className="mr-2 h-4 w-4" />
                         Logout
@@ -111,7 +119,7 @@ export default function DashboardPage() {
                     ))}
                 </TabsList>
                 <TabsContent value={pathname}>
-                    {userRole === 'admin' || userRole === 'developer' ? (
+                    {isAdminOrDev ? (
                         <Card className="mb-8 border-amber-500 bg-amber-500/10">
                             <CardHeader className="flex-row items-center justify-between">
                                 <div>
@@ -159,3 +167,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
