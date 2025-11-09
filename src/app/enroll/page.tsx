@@ -68,8 +68,16 @@ const updateUserRole = async (firestore: any, userId: string) => {
     await updateDoc(userRef, { role: 'student' });
 };
 
-async function enrollAction(prevState: ServerActionState, data: {formValues: FormValues, userId: string | undefined}): Promise<ServerActionState> {
-  const { formValues, userId } = data;
+async function enrollAction(prevState: ServerActionState, formData: FormData): Promise<ServerActionState> {
+  const formValues = {
+    fullName: formData.get('fullName') as string,
+    email: formData.get('email') as string,
+    phone: formData.get('phone') as string,
+    course: formData.get('course') as string,
+    freeDemo: formData.get('freeDemo') === 'on',
+    userId: formData.get('userId') as string,
+  };
+  
   console.log('Preparing enrollment for user:', formValues);
   
   if (formValues.email.includes('fail')) {
@@ -87,7 +95,7 @@ async function enrollAction(prevState: ServerActionState, data: {formValues: For
 
   const paymentDetails = {
     ...payhereConfig,
-    order_id: `SL-${userId?.slice(0, 5)}-${Date.now()}`,
+    order_id: `SL-${formValues.userId?.slice(0, 5)}-${Date.now()}`,
     items: formValues.course,
     amount: amount.toFixed(2),
     currency: 'LKR',
@@ -174,9 +182,6 @@ export default function EnrollPage() {
     }
   }, [user, form]);
 
-  const onSubmit = (data: FormValues) => {
-    formAction({ formValues: data, userId: user?.uid });
-  };
 
   return (
     <div className="w-full">
@@ -204,7 +209,8 @@ export default function EnrollPage() {
               </CardHeader>
               <CardContent>
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <form action={formAction} className="space-y-6">
+                    {user?.uid && <input type="hidden" name="userId" value={user.uid} />}
                     <FormField
                       control={form.control}
                       name="fullName"
@@ -250,7 +256,7 @@ export default function EnrollPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Select Course</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} defaultValue={field.value} name={field.name}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Choose your desired course" />
@@ -274,7 +280,7 @@ export default function EnrollPage() {
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                           <FormControl>
-                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} name={field.name} />
                           </FormControl>
                           <div className="space-y-1 leading-none">
                             <FormLabel>Request a Free Demo Class</FormLabel>
@@ -306,4 +312,3 @@ export default function EnrollPage() {
   );
 }
 
-    
