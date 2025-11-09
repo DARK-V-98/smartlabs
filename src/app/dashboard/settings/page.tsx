@@ -133,8 +133,9 @@ export default function SettingsPage() {
                 {isLoading ? 'Saving...' : 'Save Changes'}
               </Button>
             </form>
-          </CardContent>
-        </Card>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
