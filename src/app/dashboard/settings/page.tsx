@@ -62,7 +62,9 @@ export default function SettingsPage() {
       await updateDoc(userRef, { displayName: data.displayName });
       
       // Update Firebase Auth profile
-      await updateProfile(auth.currentUser, { displayName: data.displayName });
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, { displayName: data.displayName });
+      }
 
       toast({
         title: 'Success!',
@@ -135,7 +137,6 @@ export default function SettingsPage() {
             </form>
           </CardContent>
         </Card>
-      </Card>
-    </div>
+      </div>
   );
 }
