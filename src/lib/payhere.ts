@@ -8,9 +8,10 @@ export const payhereConfig = {
 };
 
 export const coursePrices: { [key: string]: number } = {
-    'PTE': 30000,
-    'IELTS': 30000,
-    'CELPIP': 25000, 
+    'PTE - Online Boostify Session': 25000,
+    'PTE - Physical + Online Hybrid': 30000,
+    'IELTS - Weekend Group Class': 30000,
+    'CELPIP - Self-Paced Program': 25000,
 };
 
 // This type definition is for the Payhere object available on the window
@@ -24,3 +25,5 @@ declare global {
     };
   }
 }
+
+    

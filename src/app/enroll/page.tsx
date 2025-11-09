@@ -32,7 +32,6 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { courseData } from '@/lib/constants';
 import { CreditCard, UserPlus } from 'lucide-react';
 import Image from 'next/image';
 import { useFirebase, useUser } from '@/firebase';
@@ -54,6 +53,13 @@ type ServerActionState = {
     message: string;
     payment?: any; // To hold payment details for Payhere
 }
+
+const detailedCourseData = [
+    { title: 'PTE - Online Boostify Session' },
+    { title: 'PTE - Physical + Online Hybrid' },
+    { title: 'IELTS - Weekend Group Class' },
+    { title: 'CELPIP - Self-Paced Program' },
+];
 
 // This is a client-side function that will be called inside the server action
 const updateUserRole = async (firestore: any, userId: string) => {
@@ -251,7 +257,7 @@ export default function EnrollPage() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {courseData.map((course) => (
+                              {detailedCourseData.map((course) => (
                                 <SelectItem key={course.title} value={course.title}>
                                   {course.title} - LKR {coursePrices[course.title]?.toLocaleString() || 'N/A'}
                                 </SelectItem>
@@ -299,3 +305,5 @@ export default function EnrollPage() {
     </div>
   );
 }
+
+    
