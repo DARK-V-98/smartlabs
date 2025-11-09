@@ -85,7 +85,7 @@ export default function DashboardPage() {
     <div className="w-full min-h-screen">
       <section className="py-8 md:py-12">
         <div className="container mx-auto">
-            <header className="flex items-center justify-between mb-8 gap-4">
+            <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-headline font-bold">Student Dashboard</h1>
                     <p className="text-md text-muted-foreground mt-1">Welcome back, {user.displayName}!</p>
@@ -100,10 +100,10 @@ export default function DashboardPage() {
             </header>
             
             <Tabs value={pathname} className="w-full">
-                <TabsList className="grid w-full grid-cols-3 sm:grid-cols-4 md:grid-cols-6 mb-8 h-auto">
+                <TabsList className="grid w-full sm:w-auto sm:inline-grid grid-cols-3 sm:grid-cols-6 mb-8 h-auto">
                     {navItems.map((item) => (
                         <TabsTrigger key={item.href} value={item.href} asChild>
-                             <Link href={item.href} className="flex flex-col sm:flex-row items-center gap-2 p-2">
+                             <Link href={item.href} className="flex flex-col sm:flex-row items-center gap-2 p-2 h-auto sm:h-10">
                                 <item.icon className="h-5 w-5" />
                                 <span>{item.label}</span>
                             </Link>
