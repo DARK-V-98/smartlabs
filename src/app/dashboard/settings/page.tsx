@@ -13,8 +13,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Settings } from 'lucide-react';
+import { Settings, ArrowLeft } from 'lucide-react';
 import { updateProfile } from 'firebase/auth';
+import Link from 'next/link';
 
 const settingsSchema = z.object({
   displayName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -90,6 +91,12 @@ export default function SettingsPage() {
 
   return (
     <div className="container mx-auto py-10">
+      <Button asChild variant="ghost" className="mb-4">
+        <Link href="/dashboard">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Dashboard
+        </Link>
+      </Button>
       <Card>
         <CardHeader>
           <div className="flex items-center gap-4">
