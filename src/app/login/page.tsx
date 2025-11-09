@@ -13,7 +13,7 @@ import {
   User,
 } from 'firebase/auth';
 import { useAuth, useFirebase } from '@/firebase';
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; 
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore"; 
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -67,23 +67,20 @@ export default function LoginPage() {
       const userDoc = await getDoc(userRef);
       
       let userRole = 'user';
-      const userEmail = user.email || '';
+      let hasCompletedOnboarding = false;
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
         userRole = userData.role || 'user';
+        hasCompletedOnboarding = userData.hasCompletedOnboarding || false;
         
-        let roleUpdate: { lastLogin: Date, role?: string } = { lastLogin: new Date() };
-
-        if (ADMIN_EMAILS.includes(userEmail) && userRole !== 'developer' && userRole !== 'admin') {
-            userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
-            roleUpdate.role = userRole;
-        }
-        await updateDoc(userRef, roleUpdate);
+        await updateDoc(userRef, { lastLogin: serverTimestamp() });
 
       } else {
+        const userEmail = user.email || '';
         if (ADMIN_EMAILS.includes(userEmail)) {
             userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
+            hasCompletedOnboarding = true; // Admins skip onboarding
         }
         await setDoc(userRef, {
           uid: user.uid,
@@ -91,8 +88,9 @@ export default function LoginPage() {
           displayName: user.displayName,
           photoURL: user.photoURL,
           role: userRole,
-          createdAt: new Date(),
-          lastLogin: new Date(),
+          createdAt: serverTimestamp(),
+          lastLogin: serverTimestamp(),
+          hasCompletedOnboarding: hasCompletedOnboarding,
         });
       }
 
@@ -104,8 +102,10 @@ export default function LoginPage() {
 
       if (userRole === 'admin' || userRole === 'developer') {
         router.push('/admin/dashboard');
-      } else {
+      } else if (hasCompletedOnboarding) {
         router.push('/dashboard');
+      } else {
+        router.push('/welcome');
       }
     } catch (error) {
       handleAuthError(error);

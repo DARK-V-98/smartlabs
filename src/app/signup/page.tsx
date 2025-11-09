@@ -14,7 +14,7 @@ import {
   User,
 } from 'firebase/auth';
 import { useAuth, useFirebase } from '@/firebase';
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -68,25 +68,15 @@ export default function SignupPage() {
       const userRef = doc(firestore, 'users', user.uid);
       const userDoc = await getDoc(userRef);
       
-      let userRole = 'user';
-      const userEmail = user.email || '';
       const finalDisplayName = displayNameFromForm || user.displayName;
 
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        userRole = userData.role || 'user';
+      if (!userDoc.exists()) {
+        const userEmail = user.email || '';
+        let userRole = 'user';
+        let hasCompletedOnboarding = false;
         if (ADMIN_EMAILS.includes(userEmail)) {
            userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
-        }
-        await updateDoc(userRef, {
-            lastLogin: new Date(),
-            role: userRole,
-            displayName: finalDisplayName || userData.displayName,
-            photoURL: user.photoURL || userData.photoURL,
-        });
-      } else {
-        if (ADMIN_EMAILS.includes(userEmail)) {
-           userRole = userEmail === "thimira.vishwa2003@gmail.com" ? 'developer' : 'admin';
+           hasCompletedOnboarding = true; // Admins skip onboarding
         }
         await setDoc(userRef, {
           uid: user.uid,
@@ -94,21 +84,37 @@ export default function SignupPage() {
           displayName: finalDisplayName,
           photoURL: user.photoURL,
           role: userRole,
-          createdAt: new Date(),
-          lastLogin: new Date(),
+          createdAt: serverTimestamp(),
+          lastLogin: serverTimestamp(),
+          hasCompletedOnboarding: hasCompletedOnboarding,
         });
-      }
 
-      setIsLoading(false);
-      toast({
-        title: 'Account Created!',
-        description: 'Welcome to Smart Labs!',
-      });
-      
-      if (userRole === 'admin' || userRole === 'developer') {
-          router.push('/admin/dashboard');
+        setIsLoading(false);
+        toast({
+          title: 'Account Created!',
+          description: 'Welcome to Smart Labs!',
+        });
+        
+        if (userRole === 'admin' || userRole === 'developer') {
+            router.push('/admin/dashboard');
+        } else {
+            router.push('/welcome');
+        }
       } else {
-          router.push('/dashboard');
+        // User already exists, treat as login
+        setIsLoading(false);
+        toast({
+            title: 'Login Successful!',
+            description: `Welcome back, ${finalDisplayName || user.email}!`,
+        });
+        const userData = userDoc.data();
+        if (userData.role === 'admin' || userData.role === 'developer') {
+            router.push('/admin/dashboard');
+        } else if (userData.hasCompletedOnboarding) {
+            router.push('/dashboard');
+        } else {
+            router.push('/welcome');
+        }
       }
     } catch (error) {
         handleAuthError(error);
