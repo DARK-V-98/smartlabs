@@ -1,12 +1,11 @@
-
 'use client';
 
-import { useEffect, useActionState } from 'react';
+import { useEffect, useActionState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { getApp } from 'firebase/app';
-import { getFirestore as getClientFirestore, doc as clientDoc, updateDoc as clientUpdateDoc } from 'firebase/firestore';
+import { getFirestore as getClientFirestore, doc as clientDoc, updateDoc as clientUpdateDoc, collection as clientCollection, addDoc as clientAddDoc, serverTimestamp as clientServerTimestamp, where, query, getDocs } from 'firebase/firestore';
 
 
 import { Button } from '@/components/ui/button';
@@ -54,21 +53,15 @@ type ServerActionState = {
     success: boolean;
     message: string;
     payment?: any; // To hold payment details for Payhere
+    courseId?: string; // To hold the ID of the selected course
 }
 
 const detailedCourseData = [
-    { title: 'PTE - Online Boostify Session' },
-    { title: 'PTE - Physical + Online Hybrid' },
-    { title: 'IELTS - Weekend Group Class' },
-    { title: 'CELPIP - Self-Paced Program' },
+    { id: "pte-online", title: 'PTE - Online Boostify Session' },
+    { id: "pte-hybrid", title: 'PTE - Physical + Online Hybrid' },
+    { id: "ielts-weekend", title: 'IELTS - Weekend Group Class' },
+    { id: "celpip-self", title: 'CELPIP - Self-Paced Program' },
 ];
-
-// This is a client-side function that will be called inside the server action
-const updateUserRole = async (firestore: any, userId: string) => {
-    if (!firestore || !userId) return;
-    const userRef = clientDoc(firestore, 'users', userId);
-    await clientUpdateDoc(userRef, { role: 'student' });
-};
 
 async function enrollAction(prevState: ServerActionState, formData: FormData): Promise<ServerActionState> {
   const formValues = {
@@ -82,18 +75,17 @@ async function enrollAction(prevState: ServerActionState, formData: FormData): P
   
   const userEmail = formValues.email;
 
-  console.log('Preparing enrollment for user:', formValues);
-  
   if (!userEmail) {
-      return { success: false, message: 'User email not found. Please try logging in again.' };
-  }
-  
-  if (userEmail.includes('fail')) {
-    return { success: false, message: 'This email address is blocked.' };
+      return { success: false, message: 'User email not found. Please log in to enroll.' };
   }
   
   if (formValues.freeDemo) {
       return { success: true, message: 'Free demo requested! We will contact you shortly.' };
+  }
+  
+  const selectedCourse = detailedCourseData.find(c => c.title === formValues.course);
+  if (!selectedCourse) {
+      return { success: false, message: 'Invalid course selected.' };
   }
 
   const amount = coursePrices[formValues.course] || 0;
@@ -116,16 +108,15 @@ async function enrollAction(prevState: ServerActionState, formData: FormData): P
     country: 'Sri Lanka',
   };
 
-  return { success: true, message: 'Proceeding to payment...', payment: paymentDetails };
+  return { success: true, message: 'Proceeding to payment...', payment: paymentDetails, courseId: selectedCourse.id };
 }
-
 
 export default function EnrollPage() {
   const { toast } = useToast();
-  const { firestore } = useFirebase();
   const { user } = useUser();
   const [state, formAction] = useActionState(enrollAction, { success: false, message: '' });
-
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -139,16 +130,27 @@ export default function EnrollPage() {
   useEffect(() => {
     if (state.message) {
         if (state.success) {
-            if (state.payment) {
+            if (state.payment && state.courseId) {
                 // Payment details are available, trigger Payhere
+                setSelectedCourseId(state.courseId);
                 if(window.payhere) {
                     window.payhere.onCompleted = async (orderId: string) => {
                         console.log("Payment completed. OrderID:" + orderId);
                         toast({ title: 'Payment Successful!', description: 'Your enrollment is complete.' });
+                        
                         const clientFirestore = getClientFirestore(getApp());
-                        if (clientFirestore && user) {
-                            await updateUserRole(clientFirestore, user.uid);
-                            // Redirect or update UI
+                        if (clientFirestore && user && selectedCourseId) {
+                            const userRef = clientDoc(clientFirestore, 'users', user.uid);
+                            await clientUpdateDoc(userRef, { role: 'student' });
+
+                            const enrollmentRef = clientCollection(clientFirestore, `users/${user.uid}/enrollments`);
+                            await clientAddDoc(enrollmentRef, {
+                                userId: user.uid,
+                                courseId: selectedCourseId,
+                                enrollmentDate: clientServerTimestamp(),
+                                paymentStatus: 'paid',
+                                orderId: orderId,
+                            });
                         }
                     };
                     window.payhere.onDismissed = () => {
@@ -180,7 +182,7 @@ export default function EnrollPage() {
             });
         }
     }
-  }, [state, toast, form, firestore, user]);
+  }, [state, toast, form, user, selectedCourseId]);
 
   useEffect(() => {
     if(user) {
@@ -274,7 +276,7 @@ export default function EnrollPage() {
                             </FormControl>
                             <SelectContent>
                               {detailedCourseData.map((course) => (
-                                <SelectItem key={course.title} value={course.title}>
+                                <SelectItem key={course.id} value={course.title}>
                                   {course.title} - LKR {coursePrices[course.title]?.toLocaleString() || 'N/A'}
                                 </SelectItem>
                               ))}

@@ -1,13 +1,16 @@
-
 'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useFirebase, useCollection, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { useFirebase, useCollection, useMemoFirebase, useUser } from '@/firebase';
+import { collection, query, where } from 'firebase/firestore';
 import { FileText, Video, Download } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useMemo } from 'react';
+import Link from 'next/link';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Lock } from 'lucide-react';
 
 const iconMap = {
   FileText: FileText,
@@ -16,16 +19,27 @@ const iconMap = {
 
 export default function ResourcesPage() {
   const { firestore } = useFirebase();
+  const { user } = useUser();
   
+  const enrollmentsQuery = useMemoFirebase(() => 
+    firestore && user ? collection(firestore, `users/${user.uid}/enrollments`) : null,
+    [firestore, user]
+  );
+  const { data: enrollments, isLoading: enrollmentsLoading } = useCollection(enrollmentsQuery);
+
+  const enrolledCourseIds = useMemo(() => enrollments?.map(e => e.courseId) || [], [enrollments]);
+
   const resourcesQuery = useMemoFirebase(() => 
-    firestore ? collection(firestore, 'resources') : null,
-    [firestore]
+    firestore && enrolledCourseIds.length > 0 ? query(collection(firestore, 'resources'), where('courseId', 'in', enrolledCourseIds)) : null,
+    [firestore, enrolledCourseIds]
   );
   
-  const { data: resourceLibrary, isLoading } = useCollection(resourcesQuery);
+  const { data: resourceLibrary, isLoading: resourcesLoading } = useCollection(resourcesQuery);
 
   const testsAndLists = resourceLibrary?.filter(r => r.type === 'test' || r.type === 'list');
   const videos = resourceLibrary?.filter(r => r.type === 'video');
+
+  const isLoading = enrollmentsLoading || resourcesLoading;
 
   const renderSkeleton = () => (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -43,6 +57,17 @@ export default function ResourcesPage() {
       ))}
     </div>
   );
+  
+  const renderNoAccess = () => (
+    <Alert>
+        <Lock className="h-4 w-4" />
+        <AlertTitle>No Resources Found</AlertTitle>
+        <AlertDescription>
+            You are not enrolled in any courses, or your enrolled courses do not have any materials yet.
+            Please <Link href="/courses" className="font-bold underline hover:text-primary">enroll in a course</Link> to access the resource library.
+        </AlertDescription>
+    </Alert>
+  );
 
   return (
     <div className="w-full">
@@ -51,43 +76,46 @@ export default function ResourcesPage() {
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-headline font-bold">Resource Library</h1>
             <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
-              A curated collection of practice tests, vocabulary lists, and video lessons to boost your preparation.
+              A curated collection of practice tests, vocabulary lists, and video lessons for your enrolled courses.
             </p>
           </div>
           
-          <Tabs defaultValue="all" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 max-w-xs sm:max-w-md mx-auto mb-10">
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="documents">Documents</TabsTrigger>
-              <TabsTrigger value="videos">Videos</TabsTrigger>
-            </TabsList>
-            
-            {isLoading ? renderSkeleton() : (
-              <>
-                <TabsContent value="all">
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {resourceLibrary?.map((item) => (
-                      <ResourceCard key={item.id} item={item} />
-                    ))}
-                  </div>
-                </TabsContent>
-                <TabsContent value="documents">
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {testsAndLists?.map((item) => (
-                      <ResourceCard key={item.id} item={item} />
-                    ))}
-                  </div>
-                </TabsContent>
-                <TabsContent value="videos">
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {videos?.map((item) => (
-                      <ResourceCard key={item.id} item={item} />
-                    ))}
-                  </div>
-                </TabsContent>
-              </>
-            )}
-          </Tabs>
+           {isLoading ? renderSkeleton() : (
+            !user || enrolledCourseIds.length === 0 ? renderNoAccess() : (
+                <Tabs defaultValue="all" className="w-full">
+                    <TabsList className="grid w-full grid-cols-3 max-w-xs sm:max-w-md mx-auto mb-10">
+                    <TabsTrigger value="all">All</TabsTrigger>
+                    <TabsTrigger value="documents">Documents</TabsTrigger>
+                    <TabsTrigger value="videos">Videos</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="all">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {resourceLibrary?.map((item) => (
+                            <ResourceCard key={item.id} item={item} />
+                            ))}
+                        </div>
+                        {resourceLibrary?.length === 0 && <p className="text-center text-muted-foreground">No resources available for your courses yet.</p>}
+                    </TabsContent>
+                    <TabsContent value="documents">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {testsAndLists?.map((item) => (
+                            <ResourceCard key={item.id} item={item} />
+                            ))}
+                        </div>
+                        {testsAndLists?.length === 0 && <p className="text-center text-muted-foreground">No documents available for your courses yet.</p>}
+                    </TabsContent>
+                    <TabsContent value="videos">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {videos?.map((item) => (
+                            <ResourceCard key={item.id} item={item} />
+                            ))}
+                        </div>
+                        {videos?.length === 0 && <p className="text-center text-muted-foreground">No videos available for your courses yet.</p>}
+                    </TabsContent>
+                </Tabs>
+            )
+           )}
         </div>
       </section>
     </div>
@@ -95,9 +123,9 @@ export default function ResourcesPage() {
 }
 
 function ResourceCard({ item }: { item: any }) {
-  const Icon = iconMap[item.icon as keyof typeof iconMap] || FileText;
+  const Icon = item.resourceType === "video" ? Video : FileText;
 
-  if (item.type === 'video') {
+  if (item.resourceType === 'video') {
     return (
         <Card className="overflow-hidden group shadow-lg hover:shadow-xl transition-shadow">
             <a href={item.url || '#'} target="_blank" rel="noopener noreferrer">
@@ -115,7 +143,7 @@ function ResourceCard({ item }: { item: any }) {
               </div>
               <CardHeader>
                   <CardTitle className="font-headline">{item.title}</CardTitle>
-                  <CardDescription>{item.format}</CardDescription>
+                  <CardDescription>{item.description}</CardDescription>
               </CardHeader>
               <CardContent>
                   <Button className="w-full">Watch Now</Button>
@@ -134,7 +162,7 @@ function ResourceCard({ item }: { item: any }) {
             </div>
             <div>
                 <CardTitle className="font-headline">{item.title}</CardTitle>
-                <CardDescription>{item.format}</CardDescription>
+                <CardDescription>{item.description}</CardDescription>
             </div>
         </div>
       </CardHeader>

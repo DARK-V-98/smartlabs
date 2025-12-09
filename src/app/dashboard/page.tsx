@@ -1,10 +1,9 @@
-
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { useUser, useAuth, useFirebase } from '@/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { useUser, useAuth, useFirebase, useCollection, useMemoFirebase } from '@/firebase';
+import { doc, getDoc, collection } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 
 import {
@@ -17,7 +16,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, ChevronRight, ListVideo, FileText, LogOut, BookOpen, BarChart3, Settings, MessageSquare, Briefcase, LayoutDashboard } from 'lucide-react';
+import { Calendar, ChevronRight, ListVideo, FileText, LogOut, BookOpen, BarChart3, Settings, MessageSquare, Briefcase, LayoutDashboard, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
@@ -48,6 +47,12 @@ export default function DashboardPage() {
   const router = useRouter();
   const pathname = usePathname();
   const [userRole, setUserRole] = useState('');
+  
+  const enrollmentsQuery = useMemoFirebase(
+    () => (firestore && user ? collection(firestore, `users/${user.uid}/enrollments`) : null),
+    [firestore, user]
+  );
+  const { data: enrollments, isLoading: enrollmentsLoading } = useCollection(enrollmentsQuery);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -58,8 +63,7 @@ export default function DashboardPage() {
             if (userDoc.exists()) {
                 const userData = userDoc.data();
                 setUserRole(userData.role);
-                // Redirect if user role is 'user'
-                if(userData.role === 'user') {
+                if(userData.role === 'user' && !userData.hasCompletedOnboarding) {
                     router.push('/welcome');
                 }
             } else {
@@ -75,8 +79,10 @@ export default function DashboardPage() {
         router.push('/login');
     }
   };
+  
+  const isLoading = isUserLoading || enrollmentsLoading || !userRole;
 
-  if (isUserLoading || !user || !userRole || userRole === 'user') {
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
@@ -87,7 +93,7 @@ export default function DashboardPage() {
     );
   }
 
-  const isAdminOrDev = userRole === 'admin' || userRole === 'developer';
+  const isAdminOrDev = userRole === 'admin' || userRole === 'developer' || userRole === 'teacher';
 
   return (
     <div className="w-full min-h-screen">
@@ -96,7 +102,7 @@ export default function DashboardPage() {
             <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-headline font-bold">Student Dashboard</h1>
-                    <p className="text-md text-muted-foreground mt-1">Welcome back, {user.displayName}!</p>
+                    <p className="text-md text-muted-foreground mt-1">Welcome back, {user?.displayName}!</p>
                 </div>
                  <div className="flex items-center gap-4">
                     {userRole && <Badge variant={isAdminOrDev ? "destructive" : "outline"} className="capitalize">{userRole}</Badge>}
@@ -134,6 +140,24 @@ export default function DashboardPage() {
                             </CardHeader>
                         </Card>
                     ) : null}
+
+                     <div className="mb-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2"><GraduationCap />My Enrolled Courses</CardTitle>
+                                <CardDescription>Here are the courses you are currently enrolled in.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {enrollments && enrollments.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2">
+                                        {enrollments.map(e => <Badge key={e.id} variant="secondary">{e.courseId}</Badge>)}
+                                    </div>
+                                ) : (
+                                    <p className="text-sm text-muted-foreground">You are not enrolled in any courses yet. <Link href="/courses" className="font-semibold text-primary hover:underline">Explore courses</Link></p>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </div>
                     
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {lmsFeatures.map((feature) => {
@@ -167,5 +191,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
