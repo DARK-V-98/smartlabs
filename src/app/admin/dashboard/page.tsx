@@ -15,6 +15,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { errorEmitter, FirestorePermissionError } from '@/firebase';
 
 
 export default function AdminDashboardPage() {
@@ -62,23 +63,26 @@ export default function AdminDashboardPage() {
     router.push('/login');
   };
 
-  const handleRoleChange = async (userId: string, newRole: 'user' | 'teacher' | 'admin') => {
+  const handleRoleChange = (userId: string, newRole: 'user' | 'teacher' | 'admin') => {
     if (!firestore) return;
     const userRef = doc(firestore, 'users', userId);
-    try {
-        await updateDoc(userRef, { role: newRole });
+    const updatedData = { role: newRole };
+
+    updateDoc(userRef, updatedData)
+      .then(() => {
         toast({
-            title: 'Success!',
-            description: `User role has been updated to ${newRole}.`,
+          title: 'Success!',
+          description: `User role has been updated to ${newRole}.`,
         });
-    } catch (error) {
-        console.error("Error updating user role:", error);
-        toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: 'Could not update user role.',
+      })
+      .catch((error) => {
+        const permissionError = new FirestorePermissionError({
+            path: userRef.path,
+            operation: 'update',
+            requestResourceData: updatedData
         });
-    }
+        errorEmitter.emit('permission-error', permissionError);
+      });
   };
 
   if (isUserLoading || !isAdmin) {
@@ -222,5 +226,4 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
-
     
