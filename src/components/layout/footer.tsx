@@ -51,6 +51,7 @@ export default function Footer() {
                 <li><Link href="/pte" className="text-sm text-muted-foreground hover:text-foreground">PTE</Link></li>
                 <li><Link href="/ielts" className="text-sm text-muted-foreground hover:text-foreground">IELTS</Link></li>
                 <li><Link href="/celpip" className="text-sm text-muted-foreground hover:text-foreground">CELPIP</Link></li>
+                 <li><Link href="/policies" className="text-sm text-muted-foreground hover:text-foreground">Policies</Link></li>
             </ul>
           </div>
 
@@ -92,5 +93,3 @@ export default function Footer() {
     </footer>
   );
 }
-
-    
