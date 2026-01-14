@@ -56,23 +56,27 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function isEnrolled(courseId) {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid)/enrollments/$(courseId));
+    }
+    
     /**
      * @description Rules for the 'users' collection.
      * Allows users to manage their own profile.
-     * Allows admins/developers to read any user profile and update roles.
+     * Admins/developers can read any profile and update specific fields like 'role'.
      */
     match /users/{userId} {
       allow get: if isOwner(userId) || isAdminOrDeveloper();
       allow list: if isAdminOrDeveloper();
       allow create: if isOwner(userId) && request.resource.data.uid == userId;
-      allow update: if (isExistingOwner(userId) && request.resource.data.uid == resource.data.uid) || 
-                       (isAdminOrDeveloper() && request.resource.data.keys().hasAny(['role', 'lastLogin', 'displayName', 'photoURL']));
-      allow delete: if isExistingOwner(userId) || isAdminOrDeveloper();
+      allow update: if isOwner(userId) || 
+                       (isAdminOrDeveloper() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'displayName', 'photoURL', 'lastLogin', 'hasCompletedOnboarding']));
+      allow delete: if isOwner(userId) || isAdminOrDeveloper();
     }
 
     /**
      * @description Publicly readable course information.
-     * Write access is restricted (e.g., to admins, not implemented here).
+     * Write access is restricted to support staff.
      */
     match /courses/{courseId} {
       allow get: if true;
@@ -88,22 +92,27 @@ service cloud.firestore {
     }
 
     /**
-     * @description User-specific enrollment records. Only accessible by the owner.
+     * @description User-specific enrollment records.
+     * Only accessible by the owner. Stored with a known ID for easy checking.
      */
     match /users/{userId}/enrollments/{enrollmentId} {
-      allow read, write: if isOwner(userId);
+      allow read: if isOwner(userId);
+      // Enrollment creation is handled by server-side logic/trusted client action, not direct write.
+      allow create: if isOwner(userId);
     }
 
     /**
-     * @description Course resources are readable by any authenticated user.
+     * @description Course resources are readable by any user enrolled in the course.
+     * Write access is restricted to support staff.
      */
     match /resources/{resourceId} {
-      allow get, list: if isAuthenticated();
+      allow get, list: if isAuthenticated() && isEnrolled(resource.data.courseId);
       allow write: if isSupportStaff(); 
     }
 
     /**
      * @description Publicly readable blog posts.
+     * Write access restricted to support staff.
      */
     match /blog_posts/{blogPostId} {
       allow get, list: if true;
@@ -112,16 +121,17 @@ service cloud.firestore {
 
     /**
      * @description Publicly readable practice tests.
+     * Write access restricted to support staff.
      */
     match /courses/{courseId}/practice_tests/{practiceTestId} {
       allow get, list: if true;
       allow write: if isSupportStaff();
       
       /**
-       * @description Publicly readable questions within a practice test.
+       * @description Questions are readable by users enrolled in the course.
        */
       match /questions/{questionId} {
-        allow get, list: if true;
+        allow get, list: if isEnrolled(courseId);
         allow write: if isSupportStaff(); 
       }
     }
@@ -135,7 +145,7 @@ service cloud.firestore {
     
     /**
      * @description Support chat threads.
-     * Users can create and read their own threads. Support staff can read/write all threads.
+     * Users can manage their own thread. Support staff can access all threads.
      */
     match /support_chats/{userId} {
       allow get: if isOwner(userId) || isSupportStaff();
@@ -152,5 +162,28 @@ service cloud.firestore {
         allow create: if (isOwner(userId) && request.resource.data.senderId == userId) || isSupportStaff();
       }
     }
+
+    /**
+     * @description Course-specific forums.
+     * Users enrolled in the course can read and create posts. Post owners and support staff can delete.
+     */
+    match /courses/{courseId}/forum_posts/{postId} {
+      allow read, list: if isEnrolled(courseId);
+      allow create: if isEnrolled(courseId) && request.resource.data.authorId == request.auth.uid;
+      allow update: if isOwner(request.resource.data.authorId);
+      allow delete: if isOwner(resource.data.authorId) || isSupportStaff();
+
+      /**
+       * @description Replies within a forum post.
+       * Enrolled users can read and create replies. Reply owners and support staff can delete.
+       */
+      match /replies/{replyId} {
+        allow read, list: if isEnrolled(courseId);
+        allow create: if isEnrolled(courseId) && request.resource.data.authorId == request.auth.uid;
+        allow delete: if isOwner(resource.data.authorId) || isSupportStaff();
+      }
+    }
   }
 }
+
+    
