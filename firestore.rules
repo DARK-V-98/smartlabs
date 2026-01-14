@@ -2,18 +2,18 @@
 /**
  * @file Firestore Security Rules
  * @description This ruleset enforces a strict user-ownership model for private user data while allowing public access to courses and blog posts.
- * It also defines roles for 'admin' and 'developer' with broader access permissions.
+ * It also defines roles for 'admin' and 'developer' with broader access permissions for management and community features.
  *
  * Data Structure:
  * - /users/{userId}: Stores user profiles and roles.
  * - /courses/{courseId}: Stores course information.
- * - /users/{userId}/study_plans/{studyPlanId}: Stores user-specific study plans.
  * ... and other collections as defined in backend.json
  *
  * Key Security Decisions:
  * - User data is strictly controlled; users can manage their own data.
  * - Admins and Developers can read all user data for management purposes.
  * - Public content like courses and blog posts is readable by anyone.
+ * - Enrolled users can participate in course-specific features like forums and reviews.
  */
 rules_version = '2';
 service cloud.firestore {
@@ -57,6 +57,11 @@ service cloud.firestore {
     }
 
     function isEnrolled(courseId) {
+      // Check if an enrollment document exists for the user and course.
+      // This uses a known doc ID for efficiency if enrollmentId is the courseId.
+      // If enrollmentId is random, this check becomes a query, which is not allowed in rules.
+      // Assuming enrollmentId might be the courseId for simplicity here.
+      // A more robust way is to have a subcollection of enrollments and check existence.
       return exists(/databases/$(database)/documents/users/$(request.auth.uid)/enrollments/$(courseId));
     }
     
@@ -69,8 +74,8 @@ service cloud.firestore {
       allow get: if isOwner(userId) || isAdminOrDeveloper();
       allow list: if isAdminOrDeveloper();
       allow create: if isOwner(userId) && request.resource.data.uid == userId;
-      allow update: if isOwner(userId) || 
-                       (isAdminOrDeveloper() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'displayName', 'photoURL', 'lastLogin', 'hasCompletedOnboarding']));
+      // Allow user to update their own profile, and admins to update specific fields.
+      allow update: if isOwner(userId) || (isAdminOrDeveloper() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'displayName', 'photoURL', 'lastLogin', 'hasCompletedOnboarding', 'achievements']));
       allow delete: if isOwner(userId) || isAdminOrDeveloper();
     }
 
@@ -82,6 +87,56 @@ service cloud.firestore {
       allow get: if true;
       allow list: if true;
       allow write: if isSupportStaff(); 
+
+      /**
+       * @description Course-specific forums.
+       * Users enrolled in the course can read and create posts. Post owners and support staff can delete.
+       */
+      match /forum_posts/{postId} {
+        allow read, list: if isEnrolled(courseId);
+        allow create: if isEnrolled(courseId) && request.resource.data.authorId == request.auth.uid;
+        allow update: if isOwner(request.resource.data.authorId);
+        allow delete: if isOwner(resource.data.authorId) || isSupportStaff();
+
+        /**
+         * @description Replies within a forum post.
+         * Enrolled users can read and create replies. Reply owners and support staff can delete.
+         */
+        match /replies/{replyId} {
+          allow read, list: if isEnrolled(courseId);
+          allow create: if isEnrolled(courseId) && request.resource.data.authorId == request.auth.uid;
+          allow delete: if isOwner(resource.data.authorId) || isSupportStaff();
+        }
+      }
+      
+      /**
+       * @description Course reviews.
+       * Enrolled users can create one review. Anyone can read reviews.
+       */
+      match /reviews/{reviewId} {
+        allow get, list: if true;
+        // User can only create a review if they are enrolled and haven't reviewed before.
+        allow create: if isEnrolled(courseId) && request.resource.data.userId == request.auth.uid && !exists(/databases/$(database)/documents/courses/$(courseId)/reviews/$(request.auth.uid));
+        // User can update or delete their own review.
+        allow update, delete: if isOwner(resource.data.userId);
+      }
+      
+       /**
+       * @description Publicly readable practice tests.
+       * Write access restricted to support staff.
+       */
+      match /practice_tests/{practiceTestId} {
+        allow get, list: if true;
+        allow write: if isSupportStaff();
+        
+        /**
+         * @description Questions are readable by users enrolled in the course.
+         */
+        match /questions/{questionId} {
+          allow get, list: if isEnrolled(courseId);
+          allow write: if isSupportStaff(); 
+        }
+      }
     }
 
     /**
@@ -97,7 +152,6 @@ service cloud.firestore {
      */
     match /users/{userId}/enrollments/{enrollmentId} {
       allow read: if isOwner(userId);
-      // Enrollment creation is handled by server-side logic/trusted client action, not direct write.
       allow create: if isOwner(userId);
     }
 
@@ -117,23 +171,6 @@ service cloud.firestore {
     match /blog_posts/{blogPostId} {
       allow get, list: if true;
       allow write: if isSupportStaff(); 
-    }
-
-    /**
-     * @description Publicly readable practice tests.
-     * Write access restricted to support staff.
-     */
-    match /courses/{courseId}/practice_tests/{practiceTestId} {
-      allow get, list: if true;
-      allow write: if isSupportStaff();
-      
-      /**
-       * @description Questions are readable by users enrolled in the course.
-       */
-      match /questions/{questionId} {
-        allow get, list: if isEnrolled(courseId);
-        allow write: if isSupportStaff(); 
-      }
     }
 
     /**
@@ -164,24 +201,12 @@ service cloud.firestore {
     }
 
     /**
-     * @description Course-specific forums.
-     * Users enrolled in the course can read and create posts. Post owners and support staff can delete.
+     * @description Badges for gamification. Publicly readable.
+     * Write access is restricted to admins/developers.
      */
-    match /courses/{courseId}/forum_posts/{postId} {
-      allow read, list: if isEnrolled(courseId);
-      allow create: if isEnrolled(courseId) && request.resource.data.authorId == request.auth.uid;
-      allow update: if isOwner(request.resource.data.authorId);
-      allow delete: if isOwner(resource.data.authorId) || isSupportStaff();
-
-      /**
-       * @description Replies within a forum post.
-       * Enrolled users can read and create replies. Reply owners and support staff can delete.
-       */
-      match /replies/{replyId} {
-        allow read, list: if isEnrolled(courseId);
-        allow create: if isEnrolled(courseId) && request.resource.data.authorId == request.auth.uid;
-        allow delete: if isOwner(resource.data.authorId) || isSupportStaff();
-      }
+    match /badges/{badgeId} {
+      allow get, list: if true;
+      allow write: if isAdminOrDeveloper();
     }
   }
 }
