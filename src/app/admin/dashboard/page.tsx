@@ -7,7 +7,7 @@ import { doc, getDoc, collection, updateDoc } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
-import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal, Shield, UserCheck, UserX, UserCog, MessageSquare, GraduationCap, FileText } from 'lucide-react';
+import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal, Shield, UserCheck, UserX, UserCog, MessageSquare, GraduationCap, FileText, Library } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
@@ -62,8 +62,18 @@ export default function AdminDashboardPage() {
     router.push('/login');
   };
 
-  const handleRoleChange = (userId: string, newRole: 'user' | 'teacher' | 'admin') => {
+  const handleRoleChange = (userId: string, newRole: 'user' | 'teacher' | 'admin' | 'developer') => {
     if (!firestore || !currentUser) return;
+    
+    if(userId === currentUser.uid) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: "You cannot change your own role.",
+        });
+        return;
+    }
+
     const userRef = doc(firestore, 'users', userId);
     const updatedData = { role: newRole };
 
@@ -133,6 +143,18 @@ export default function AdminDashboardPage() {
                     <CardContent>
                         <div className="text-2xl font-bold">Manage</div>
                         <p className="text-xs text-muted-foreground">Add, edit, or delete courses.</p>
+                    </CardContent>
+                </Link>
+            </Card>
+            <Card className="hover:bg-muted/50 transition-colors">
+                <Link href="/admin/dashboard/resources">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Resource Library</CardTitle>
+                        <Library className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">Manage</div>
+                        <p className="text-xs text-muted-foreground">Add and organize materials.</p>
                     </CardContent>
                 </Link>
             </Card>
@@ -211,6 +233,7 @@ export default function AdminDashboardPage() {
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'teacher')}><UserCog className="mr-2 h-4 w-4" /> Make Teacher</DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'admin')}><Shield className="mr-2 h-4 w-4" /> Make Admin</DropdownMenuItem>
+                                             <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'developer')}><UserCog className="mr-2 h-4 w-4" /> Make Developer</DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'user')}><UserCheck className="mr-2 h-4 w-4" /> Make Student</DropdownMenuItem>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem className="text-red-600 focus:text-red-500"><UserX className="mr-2 h-4 w-4" /> Suspend User</DropdownMenuItem>
@@ -229,3 +252,5 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
+    
