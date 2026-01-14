@@ -178,5 +178,3 @@ function ChatWindow({ threadId, adminUser }: { threadId: string | null, adminUse
     );
 }
 
-
-    
