@@ -113,7 +113,7 @@ export default function DashboardPage() {
                 </div>
             </header>
             
-            <Tabs value={pathname} className="w-full">
+            <Tabs defaultValue="/dashboard" value={pathname} className="w-full">
                 <TabsList className="grid w-full sm:w-auto sm:inline-grid grid-cols-3 sm:grid-cols-6 mb-8 h-auto">
                     {navItems.map((item) => (
                         <TabsTrigger key={item.href} value={item.href} asChild>
@@ -125,7 +125,7 @@ export default function DashboardPage() {
                     ))}
                 </TabsList>
                 <TabsContent value={pathname}>
-                    {isAdminOrDev ? (
+                    {isAdminOrDev && (
                         <Card className="mb-8 border-amber-500 bg-amber-500/10">
                             <CardHeader className="flex-row items-center justify-between">
                                 <div>
@@ -139,7 +139,7 @@ export default function DashboardPage() {
                                 </Button>
                             </CardHeader>
                         </Card>
-                    ) : null}
+                    )}
 
                      <div className="mb-8">
                         <Card>
@@ -191,3 +191,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
