@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
@@ -8,7 +7,7 @@ import { doc, getDoc, collection, updateDoc } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
-import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal, Shield, UserCheck, UserX, UserCog, MessageSquare, GraduationCap } from 'lucide-react';
+import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal, Shield, UserCheck, UserX, UserCog, MessageSquare, GraduationCap, FileText } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
@@ -64,7 +63,7 @@ export default function AdminDashboardPage() {
   };
 
   const handleRoleChange = (userId: string, newRole: 'user' | 'teacher' | 'admin') => {
-    if (!firestore) return;
+    if (!firestore || !currentUser) return;
     const userRef = doc(firestore, 'users', userId);
     const updatedData = { role: newRole };
 
@@ -137,15 +136,17 @@ export default function AdminDashboardPage() {
                     </CardContent>
                 </Link>
             </Card>
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Site Traffic</CardTitle>
-                    <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">12,389</div>
-                    <p className="text-xs text-muted-foreground">(Sample Data)</p>
-                </CardContent>
+             <Card className="hover:bg-muted/50 transition-colors">
+                <Link href="/admin/dashboard/blog">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Blog Management</CardTitle>
+                        <FileText className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">Manage</div>
+                        <p className="text-xs text-muted-foreground">Create and edit blog posts.</p>
+                    </CardContent>
+                </Link>
             </Card>
              <Card className="hover:bg-muted/50 transition-colors">
                 <Link href="/admin/dashboard/support">
@@ -228,5 +229,3 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
-
-    
