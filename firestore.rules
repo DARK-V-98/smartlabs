@@ -58,10 +58,7 @@ service cloud.firestore {
 
     function isEnrolled(courseId) {
       // Check if an enrollment document exists for the user and course.
-      // This uses a known doc ID for efficiency if enrollmentId is the courseId.
-      // If enrollmentId is random, this check becomes a query, which is not allowed in rules.
-      // Assuming enrollmentId might be the courseId for simplicity here.
-      // A more robust way is to have a subcollection of enrollments and check existence.
+      // This is efficient because it checks for a document with a known path.
       return exists(/databases/$(database)/documents/users/$(request.auth.uid)/enrollments/$(courseId));
     }
     
@@ -84,8 +81,7 @@ service cloud.firestore {
      * Write access is restricted to support staff.
      */
     match /courses/{courseId} {
-      allow get: if true;
-      allow list: if true;
+      allow get, list: if true;
       allow write: if isSupportStaff(); 
 
       /**
@@ -95,8 +91,8 @@ service cloud.firestore {
       match /forum_posts/{postId} {
         allow read, list: if isEnrolled(courseId);
         allow create: if isEnrolled(courseId) && request.resource.data.authorId == request.auth.uid;
-        allow update: if isOwner(request.resource.data.authorId);
-        allow delete: if isOwner(resource.data.authorId) || isSupportStaff();
+        allow update: if request.resource.data.authorId == request.auth.uid;
+        allow delete: if resource.data.authorId == request.auth.uid || isSupportStaff();
 
         /**
          * @description Replies within a forum post.
@@ -105,20 +101,19 @@ service cloud.firestore {
         match /replies/{replyId} {
           allow read, list: if isEnrolled(courseId);
           allow create: if isEnrolled(courseId) && request.resource.data.authorId == request.auth.uid;
-          allow delete: if isOwner(resource.data.authorId) || isSupportStaff();
+          allow update: if request.resource.data.authorId == request.auth.uid;
+          allow delete: if resource.data.authorId == request.auth.uid || isSupportStaff();
         }
       }
       
       /**
        * @description Course reviews.
-       * Enrolled users can create one review. Anyone can read reviews.
+       * Enrolled users can create one review (by using their UID as the doc ID). Anyone can read reviews.
        */
       match /reviews/{reviewId} {
         allow get, list: if true;
-        // User can only create a review if they are enrolled and haven't reviewed before.
-        allow create: if isEnrolled(courseId) && request.resource.data.userId == request.auth.uid && !exists(/databases/$(database)/documents/courses/$(courseId)/reviews/$(request.auth.uid));
-        // User can update or delete their own review.
-        allow update, delete: if isOwner(resource.data.userId);
+        allow create: if isEnrolled(courseId) && request.resource.data.userId == request.auth.uid && reviewId == request.auth.uid;
+        allow update, delete: if resource.data.userId == request.auth.uid;
       }
       
        /**
@@ -148,11 +143,10 @@ service cloud.firestore {
 
     /**
      * @description User-specific enrollment records.
-     * Only accessible by the owner. Stored with a known ID for easy checking.
+     * Only accessible by the owner. Stored with a known ID (courseId) for easy checking.
      */
     match /users/{userId}/enrollments/{enrollmentId} {
-      allow read: if isOwner(userId);
-      allow create: if isOwner(userId);
+      allow read, write: if isOwner(userId);
     }
 
     /**
@@ -210,5 +204,3 @@ service cloud.firestore {
     }
   }
 }
-
-    
