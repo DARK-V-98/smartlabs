@@ -137,10 +137,7 @@ export default function PracticeTestsPage() {
                           <Link
                             key={test.title}
                             href={test.status !== 'Coming Soon' ? test.href : '#'}
-                            passHref
-                            legacyBehavior>
-                            <a
-                              onClick={(e) => {
+                            onClick={(e) => {
                                 if (test.status === 'Coming Soon') {
                                   e.preventDefault();
                                 } else {
@@ -158,7 +155,6 @@ export default function PracticeTestsPage() {
                               </div>
                               <p className="text-sm text-muted-foreground mt-1">{test.description}</p>
                               {test.status === 'Coming Soon' && <p className="text-xs font-bold text-amber-600 mt-2">Coming Soon</p>}
-                            </a>
                           </Link>
                         ))
                       ) : (
