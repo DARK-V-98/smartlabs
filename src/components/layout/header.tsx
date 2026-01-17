@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -48,6 +48,18 @@ export default function Header() {
   const auth = useAuth();
   const router = useRouter();
 
+  const [isElectron, setIsElectron] = useState(false);
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    const runningInElectron = typeof window !== 'undefined' && !!window.electronAPI;
+    setIsElectron(runningInElectron);
+    if (runningInElectron) {
+      const runningOnMac = navigator.userAgent.includes('Mac');
+      setIsMac(runningOnMac);
+    }
+  }, []);
+
   const handleLogout = async () => {
     if (!auth) return;
     await signOut(auth);
@@ -62,12 +74,15 @@ export default function Header() {
 
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
+    <header 
+      className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50"
+      style={(isElectron && !isMac) ? { WebkitAppRegion: 'drag' } as React.CSSProperties : {}}
+    >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} className="relative z-10" />
+            <Image src="/logo.png" alt="Smart Labs Logo" width={40} height={40} className="relative z-10" />
           </Link>
 
           {/* Desktop Navigation */}

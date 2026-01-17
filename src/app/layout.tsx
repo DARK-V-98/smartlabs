@@ -8,6 +8,7 @@ import './globals.css';
 import Script from 'next/script';
 import { CookieBanner } from '@/components/cookie-banner';
 import { LayoutManager } from '@/components/layout/layout-manager';
+import { WindowControls } from '@/components/layout/window-controls';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
@@ -50,6 +51,7 @@ export default function RootLayout({
         )}
       >
         <FirebaseClientProvider>
+          <WindowControls />
           <LayoutManager />
           <Header />
           <main className="flex-1">{children}</main>
