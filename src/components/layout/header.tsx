@@ -60,7 +60,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <Image src="/logo.png" alt="Smart Labs Logo" width={96} height={96} className="relative z-10" />
+            <Image src="/logo.png" alt="Smart Labs Logo" width={128} height={128} className="relative z-10" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -86,7 +86,7 @@ export default function Header() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 mt-2 w-64 glass-card rounded-2xl p-2 shadow-xl"
+                    className="absolute top-full left-0 mt-2 w-64 bg-card border rounded-2xl p-2 shadow-xl"
                   >
                     {courses.map((course) => (
                       <Link
@@ -187,7 +187,7 @@ export default function Header() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg shadow-lg border-t"
+            className="lg:hidden absolute top-full left-0 right-0 bg-background shadow-lg border-t"
           >
             <div className="p-4 space-y-2">
               <div className="pb-2 border-b border-border">
