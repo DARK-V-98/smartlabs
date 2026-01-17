@@ -18,6 +18,7 @@ const courses = [
 
 const navLinks = [
   { name: "About", href: "/about" },
+  { name: "Apps", href: "/apps" },
   { name: "Corporate Training", href: "/corporate-training" },
   { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },
