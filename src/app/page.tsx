@@ -513,7 +513,7 @@ export default function Home() {
       </section>
 
       {/* Courses Section */}
-      <section className="py-20 lg:py-28 bg-secondary/30">
+      <section className="relative py-20 lg:py-28 bg-secondary/30 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -574,7 +574,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 lg:py-28">
+      <section className="relative py-20 lg:py-28 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -641,7 +641,7 @@ export default function Home() {
       </section>
 
       {/* Meet The Founder Section */}
-      <section className="py-20 lg:py-28">
+      <section className="relative py-20 lg:py-28 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
             <motion.div
@@ -705,7 +705,7 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 lg:py-28 bg-secondary/30">
+      <section className="relative py-20 lg:py-28 bg-secondary/30 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -760,7 +760,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 lg:py-28">
+      <section className="relative py-20 lg:py-28 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
