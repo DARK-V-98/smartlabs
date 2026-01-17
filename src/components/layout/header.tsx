@@ -1,133 +1,194 @@
-
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { MobileNav } from '@/components/layout/mobile-nav';
-import { NAV_LINKS } from '@/lib/constants';
-import { cn } from '@/lib/utils';
-import { useUser, useAuth } from '@/firebase';
-import { User, Download } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { signOut } from 'firebase/auth';
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, GraduationCap, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useUser } from "@/firebase";
 
-interface BeforeInstallPromptEvent extends Event {
-  readonly platforms: string[];
-  readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed',
-    platform: string,
-  }>;
-  prompt(): Promise<void>;
-}
+const courses = [
+  { name: "PTE", href: "/pte", description: "Pearson Test of English" },
+  { name: "IELTS", href: "/ielts", description: "International English Language Testing" },
+  { name: "CELPIP", href: "/celpip", description: "Canadian English Language Proficiency" },
+];
+
+const navLinks = [
+  { name: "About", href: "/about" },
+  { name: "Corporate Training", href: "/corporate-training" },
+  { name: "Blog", href: "/blog" },
+  { name: "Contact", href: "/contact" },
+];
 
 export default function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [coursesOpen, setCoursesOpen] = useState(false);
   const pathname = usePathname();
-  const { user, isUserLoading } = useUser();
-  const auth = useAuth();
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstallable, setIsInstallable] = useState(false);
-
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setIsInstallable(true);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
-  }, []);
-
-  const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-      } else {
-        console.log('User dismissed the install prompt');
-      }
-      setDeferredPrompt(null);
-      setIsInstallable(false);
-    }
-  };
-  
-  const handleLogout = async () => {
-    await signOut(auth);
-  };
+  const { user } = useUser();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center">
-        <Link href="/" className="mr-4 sm:mr-8 flex items-center gap-2">
-          <Image src="/logo.png" alt="Smart Labs logo" width={96} height={96} className="h-20 w-20 sm:h-24 sm:w-24" />
-        </Link>
-        <nav className="hidden items-center gap-4 lg:gap-6 text-sm font-medium md:flex">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                'transition-colors hover:text-foreground/80',
-                pathname === link.href
-                  ? 'text-foreground'
-                  : 'text-foreground/60'
-              )}
-            >
-              {link.label}
+    <header className="fixed top-0 left-0 right-0 z-50">
+      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mt-4 rounded-2xl glass-card px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/30 transition-all" />
+                <GraduationCap className="h-8 w-8 text-primary relative z-10" />
+              </div>
+              <span className="font-display font-bold text-xl text-foreground">
+                Smart<span className="text-primary">Labs</span>
+              </span>
             </Link>
-          ))}
-        </nav>
-        <div className="flex flex-1 items-center justify-end gap-2 sm:gap-4">
-           {isInstallable && (
-            <Button onClick={handleInstallClick} variant="outline" size="sm">
-              <Download className="mr-2 h-4 w-4" />
-              Install
-            </Button>
-          )}
-          {isUserLoading ? null : user ? (
-             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="secondary" size="icon" className="rounded-full">
-                    <User className="h-5 w-5" />
-                    <span className="sr-only">Toggle user menu</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild><Link href="/dashboard">Dashboard</Link></DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-          ) : (
-            <div className="hidden md:flex items-center gap-2">
-                <Button variant="ghost" asChild>
-                    <Link href="/login">Login</Link>
-                </Button>
-                <Button asChild>
-                    <Link href="/signup">Sign Up</Link>
-                </Button>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-1">
+              {/* Courses Dropdown */}
+              <div 
+                className="relative"
+                onMouseEnter={() => setCoursesOpen(true)}
+                onMouseLeave={() => setCoursesOpen(false)}
+              >
+                <button className={cn(
+                  "flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                )}>
+                  Courses
+                  <ChevronDown className={cn("h-4 w-4 transition-transform", coursesOpen && "rotate-180")} />
+                </button>
+                
+                <AnimatePresence>
+                  {coursesOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full left-0 mt-2 w-64 glass-card rounded-xl p-2 shadow-xl"
+                    >
+                      {courses.map((course) => (
+                        <Link
+                          key={course.href}
+                          href={course.href}
+                          className={cn(
+                            "block px-4 py-3 rounded-lg transition-colors",
+                            pathname === course.href 
+                              ? "bg-primary/10 text-primary" 
+                              : "hover:bg-secondary"
+                          )}
+                        >
+                          <div className="font-semibold text-foreground">{course.name}</div>
+                          <div className="text-sm text-muted-foreground">{course.description}</div>
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                    pathname === link.href
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                  )}
+                >
+                  {link.name}
+                </Link>
+              ))}
             </div>
-          )}
-          <div className="md:hidden">
-            <MobileNav />
+
+            {/* CTA Buttons */}
+            <div className="hidden lg:flex items-center gap-3">
+              {user ? (
+                <Button variant="hero" asChild>
+                  <Link href="/dashboard">Dashboard</Link>
+                </Button>
+              ) : (
+                <>
+                  <Button variant="ghost" asChild>
+                    <Link href="/login">Log In</Link>
+                  </Button>
+                  <Button variant="hero" asChild>
+                    <Link href="/signup">Get Started</Link>
+                  </Button>
+                </>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
         </div>
-      </div>
+      </nav>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden mx-4 mt-2 glass-card rounded-2xl overflow-hidden"
+          >
+            <div className="p-4 space-y-2">
+              <div className="pb-2 border-b border-border">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Courses</p>
+                {courses.map((course) => (
+                  <Link
+                    key={course.href}
+                    href={course.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-2 rounded-lg text-foreground hover:bg-secondary transition-colors"
+                  >
+                    {course.name}
+                  </Link>
+                ))}
+              </div>
+              
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-4 py-2 rounded-lg text-foreground hover:bg-secondary transition-colors"
+                >
+                  {link.name}
+                </Link>
+              ))}
+
+              <div className="pt-4 flex flex-col gap-2">
+                {user ? (
+                  <Button variant="hero" className="w-full" asChild>
+                    <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
+                    </Button>
+                    <Button variant="hero" className="w-full" asChild>
+                      <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>Get Started</Link>
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

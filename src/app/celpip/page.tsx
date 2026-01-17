@@ -1,89 +1,246 @@
+'use client';
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { 
+  Zap, 
+  CheckCircle, 
+  ArrowRight,
+  Sparkles,
+  BookOpen,
+  Headphones,
+  PenTool,
+  MessageSquare,
+  Video,
+  Lightbulb,
+  Flag
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { CheckCircle, Video } from 'lucide-react';
-import Link from 'next/link';
+const celpipSkills = [
+  { icon: Headphones, title: "Listening", description: "Understand everyday conversations and discussions" },
+  { icon: BookOpen, title: "Reading", description: "Comprehend various text types and formats" },
+  { icon: PenTool, title: "Writing", description: "Compose emails and respond to survey questions" },
+  { icon: MessageSquare, title: "Speaking", description: "Respond to prompts in everyday scenarios" },
+];
 
-export default function CELPIPPage() {
+const programFeatures = [
+  "Introductory guidance video covering all sections",
+  "Writing component training video with examples",
+  "Self-paced learning flexibility",
+  "Comprehensive study materials",
+];
+
+const preparationTips = [
+  "Practice daily with official CELPIP materials",
+  "Focus on time management during practice tests",
+  "Record yourself speaking and review for improvements",
+  "Build vocabulary relevant to Canadian contexts",
+  "Take full-length practice tests under exam conditions",
+  "Review your weak areas systematically",
+];
+
+export default function CELPIP() {
   return (
-    <div className="w-full">
-      <section className="relative py-20 md:py-32">
-        <div className="absolute inset-0 bg-primary/10">
-            <Image 
-                src="https://picsum.photos/seed/celpip-hero/1600/500"
-                alt="Canadian flag and cityscape"
-                data-ai-hint="Canada cityscape"
-                fill
-                className="object-cover opacity-20"
-            />
+    <>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden py-20 lg:py-28">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-amber/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl" />
         </div>
-        <div className="container mx-auto relative text-center">
-            <h1 className="text-3xl md:text-5xl font-headline font-bold">CELPIP Preparation Course</h1>
-            <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
-              Your key to Canadian immigration, PR, and citizenship applications.
-            </p>
-        </div>
-      </section>
-      
-      <section className="py-12 md:py-20">
-          <div className="container mx-auto grid md:grid-cols-2 gap-12 items-start">
-            <div className="prose lg:prose-lg max-w-none">
-                <h2 className="font-headline">About the CELPIP Test</h2>
-                <p>CELPIP (Canadian English Language Proficiency Index Program) is an English language test used for immigration, PR, and citizenship applications in Canada. Preparing for the CELPIP test involves improving everyday English communication skills — not just grammar or theory. The test focuses on how well you can understand and respond naturally in real-life situations.</p>
-                <h3 className="font-headline">Key Focus Areas:</h3>
-                <ul>
-                    <li><strong>Listening:</strong> Understanding conversations, announcements, and everyday discussions.</li>
-                    <li><strong>Reading:</strong> Interpreting emails, notices, articles, and similar written materials.</li>
-                    <li><strong>Writing:</strong> Structuring clear responses for emails and opinion-based questions.</li>
-                    <li><strong>Speaking:</strong> Responding confidently to recorded prompts, expressing ideas clearly and naturally.</li>
-                </ul>
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-amber/10 text-brand-amber text-sm font-medium mb-6">
+              <Flag className="h-4 w-4" />
+              <span>Canadian Immigration</span>
             </div>
             
-             <div className="space-y-8">
-                  <Card className="shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="font-headline">CELPIP Self-Paced Program</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div>
-                            <h4 className="font-semibold mb-2">Key Features:</h4>
-                            <ul className="space-y-2 text-sm text-muted-foreground">
-                                <li className="flex items-start"><Video className="h-4 w-4 mr-2 mt-0.5 text-primary" />Introductory guidance video</li>
-                                <li className="flex items-start"><Video className="h-4 w-4 mr-2 mt-0.5 text-primary" />Writing component training video</li>
-                            </ul>
-                        </div>
-                         <div>
-                            <h4 className="font-semibold mb-2 mt-4">Preparation Tips:</h4>
-                             <ul className="space-y-2 text-sm text-muted-foreground">
-                                <li className="flex items-start"><CheckCircle className="h-4 w-4 mr-2 mt-0.5 text-green-500" />Practice speaking in English every day — focus on clarity and natural flow.</li>
-                                <li className="flex items-start"><CheckCircle className="h-4 w-4 mr-2 mt-0.5 text-green-500" />Learn to manage your time during each section.</li>
-                                <li className="flex items-start"><CheckCircle className="h-4 w-4 mr-2 mt-0.5 text-green-500" />Use official CELPIP practice materials for familiarity with the format.</li>
-                                <li className="flex items-start"><CheckCircle className="h-4 w-4 mr-2 mt-0.5 text-green-500" />Practice real-life scenarios like workplace conversations, emails, and discussions.</li>
-                            </ul>
-                        </div>
-                    </CardContent>
-                    <CardFooter>
-                        <Button asChild className="w-full">
-                            <Link href="/contact">Get CELPIP Resources</Link>
-                        </Button>
-                    </CardFooter>
-                  </Card>
-             </div>
-          </div>
-      </section>
-
-      <section className="py-12 md:py-20">
-        <div className="container mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-headline font-bold">Your Pathway to Canada Starts Here</h2>
-            <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-                Our CELPIP resources are designed to improve your confidence and fluency. Contact us to get started.
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+              CELPIP Preparation{" "}
+              <span className="text-brand-amber">Course</span>
+            </h1>
+            
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Your key to Canadian immigration, PR, and citizenship applications.
             </p>
-            <Button asChild size="lg" className="mt-6">
-                <Link href="/contact">Book a Free Consultation</Link>
-            </Button>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button variant="warm" size="xl" asChild>
+                <Link href="/signup">
+                  Get Started
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button variant="heroOutline" size="xl" asChild>
+                <Link href="/contact">Book Free Consultation</Link>
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
-    </div>
+
+      {/* About CELPIP Section */}
+      <section className="py-20 bg-secondary/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid lg:grid-cols-2 gap-16 items-center"
+          >
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-amber/10 text-brand-amber text-sm font-medium mb-4">
+                <BookOpen className="h-4 w-4" />
+                <span>About the Test</span>
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-6">
+                About the CELPIP Test
+              </h2>
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                The Canadian English Language Proficiency Index Program (CELPIP) is a general English language proficiency test designated by Immigration, Refugees and Citizenship Canada (IRCC) for permanent residency and citizenship applications.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The test focuses on everyday English communication skills that you'll need in Canada, making it an excellent choice for those planning to immigrate or become Canadian citizens.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-6">
+              {celpipSkills.map((skill, index) => (
+                <motion.div
+                  key={skill.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="glass-card rounded-2xl p-6"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-brand-amber/10 flex items-center justify-center mb-4">
+                    <skill.icon className="h-6 w-6 text-brand-amber" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2">{skill.title}</h3>
+                  <p className="text-sm text-muted-foreground">{skill.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Self-Paced Program */}
+      <section className="py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+              <Sparkles className="h-4 w-4" />
+              <span>Self-Paced Learning</span>
+            </div>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
+              CELPIP Self-Paced Program
+            </h2>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Program Features */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="glass-card rounded-3xl p-8 border-2 border-brand-amber/20"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 rounded-2xl bg-brand-amber/10">
+                  <Video className="h-8 w-8 text-brand-amber" />
+                </div>
+                <div>
+                  <h3 className="font-display text-xl font-bold">Program Features</h3>
+                  <p className="text-muted-foreground">What's included</p>
+                </div>
+              </div>
+
+              <ul className="space-y-4">
+                {programFeatures.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-brand-amber mt-0.5" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-8">
+                <Button variant="warm" size="lg" className="w-full" asChild>
+                  <Link href="/signup">Get CELPIP Resources</Link>
+                </Button>
+              </div>
+            </motion.div>
+
+            {/* Preparation Tips */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="glass-card rounded-3xl p-8"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 rounded-2xl bg-primary/10">
+                  <Lightbulb className="h-8 w-8 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-display text-xl font-bold">Preparation Tips</h3>
+                  <p className="text-muted-foreground">Expert recommendations</p>
+                </div>
+              </div>
+
+              <ul className="space-y-4">
+                {preparationTips.map((tip) => (
+                  <li key={tip} className="flex items-start gap-3">
+                    <Zap className="h-5 w-5 text-primary mt-0.5" />
+                    <span className="text-muted-foreground">{tip}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-secondary/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center glass-card rounded-3xl p-12"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-amber/10 text-brand-amber text-sm font-medium mb-4">
+              <Flag className="h-4 w-4" />
+              <span>Start Your Journey</span>
+            </div>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
+              Your Pathway to Canada Starts Here
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+              Our resources are designed to improve your confidence and fluency for the CELPIP test.
+            </p>
+            <Button variant="hero" size="xl" asChild>
+              <Link href="/contact">
+                Book a Free Consultation
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+    </>
   );
 }

@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
@@ -23,16 +22,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300..700&display=swap"
-          rel="stylesheet"
-        />
         <meta name="theme-color" content="#3b82f6" />
       </head>
       <body
@@ -43,7 +32,7 @@ export default function RootLayout({
       >
         <FirebaseClientProvider>
           <Header />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pt-24">{children}</main>
           <Footer />
           <Toaster />
         </FirebaseClientProvider>

@@ -1,475 +1,489 @@
-
 'use client';
-
-import Image from 'next/image';
-import Link from 'next/link';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
-import {
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { 
+  GraduationCap, 
+  Users, 
+  Trophy, 
+  BookOpen, 
+  CheckCircle, 
+  Star, 
   ArrowRight,
-  Award,
-  Briefcase,
-  CheckCircle,
-  Globe,
-  Star,
-  BookCheck,
-  Users,
+  Play,
+  Sparkles,
   Target,
-  Heart,
-  BookOpen,
-} from 'lucide-react';
+  Zap,
+  Globe
+} from "lucide-react";
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { motion } from 'framer-motion';
 
-const heroImages = [
-  { src: '/1.png', alt: 'Students learning in a classroom' },
-  { src: '/2.png', alt: 'Student writing notes' },
-  { src: '/3.png', alt: 'Teacher helping a student' },
-  { src: '/4.png', alt: 'Group of students collaborating' },
-  { src: '/5.png', alt: 'Student smiling with a laptop' },
+const stats = [
+  { value: "10,000+", label: "Students Trained" },
+  { value: "95%", label: "Success Rate" },
+  { value: "50+", label: "Expert Instructors" },
+  { value: "4.9", label: "Average Rating" },
 ];
 
-const services = [
+const courses = [
   {
-    title: 'PTE Training Programs',
-    description: 'Online Boostify classes + Physical weekend sessions.',
-    icon: Award,
-    href: '/pte',
-  },
-  {
-    title: 'IELTS Training',
-    description: 'Weekend group classes with speaking and feedback support.',
-    icon: Award,
-    href: '/ielts',
-  },
-  {
-    title: 'CELPIP Preparation',
-    description: 'Self-paced practice with guided videos.',
-    icon: Award,
-    href: '/celpip',
-  },
-];
-
-const whyChooseUs = [
-  {
-    title: 'Certified Trainers',
-    description: 'Trainers directly trained under Pearson UK.',
-    icon: Award,
-  },
-  {
-    title: '5,000+ Students Guided',
-    description: 'A proven track record of success across all courses.',
-    icon: Users,
-  },
-  {
-    title: 'Strategic Focus',
-    description: 'Emphasis on strategy, time management, and confidence.',
+    title: "PTE Academic",
+    description: "Master the Pearson Test of English with AI-powered practice and expert strategies.",
     icon: Target,
+    href: "/pte",
+    color: "from-primary to-purple-500",
+    features: ["AI Scoring Practice", "Live Classes", "Full Materials Access"],
   },
   {
-    title: 'Personal Feedback',
-    description: 'Individual speaking practice and personal feedback.',
-    icon: Heart,
+    title: "IELTS Training",
+    description: "Achieve your target band score with comprehensive IELTS preparation.",
+    icon: Globe,
+    href: "/ielts",
+    color: "from-accent to-teal-400",
+    features: ["Speaking Practice", "Writing Feedback", "Mock Tests"],
   },
-   {
-    title: 'Flexible & Updated',
-    description: 'Online/physical classes with current materials.',
+  {
+    title: "CELPIP Prep",
+    description: "Your pathway to Canadian immigration with focused CELPIP training.",
+    icon: Zap,
+    href: "/celpip",
+    color: "from-brand-amber to-orange-400",
+    features: ["Self-Paced Learning", "Video Guides", "Practice Tests"],
+  },
+];
+
+const features = [
+  {
     icon: BookOpen,
+    title: "Expert-Led Courses",
+    description: "Learn from certified instructors with years of exam preparation experience.",
   },
-];
-
-const results = [
-    { number: '5,000+', label: 'Students Trained' },
-    { number: '95%', label: 'Success Rate' },
-    { number: '6–8 Weeks', label: 'Typical Target Achievement' },
-];
-
-const successStories = [
-    { text: "Achieved PTE 79 in 6 weeks -> Now studying in Australia." },
-    { text: "IELTS Band 8 achieved -> Migration visa approved for Canada." },
-    { text: "CELPIP Level 10 -> Permanent Residency secured." },
-    { text: "From Band 6.5 to 7.5 in IELTS Writing in one month." },
+  {
+    icon: Sparkles,
+    title: "AI-Powered Practice",
+    description: "Get instant feedback on your practice tests with our advanced AI scoring system.",
+  },
+  {
+    icon: Trophy,
+    title: "Proven Results",
+    description: "Join thousands of successful students who achieved their target scores.",
+  },
+  {
+    icon: Users,
+    title: "Community Support",
+    description: "Connect with fellow learners and get support from our dedicated team.",
+  },
 ];
 
 const testimonials = [
-    {
-        image: 'https://picsum.photos/300/150?random=10',
-        name: 'Rochelle T.',
-        course: 'PTE Academic',
-        achievement: 'Achieved 79+ Overall',
-        quote: 'The strategies were spot on. I finally got the score I needed for my visa!'
-    },
-    {
-        image: 'https://picsum.photos/300/150?random=11',
-        name: 'Sahan P.',
-        course: 'IELTS General',
-        achievement: 'Scored Band 8.0',
-        quote: 'The individual feedback on my speaking made all the difference.'
-    },
-    {
-        image: 'https://picsum.photos/300/150?random=12',
-        name: 'Fathima S.',
-        course: 'PTE Academic',
-        achievement: 'From 58 to 75 in 4 Weeks',
-        quote: 'Smart Labs helped me understand my mistakes and improve quickly.'
-    },
+  {
+    name: "Priya Sharma",
+    role: "PTE Score: 85",
+    content: "Smart Labs transformed my preparation journey. The AI feedback and personalized study plan helped me achieve my target score in just 3 weeks!",
+    avatar: "PS",
+  },
+  {
+    name: "Mohammed Al-Hassan",
+    role: "IELTS Band: 8.0",
+    content: "The instructors are incredibly knowledgeable. Their strategies for the speaking section were game-changers. Highly recommended!",
+    avatar: "MA",
+  },
+  {
+    name: "Sarah Chen",
+    role: "CELPIP Score: 12",
+    content: "The self-paced CELPIP course was perfect for my schedule. The materials are comprehensive and the practice tests are very close to the real exam.",
+    avatar: "SC",
+  },
 ];
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 50 },
+const containerVariants = {
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    y: 0,
     transition: {
-      duration: 0.6,
-      ease: "easeOut",
-      staggerChildren: 0.2,
+      staggerChildren: 0.1,
     },
   },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0 },
 };
 
 export default function Home() {
   return (
-    <div className="flex flex-col overflow-x-hidden bg-background text-foreground">
-      <section className="relative h-[80vh] md:h-[90vh] w-full">
-        <Carousel
-          opts={{ align: 'start', loop: true }}
-          plugins={[Autoplay({ delay: 3000, stopOnInteraction: false })]}
-          className="w-full h-full"
-        >
-          <CarouselContent>
-            {heroImages.map((img, index) => (
-              <CarouselItem key={index}>
-                <div className="w-full h-[80vh] md:h-[90vh] relative">
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    fill
-                    className="object-cover"
-                    priority={index === 0}
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="absolute inset-0 z-10 flex h-full items-center justify-center">
+    <>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
+        </div>
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Left Content */}
             <motion.div
-                className="max-w-4xl mx-auto text-center p-4 sm:p-8 flex flex-col items-center"
-                initial="hidden"
-                animate="visible"
-                variants={sectionVariants}
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
             >
-                <motion.div variants={itemVariants} className="mb-4">
-                  <Image
-                    src="/logo.png"
-                    alt="Smart Labs Logo"
-                    width={500}
-                    height={500}
-                    className="h-32 w-32 sm:h-48 sm:w-48"
-                    priority
-                  />
-                </motion.div>
-                <motion.h1 variants={itemVariants} className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold text-white">
-                    Achieve Your Target Score with the Right Guidance.
-                </motion.h1>
-                <motion.p variants={itemVariants} className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-gray-200">
-                    PTE, IELTS & CELPIP Training | Corporate English & Workplace Communication Workshops
-                </motion.p>
-                <motion.div variants={itemVariants} className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto">
-                    <Button asChild size="lg">
-                        <Link href="/contact">
-                            Book a Free Consultation <ArrowRight className="ml-2" />
-                        </Link>
-                    </Button>
-                </motion.div>
-            </motion.div>
-        </div>
-      </section>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+                <Sparkles className="h-4 w-4" />
+                <span>#1 Exam Prep Platform in Sri Lanka</span>
+              </div>
+              
+              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
+                Master Your{" "}
+                <span className="gradient-text">English Exams</span>{" "}
+                with Confidence
+              </h1>
+              
+              <p className="text-lg text-muted-foreground mb-8 max-w-lg">
+                Join thousands of successful students who achieved their dream scores with our AI-powered learning platform, expert instructors, and proven strategies.
+              </p>
 
-      {/* Founder Section */}
-      <motion.section 
-        id="founder" 
-        className="py-16 md:py-24 bg-sky-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto grid lg:grid-cols-5 gap-8 md:gap-12 items-center">
-            <motion.div className="lg:col-span-2" variants={itemVariants}>
-                <div className="relative aspect-square rounded-xl overflow-hidden shadow-2xl mx-auto max-w-sm lg:max-w-none">
-                    <Image
-                      src="/la.png"
-                      alt="Lahiruka Weeraratne (Laheer) - Founder of Smart Labs"
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover"
-                    />
-                </div>
-            </motion.div>
-            <motion.div className="lg:col-span-3" variants={itemVariants}>
-                <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Founder – Lahiruka Weeraratne (Laheer)</h2>
-                <p className="mt-4 text-muted-foreground">
-                    Our Founder and Director, Lahiruka Weeraratne, known in the industry as Laheer, is a distinguished expert trainer officially trained by Pearson UK. She specializes in PTE, IELTS, and CELPIP exams—the essential pathways for students and professionals seeking to study, migrate, or settle abroad. With over 6 years of professional experience, she has successfully trained more than 5,000 students, empowering them to achieve their global aspirations.
-                </p>
-                <div className="mt-8">
-                  <h3 className="font-headline font-semibold text-xl mb-4">Areas of Expertise</h3>
-                   <ul className="space-y-3">
-                      <li className="flex items-start">
-                        <BookCheck className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Competency Test Training: PTE, IELTS, CELPIP</span>
-                      </li>
-                       <li className="flex items-start">
-                        <Briefcase className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Corporate Language & Communication Development</span>
-                      </li>
-                       <li className="flex items-start">
-                        <Globe className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Study Abroad & Migration Guidance</span>
-                      </li>
-                  </ul>
-                </div>
-            </motion.div>
-        </div>
-      </motion.section>
-      
-      {/* Results Snapshot Section */}
-      <motion.section 
-        id="results" 
-        className="py-12 bg-amber-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.5 }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto">
-          <div className="grid sm:grid-cols-3 gap-8 text-center">
-            {results.map((result) => (
-              <motion.div key={result.label} variants={itemVariants}>
-                <div>
-                  <p className="text-4xl md:text-5xl font-headline font-bold text-amber-800">{result.number}</p>
-                  <p className="text-amber-700 mt-2 uppercase tracking-widest text-sm">{result.label}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Services Section */}
-      <motion.section 
-        id="services" 
-        className="py-16 md:py-24 bg-background"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-headline font-bold mb-12">
-            Our Services
-          </h2>
-           <div className="grid md:grid-cols-3 gap-8 mt-12">
-            {services.map((service, index) => {
-                const Icon = service.icon;
-                return (
-                    <motion.div key={service.title} variants={itemVariants}>
-                        <Card className="text-center hover:shadow-xl transition-shadow h-full flex flex-col items-center p-6">
-                          <div className="p-4 bg-secondary rounded-full mb-4">
-                            <Icon className="h-8 w-8 text-primary" />
-                          </div>
-                          <CardTitle className="font-headline pt-2 text-xl">{service.title}</CardTitle>
-                          <CardContent className="pt-4 flex-grow">
-                            <p className="text-muted-foreground">{service.description}</p>
-                          </CardContent>
-                           <Button asChild variant="outline" className="mt-auto">
-                              <Link href={service.href}>View Course Details</Link>
-                           </Button>
-                        </Card>
-                    </motion.div>
-                );
-            })}
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Why Choose Us Section */}
-      <motion.section 
-        id="why-choose-us" 
-        className="py-16 md:py-24 bg-sky-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12">
-            Why Choose Smart Labs?
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {whyChooseUs.map((feature) => {
-              const Icon = feature.icon;
-              return (
-                 <motion.div key={feature.title} variants={itemVariants}>
-                     <Card className="text-center p-6 flex flex-col items-center h-full hover:shadow-xl transition-shadow">
-                        <div className="text-primary mb-4">
-                            <Icon className="h-10 w-10" />
-                        </div>
-                        <div>
-                            <h3 className="font-headline text-lg font-semibold">{feature.title}</h3>
-                            <p className="text-muted-foreground text-sm mt-2">{feature.description}</p>
-                        </div>
-                     </Card>
-                 </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Success Stories Carousel */}
-      <section
-        id="success-stories"
-        className="py-16 md:py-24 bg-amber-200"
-      >
-        <div className="container mx-auto">
-            <h2 className="text-3xl font-headline font-bold text-center mb-12 text-amber-800">
-                Student Success Stories
-            </h2>
-            <Carousel
-                opts={{ align: "start", loop: true }}
-                plugins={[Autoplay({ delay: 3000, stopOnInteraction: false })]}
-                className="w-full"
-            >
-                <CarouselContent>
-                    {successStories.map((story, index) => (
-                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1">
-                                <Card className="bg-white/80 backdrop-blur-sm">
-                                    <CardContent className="flex items-center justify-center p-6 h-24">
-                                        <p className="text-center font-medium text-amber-900">{story.text}</p>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-            </Carousel>
-        </div>
-    </section>
-
-      {/* Corporate Training Section */}
-       <motion.section 
-        id="corporate-training" 
-        className="py-16 md:py-24 bg-background"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            <motion.div variants={itemVariants}>
-                 <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg mx-auto max-w-lg lg:max-w-none">
-                    <Image
-                      src="https://picsum.photos/seed/corporate/800/450"
-                      alt="Corporate training session"
-                      data-ai-hint="corporate training"
-                      fill
-                      className="object-cover"
-                    />
-                </div>
-            </motion.div>
-            <motion.div variants={itemVariants}>
-                <h2 className="text-3xl md:text-4xl font-headline font-bold">Your Goals, Our Expertise — Custom Workshops for Your Team.</h2>
-                <ul className="space-y-3 mt-6">
-                    <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Upgrade English for workplace communication</span>
-                    </li>
-                    <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Professional etiquette and confidence development</span>
-                    </li>
-                    <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Practical use of AI tools for productivity</span>
-                    </li>
-                     <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-muted-foreground">Post-training evaluation and feedback reports</span>
-                    </li>
-                </ul>
-                <Button asChild size="lg" className="mt-8">
-                    <Link href="/corporate-training">Request Corporate Training Proposal</Link>
+              <div className="flex flex-col sm:flex-row gap-4 mb-10">
+                <Button variant="hero" size="xl" asChild>
+                  <Link href="/signup">
+                    Start Free Trial
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
                 </Button>
+                <Button variant="heroOutline" size="xl" asChild>
+                  <Link href="/about">
+                    <Play className="mr-2 h-5 w-5" />
+                    Watch Demo
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                {stats.map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 + index * 0.1 }}
+                    className="text-center sm:text-left"
+                  >
+                    <div className="text-2xl sm:text-3xl font-bold text-foreground">{stat.value}</div>
+                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
-        </div>
-      </motion.section>
-      
-      {/* CTA Section */}
-       <section className="py-16 md:py-24 bg-sky-200">
-        <div className="container mx-auto">
-          <div 
-            className="text-center bg-card p-8 md:p-12 rounded-lg border"
-          >
-            <h2 className="text-2xl md:text-3xl font-headline font-bold mb-4">Ready to Start Your Score Journey?</h2>
-            <p className="max-w-3xl mx-auto text-muted-foreground mb-6">
-                Talk to one of our certified trainers to find the perfect program for you. Your initial consultation is free.
-            </p>
-            <Button asChild size="lg">
-                <Link href="/contact">Book a Free Consultation</Link>
-            </Button>
+
+            {/* Right Content - Hero Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative">
+                {/* Main Card */}
+                <div className="glass-card rounded-3xl p-8 shadow-xl">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="p-3 rounded-2xl bg-primary/10">
+                      <GraduationCap className="h-8 w-8 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-display font-semibold text-lg">Your Learning Journey</div>
+                      <div className="text-sm text-muted-foreground">Personalized path to success</div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {["Complete diagnostic test", "Get personalized study plan", "Practice with AI feedback", "Achieve your target score"].map((step, i) => (
+                      <div key={step} className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
+                          {i + 1}
+                        </div>
+                        <span className={i === 0 ? "font-medium" : "text-muted-foreground"}>{step}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 pt-6 border-t border-border">
+                    <div className="flex items-center justify-between">
+                      <div className="flex -space-x-2">
+                        {["PS", "MH", "SC", "+"].map((avatar, i) => (
+                          <div
+                            key={i}
+                            className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold ring-2 ring-card"
+                          >
+                            {avatar}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="text-right">
+                        <div className="flex items-center gap-1 text-brand-amber">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="h-4 w-4 fill-current" />
+                          ))}
+                        </div>
+                        <div className="text-sm text-muted-foreground">2,400+ reviews</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating Elements */}
+                <motion.div
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-4 -right-4 glass-card rounded-2xl p-4 shadow-lg"
+                >
+                  <div className="flex items-center gap-2">
+                    <Trophy className="h-6 w-6 text-brand-amber" />
+                    <span className="font-semibold">95% Pass Rate</span>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  className="absolute -bottom-4 -left-4 glass-card rounded-2xl p-4 shadow-lg"
+                >
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-6 w-6 text-accent" />
+                    <span className="font-semibold">AI-Powered</span>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
-      
-      {/* Testimonials Section */}
-      <motion.section 
-        id="testimonials" 
-        className="py-16 md:py-24 bg-background"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12">
-            What Our Students Say
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div key={index} variants={itemVariants}>
-                <Card className="overflow-hidden h-full flex flex-col">
-                    <div className="relative aspect-video">
-                        <Image src={testimonial.image} alt={`Testimonial for ${testimonial.name}`} data-ai-hint="student testimonial" fill className="object-cover" />
-                    </div>
-                    <CardContent className="p-6 flex flex-col flex-grow">
-                        <p className="text-muted-foreground text-sm mb-4 flex-grow italic">"{testimonial.quote}"</p>
-                        <div>
-                            <p className="font-bold font-headline">{testimonial.name}</p>
-                            <p className="text-xs text-muted-foreground">{testimonial.course}</p>
-                            <Badge className="mt-2">{testimonial.achievement}</Badge>
-                        </div>
-                    </CardContent>
-                </Card>
+
+      {/* Courses Section */}
+      <section className="py-20 lg:py-28 bg-secondary/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
+              <BookOpen className="h-4 w-4" />
+              <span>Our Courses</span>
+            </div>
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+              Choose Your Path to Success
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Expert-crafted courses designed to help you achieve your target scores in PTE, IELTS, and CELPIP exams.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-8"
+          >
+            {courses.map((course) => (
+              <motion.div key={course.title} variants={itemVariants}>
+                <Link
+                  href={course.href}
+                  className="group block h-full glass-card rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
+                >
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${course.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                    <course.icon className="h-7 w-7 text-white" />
+                  </div>
+                  <h3 className="font-display text-xl font-bold text-foreground mb-3">
+                    {course.title}
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    {course.description}
+                  </p>
+                  <ul className="space-y-2 mb-6">
+                    {course.features.map((feature) => (
+                      <li key={feature} className="flex items-center gap-2 text-sm">
+                        <CheckCircle className="h-4 w-4 text-accent" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="flex items-center text-primary font-semibold group-hover:gap-3 gap-2 transition-all">
+                    Learn More <ArrowRight className="h-4 w-4" />
+                  </div>
+                </Link>
               </motion.div>
             ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+                <Sparkles className="h-4 w-4" />
+                <span>Why Choose Us</span>
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+                Everything You Need to{" "}
+                <span className="gradient-text">Succeed</span>
+              </h2>
+              <p className="text-lg text-muted-foreground mb-8">
+                Our comprehensive platform combines cutting-edge technology with expert instruction to deliver the most effective exam preparation experience.
+              </p>
+
+              <div className="grid sm:grid-cols-2 gap-6">
+                {features.map((feature, index) => (
+                  <motion.div
+                    key={feature.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex gap-4"
+                  >
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <feature.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
+                      <p className="text-sm text-muted-foreground">{feature.description}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="glass-card rounded-3xl p-8 shadow-xl">
+                <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center mb-6">
+                  <div className="w-20 h-20 rounded-full bg-white/90 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+                    <Play className="h-8 w-8 text-primary ml-1" />
+                  </div>
+                </div>
+                <h3 className="font-display text-xl font-bold mb-2">See How It Works</h3>
+                <p className="text-muted-foreground">Watch our 2-minute overview to learn how Smart Labs can help you achieve your goals.</p>
+              </div>
+            </motion.div>
           </div>
         </div>
-      </motion.section>
-    </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 lg:py-28 bg-secondary/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-amber/10 text-brand-amber text-sm font-medium mb-4">
+              <Star className="h-4 w-4" />
+              <span>Success Stories</span>
+            </div>
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+              What Our Students Say
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Join thousands of successful students who transformed their futures with Smart Labs.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-8"
+          >
+            {testimonials.map((testimonial) => (
+              <motion.div
+                key={testimonial.name}
+                variants={itemVariants}
+                className="glass-card rounded-2xl p-8"
+              >
+                <div className="flex items-center gap-1 text-brand-amber mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-current" />
+                  ))}
+                </div>
+                <p className="text-foreground mb-6 leading-relaxed">"{testimonial.content}"</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold">
+                    {testimonial.avatar}
+                  </div>
+                  <div>
+                    <div className="font-semibold text-foreground">{testimonial.name}</div>
+                    <div className="text-sm text-accent font-medium">{testimonial.role}</div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-purple-600 to-primary p-12 lg:p-16 text-center"
+          >
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-0 left-1/4 w-64 h-64 bg-white rounded-full blur-3xl" />
+              <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full blur-3xl" />
+            </div>
+
+            <div className="relative z-10">
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+                Ready to Ace Your Exam?
+              </h2>
+              <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8">
+                Join thousands of successful students. Start your free trial today and take the first step towards achieving your dream score.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  size="xl" 
+                  className="bg-white text-primary hover:bg-white/90 shadow-xl"
+                  asChild
+                >
+                  <Link href="/signup">
+                    Start Free Trial
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button 
+                  variant="heroOutline" 
+                  size="xl" 
+                  className="border-white/30 text-white hover:bg-white/10 hover:border-white/50"
+                  asChild
+                >
+                  <Link href="/contact">Book Free Consultation</Link>
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </>
   );
 }
