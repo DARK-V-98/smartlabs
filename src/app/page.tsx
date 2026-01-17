@@ -46,7 +46,7 @@ const courses = [
     description: "Your pathway to Canadian immigration with focused CELPIP training.",
     icon: Zap,
     href: "/celpip",
-    color: "from-brand-amber to-orange-400",
+    color: "from-accent to-orange-400",
     features: ["Self-Paced Learning", "Video Guides", "Practice Tests"],
   },
 ];
@@ -220,7 +220,7 @@ export default function Home() {
                         ))}
                       </div>
                       <div className="text-right">
-                        <div className="flex items-center gap-1 text-brand-amber">
+                        <div className="flex items-center gap-1 text-accent">
                           {[...Array(5)].map((_, i) => (
                             <Star key={i} className="h-4 w-4 fill-current" />
                           ))}
@@ -238,7 +238,7 @@ export default function Home() {
                   className="absolute -top-4 -right-4 glass-card rounded-2xl p-4 shadow-lg"
                 >
                   <div className="flex items-center gap-2">
-                    <Trophy className="h-6 w-6 text-brand-amber" />
+                    <Trophy className="h-6 w-6 text-accent" />
                     <span className="font-semibold">95% Pass Rate</span>
                   </div>
                 </motion.div>
@@ -392,7 +392,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-amber/10 text-brand-amber text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
               <Star className="h-4 w-4" />
               <span>Success Stories</span>
             </div>
@@ -417,7 +417,7 @@ export default function Home() {
                 variants={itemVariants}
                 className="glass-card rounded-2xl p-8"
               >
-                <div className="flex items-center gap-1 text-brand-amber mb-4">
+                <div className="flex items-center gap-1 text-accent mb-4">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 fill-current" />
                   ))}

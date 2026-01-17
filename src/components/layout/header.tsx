@@ -36,10 +36,7 @@ export default function Header() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <Image src="/logo.png" alt="Smart Labs Logo" width={32} height={32} />
-              <span className="font-display font-bold text-xl text-foreground">
-                Smart<span className="text-primary">Labs</span>
-              </span>
+              <Image src="/logo.png" alt="Smart Labs Logo" width={40} height={40} />
             </Link>
 
             {/* Desktop Navigation */}

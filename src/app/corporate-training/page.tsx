@@ -160,8 +160,8 @@ export default function CorporateTraining() {
                 transition={{ delay: 0.2 }}
                 className="glass-card rounded-2xl p-6 text-center"
               >
-                <div className="w-14 h-14 rounded-xl bg-brand-amber/10 flex items-center justify-center mb-4 mx-auto">
-                  <BarChart3 className="h-7 w-7 text-brand-amber" />
+                <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center mb-4 mx-auto">
+                  <BarChart3 className="h-7 w-7 text-accent" />
                 </div>
                 <div className="text-3xl font-bold text-foreground mb-2">95%</div>
                 <p className="text-sm text-muted-foreground">Satisfaction Rate</p>

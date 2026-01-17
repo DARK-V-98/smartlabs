@@ -132,7 +132,7 @@ export default function About() {
                 <p className="text-sm text-muted-foreground">Success Rate</p>
               </div>
               <div className="glass-card rounded-2xl p-6 text-center">
-                <div className="text-4xl font-bold text-brand-amber mb-2">50+</div>
+                <div className="text-4xl font-bold text-accent mb-2">50+</div>
                 <p className="text-sm text-muted-foreground">Expert Instructors</p>
               </div>
               <div className="glass-card rounded-2xl p-6 text-center">

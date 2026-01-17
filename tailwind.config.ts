@@ -65,14 +65,6 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        brand: {
-          indigo: "hsl(var(--brand-indigo))",
-          "indigo-dark": "hsl(var(--brand-indigo-dark))",
-          emerald: "hsl(var(--brand-emerald))",
-          "emerald-light": "hsl(var(--brand-emerald-light))",
-          amber: "hsl(var(--brand-amber))",
-          "amber-light": "hsl(var(--brand-amber-light))",
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -83,7 +75,7 @@ export default {
       },
       boxShadow: {
         glow: "var(--shadow-glow)",
-        "glow-emerald": "var(--shadow-emerald)",
+        "glow-accent": "var(--shadow-accent)",
       },
       keyframes: {
         "accordion-down": {

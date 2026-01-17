@@ -38,10 +38,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Image src="/logo.png" alt="Smart Labs Logo" width={32} height={32} />
-              <span className="font-display font-bold text-xl">
-                Smart<span className="text-primary">Labs</span>
-              </span>
+              <Image src="/logo.png" alt="Smart Labs Logo" width={40} height={40} />
             </Link>
             <p className="text-muted-foreground mb-6 max-w-sm">
               Empowering learners worldwide with expert-led exam preparation and professional development courses.
