@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useUser, useAuth, useFirebase, useCollection, useMemoFirebase } from '@/firebase';
 import { doc, getDoc, collection } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
+import Image from 'next/image';
 
 import {
   Card,
@@ -85,9 +86,10 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-            <p className="text-lg font-semibold">Loading...</p>
-            <p className="text-sm text-muted-foreground">Please wait while we load your dashboard.</p>
+        <div className="text-center flex flex-col items-center gap-4">
+            <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} className="animate-pulse-glow" />
+            <p className="text-lg font-semibold">Loading Your Dashboard...</p>
+            <p className="text-sm text-muted-foreground">Please wait a moment.</p>
         </div>
       </div>
     );
@@ -191,5 +193,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    

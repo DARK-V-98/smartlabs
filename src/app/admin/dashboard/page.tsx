@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { errorEmitter, FirestorePermissionError } from '@/firebase';
-
+import Image from 'next/image';
 
 export default function AdminDashboardPage() {
   const { user: currentUser, isUserLoading } = useUser();
@@ -97,7 +97,8 @@ export default function AdminDashboardPage() {
   if (isUserLoading || !isAdmin) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center gap-4">
+            <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} className="animate-pulse-glow" />
             <p className="text-lg font-semibold">Verifying Access...</p>
             <p className="text-sm text-muted-foreground">Please wait while we check your credentials.</p>
         </div>

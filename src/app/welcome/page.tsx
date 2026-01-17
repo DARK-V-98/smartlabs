@@ -78,7 +78,14 @@ export default function WelcomePage() {
   };
   
   if (isUserLoading || !user) {
-    return <div className="flex h-screen items-center justify-center"><p>Loading...</p></div>;
+    return (
+        <div className="flex h-screen items-center justify-center">
+            <div className="text-center flex flex-col items-center gap-4">
+                <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} className="animate-pulse-glow" />
+                <p className="text-lg font-semibold">Loading...</p>
+            </div>
+        </div>
+    );
   }
   
   const progress = (step / TOTAL_STEPS) * 100;

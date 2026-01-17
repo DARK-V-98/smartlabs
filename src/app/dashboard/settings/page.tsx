@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Settings, ArrowLeft } from 'lucide-react';
 import { updateProfile } from 'firebase/auth';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const settingsSchema = z.object({
   displayName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -84,7 +85,10 @@ export default function SettingsPage() {
   if (isUserLoading || !user) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <p>Loading settings...</p>
+        <div className="text-center flex flex-col items-center gap-4">
+            <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} className="animate-pulse-glow" />
+            <p className="text-lg font-semibold">Loading settings...</p>
+        </div>
       </div>
     );
   }

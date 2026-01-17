@@ -1,8 +1,8 @@
 'use client';
-import type { Metadata } from 'next';
 import Link from "next/link";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import React, { useRef } from "react";
+import Image from 'next/image';
 import { 
   Book,
   Feather,
@@ -247,9 +247,7 @@ export default function Home() {
                 {/* Main Card */}
                 <div className="glass-card rounded-3xl p-8 shadow-xl">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="p-3 rounded-2xl bg-primary/10">
-                      <Book className="h-8 w-8 text-primary" />
-                    </div>
+                    <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} />
                     <div>
                       <div className="font-display font-semibold text-lg">Your Learning Journey</div>
                       <div className="text-sm text-muted-foreground">Personalized path to success</div>
