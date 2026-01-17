@@ -538,9 +538,9 @@ export default function Home() {
                   </Link>
                 </Button>
                 <Button 
-                  variant="outline" 
+                  variant="default"
                   size="xl" 
-                  className="border-white/30 text-white hover:bg-white/10 hover:border-white/50"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl"
                   asChild
                 >
                   <Link href="/contact">Book Free Consultation</Link>
