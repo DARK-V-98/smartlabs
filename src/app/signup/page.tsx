@@ -228,10 +228,15 @@ export default function SignupPage() {
                 Sign up with Google
               </Button>
 
-               <div className="mt-6 text-center text-sm">
-                Already have an account?{' '}
-                <Link href="/login" className="font-semibold text-primary hover:underline">
-                  Login
+               <div className="mt-6 text-center text-sm text-muted-foreground">
+                <p className="mb-2">
+                  Already have an account?{' '}
+                  <Link href="/login" className="font-semibold text-primary hover:underline">
+                    Login
+                  </Link>
+                </p>
+                <Link href="/" className="hover:underline hover:text-primary">
+                  Back to Home
                 </Link>
               </div>
             </CardContent>

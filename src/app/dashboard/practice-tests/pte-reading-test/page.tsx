@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -58,7 +59,10 @@ export default function PteReadingTestPage() {
 
   return (
     <div className="w-full">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-4xl space-y-4">
+             <Button asChild variant="ghost">
+                <Link href="/dashboard/practice-tests"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Practice Tests</Link>
+            </Button>
             <Card>
                 <CardHeader>
                     <CardTitle className="text-3xl font-headline">PTE Reading: Multiple-Choice, Single Answer</CardTitle>

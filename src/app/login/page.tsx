@@ -218,10 +218,15 @@ export default function LoginPage() {
                 <Image src="/google-logo.svg" alt="Google" width={20} height={20} className="mr-2" />
                 Sign in with Google
               </Button>
-               <div className="mt-6 text-center text-sm">
-                Don't have an account?{' '}
-                <Link href="/signup" className="font-semibold text-primary hover:underline">
-                  Sign up
+               <div className="mt-6 text-center text-sm text-muted-foreground">
+                <p className="mb-2">
+                  Don't have an account?{' '}
+                  <Link href="/signup" className="font-semibold text-primary hover:underline">
+                    Sign up
+                  </Link>
+                </p>
+                <Link href="/" className="hover:underline hover:text-primary">
+                  Back to Home
                 </Link>
               </div>
             </CardContent>
