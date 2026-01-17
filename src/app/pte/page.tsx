@@ -127,8 +127,11 @@ export default function PTE() {
             >
                 <video
                     src="/pte.mp4"
-                    controls
-                    className="w-full h-full rounded-2xl shadow-2xl"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full rounded-2xl shadow-2xl object-cover"
                 >
                     Your browser does not support the video tag.
                 </video>
