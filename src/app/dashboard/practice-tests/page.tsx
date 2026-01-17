@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -325,7 +326,7 @@ export default function PracticeTestsPage() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {exams.map((exam) => {
             const details = examDetails[exam];
             const Icon = details.icon;
