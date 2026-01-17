@@ -18,13 +18,61 @@ import {
   MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 
-const pteSkills = [
-  { icon: MessageSquare, title: "Speaking", description: "Record responses, read aloud, and describe images" },
-  { icon: PenTool, title: "Writing", description: "Essay writing and summarize written text" },
-  { icon: BookOpen, title: "Reading", description: "Multiple choice, reorder paragraphs, and fill in blanks" },
-  { icon: Headphones, title: "Listening", description: "Summarize spoken text, multiple choice, and dictation" },
+const pteSections = [
+  {
+    title: "Speaking",
+    icon: MessageSquare,
+    items: [
+      { name: "Read Aloud", hasAiScore: true },
+      { name: "Repeat Sentence", hasAiScore: true },
+      { name: "Describe Image", hasAiScore: true },
+      { name: "Retell Lecture", hasAiScore: true },
+      { name: "Answer Short Question", hasAiScore: true },
+      { name: "Summarize Group Discussion", hasAiScore: true },
+      { name: "Respond to a Situation", hasAiScore: true },
+      { name: "Respond to a Situation (Core)", hasAiScore: false },
+    ],
+  },
+  {
+    title: "Writing",
+    icon: PenTool,
+    items: [
+      { name: "Summarize Written Text", hasAiScore: true },
+      { name: "Write Essay", hasAiScore: true },
+      { name: "Summarize Written Text (Core)", hasAiScore: false },
+      { name: "Write Email (Core)", hasAiScore: false },
+    ],
+  },
+  {
+    title: "Reading",
+    icon: BookOpen,
+    items: [
+      { name: "Fill in the Blanks (Dropdown)", hasAiScore: false },
+      { name: "Multiple Choice (Multiple)", hasAiScore: false },
+      { name: "Reorder Paragraph", hasAiScore: false },
+      { name: "Fill in the Blanks (Drag and Drop)", hasAiScore: false },
+      { name: "Multiple Choice (Single)", hasAiScore: false },
+    ],
+  },
+  {
+    title: "Listening",
+    icon: Headphones,
+    items: [
+      { name: "Summarize Spoken Text", hasAiScore: true },
+      { name: "Multiple Choice (Multiple)", hasAiScore: false },
+      { name: "Fill in the Blanks", hasAiScore: false },
+      { name: "Highlight Correct Summary", hasAiScore: false },
+      { name: "Multiple Choice (Single)", hasAiScore: false },
+      { name: "Select Missing Word", hasAiScore: false },
+      { name: "Highlight Incorrect Words", hasAiScore: false },
+      { name: "Write from Dictation", hasAiScore: false },
+    ],
+  },
 ];
+
 
 const boostifyFeatures = [
   "AI scoring practice with instant feedback",
@@ -85,49 +133,58 @@ export default function PTE() {
         </div>
       </section>
 
-      {/* About PTE Section */}
+      {/* Exam Structure Section */}
       <section className="py-20 bg-secondary/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="grid lg:grid-cols-2 gap-16 items-center"
+            className="text-center mb-16"
           >
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
+             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
                 <BookOpen className="h-4 w-4" />
-                <span>About the Exam</span>
+                <span>Exam Structure</span>
               </div>
-              <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-6">
-                About the PTE Exam
-              </h2>
-              <p className="text-muted-foreground mb-6 leading-relaxed">
-                The PTE Academic is a computer-based English language test that assesses your reading, writing, listening, and speaking skills. It's accepted by universities, colleges, and governments worldwide for study abroad and immigration purposes.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Our comprehensive program focuses on skill-building, exam format familiarity, time management, and achieving target scores through practice and personalized feedback.
-              </p>
-            </div>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
+              PTE Exam Question Types
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Understand the question types for each section of the PTE Academic exam.
+            </p>
+          </motion.div>
 
-            <div className="grid sm:grid-cols-2 gap-6">
-              {pteSkills.map((skill, index) => (
-                <motion.div
-                  key={skill.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="glass-card rounded-2xl p-6"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                    <skill.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-foreground mb-2">{skill.title}</h3>
-                  <p className="text-sm text-muted-foreground">{skill.description}</p>
-                </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto">
+            <Accordion type="single" collapsible className="w-full" defaultValue="Speaking">
+              {pteSections.map((section) => (
+                <AccordionItem value={section.title} key={section.title}>
+                  <AccordionTrigger className="text-xl font-semibold hover:no-underline">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 rounded-xl bg-primary/10">
+                        <section.icon className="h-6 w-6 text-primary" />
+                      </div>
+                      {section.title}
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3 pt-4 pl-4">
+                      {section.items.map((item) => (
+                        <li key={item.name} className="flex items-center justify-between">
+                          <span className="text-muted-foreground">{item.name}</span>
+                          {item.hasAiScore && (
+                            <Badge variant="secondary" className="bg-primary/10 text-primary">AI Score</Badge>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
               ))}
-            </div>
+            </Accordion>
           </motion.div>
         </div>
       </section>
