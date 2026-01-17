@@ -67,7 +67,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={8} className="relative z-10" />
+            <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} className="relative z-10" />
           </Link>
 
           {/* Desktop Navigation */}

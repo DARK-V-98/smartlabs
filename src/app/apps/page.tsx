@@ -1,3 +1,4 @@
+
 'use client';
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -96,8 +97,10 @@ export default function AppsPage() {
                     <Button size="lg" variant="accent">
                         <Apple className="mr-2 h-5 w-5" /> Download for macOS
                     </Button>
-                    <Button size="lg" variant="outline">
-                        <WindowsIcon /> Download for Windows
+                    <Button size="lg" variant="outline" asChild>
+                        <a href="/smartlabs Setup 1.0.0.exe" download>
+                           <WindowsIcon /> Download for Windows
+                        </a>
                     </Button>
               </div>
             </motion.div>
