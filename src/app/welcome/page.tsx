@@ -89,7 +89,7 @@ export default function WelcomePage() {
         <Card className="w-full max-w-2xl shadow-2xl">
           <CardHeader>
             <div className="text-center">
-              <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} className="mx-auto mb-4" />
+              <Image src="/logo.png" alt="Smart Labs Logo" width={64} height={64} className="mx-auto mb-4" />
               <CardTitle className="font-headline text-3xl">Welcome, {user.displayName}!</CardTitle>
               <CardDescription className="mt-2 text-lg">Let's set up your learning journey.</CardDescription>
             </div>

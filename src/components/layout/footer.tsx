@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import { GraduationCap, Facebook, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from "lucide-react";
 
 const footerLinks = {
   courses: [
@@ -12,7 +12,7 @@ const footerLinks = {
   company: [
     { name: "About Us", href: "/about" },
     { name: "Blog", href: "/blog" },
-    { name: "Careers", href: "/careers" },
+    { name: "Apps", href: "/apps" },
     { name: "Contact", href: "/contact" },
   ],
   support: [
@@ -38,7 +38,10 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Image src="/logo.png" alt="Smart Labs Logo" width={40} height={40} />
+               <Image src="/logo.png" alt="Smart Labs Logo" width={40} height={40} />
+               <span className="font-display font-bold text-xl">
+                Smart<span className="text-primary">Labs</span>
+              </span>
             </Link>
             <p className="text-muted-foreground mb-6 max-w-sm">
               Empowering learners worldwide with expert-led exam preparation and professional development courses.

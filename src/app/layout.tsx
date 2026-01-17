@@ -23,17 +23,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="theme-color" content="#3b82f6" />
+        <meta name="theme-color" content="#4f46e5" />
       </head>
       <body
         className={cn(
-          'min-h-screen font-body antialiased',
+          'min-h-screen font-sans antialiased',
           'flex flex-col'
         )}
       >
         <FirebaseClientProvider>
           <Header />
-          <main className="flex-1 pt-24">{children}</main>
+          <main className="flex-1">{children}</main>
           <Footer />
           <Toaster />
           <CookieBanner />

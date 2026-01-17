@@ -159,7 +159,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           <Card className="shadow-lg">
             <CardHeader className="text-center items-center">
-              <Image src="/logo.png" alt="Smart Labs Logo" width={96} height={96} className="mb-4" />
+              <Image src="/logo.png" alt="Smart Labs Logo" width={64} height={64} className="mb-4" />
               <CardTitle className="font-headline text-3xl">Login</CardTitle>
               <CardDescription>Access your student dashboard.</CardDescription>
             </CardHeader>
