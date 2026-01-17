@@ -1,27 +1,30 @@
 'use client';
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import React, { useRef } from "react";
 import { 
   GraduationCap, 
   Users, 
   Trophy, 
   BookOpen, 
-  CheckCircle, 
   Star, 
   ArrowRight,
   Play,
   Sparkles,
   Target,
   Zap,
-  Globe
+  Globe,
+  CheckCircle
 } from "lucide-react";
 import { Button } from '@/components/ui/button';
+import { AnimatedNumber } from "@/components/ui/animated-number";
+import { AnimatedCheckmark } from "@/components/ui/animated-checkmark";
 
 const stats = [
-  { value: "10,000+", label: "Students Trained" },
-  { value: "95%", label: "Success Rate" },
-  { value: "50+", label: "Expert Instructors" },
-  { value: "4.9", label: "Average Rating" },
+  { value: 10000, suffix: "+", label: "Students Trained" },
+  { value: 95, suffix: "%", label: "Success Rate" },
+  { value: 50, suffix: "+", label: "Expert Instructors" },
+  { value: 4.9, suffix: "", label: "Average Rating", decimals: 1 },
 ];
 
 const courses = [
@@ -111,6 +114,34 @@ const itemVariants = {
 };
 
 export default function Home() {
+  const heroRef = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const springX = useSpring(x, { stiffness: 300, damping: 40 });
+  const springY = useSpring(y, { stiffness: 300, damping: 40 });
+
+  const parallaxX1 = useTransform(springX, [-100, 100], [-15, 15]);
+  const parallaxY1 = useTransform(springY, [-100, 100], [-10, 10]);
+
+  const parallaxX2 = useTransform(springX, [-100, 100], [15, -15]);
+  const parallaxY2 = useTransform(springY, [-100, 100], [10, -10]);
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (heroRef.current) {
+      const rect = (heroRef.current as HTMLElement).getBoundingClientRect();
+      const newX = event.clientX - rect.left - rect.width / 2;
+      const newY = event.clientY - rect.top - rect.height / 2;
+      x.set(newX);
+      y.set(newY);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+  
   return (
     <>
       {/* Hero Section */}
@@ -169,7 +200,9 @@ export default function Home() {
                     transition={{ delay: 0.3 + index * 0.1 }}
                     className="text-center sm:text-left"
                   >
-                    <div className="text-2xl sm:text-3xl font-bold text-foreground">{stat.value}</div>
+                    <div className="text-2xl sm:text-3xl font-bold text-foreground">
+                      <AnimatedNumber value={stat.value} decimals={stat.decimals || 0} />{stat.suffix}
+                    </div>
                     <div className="text-sm text-muted-foreground">{stat.label}</div>
                   </motion.div>
                 ))}
@@ -178,6 +211,9 @@ export default function Home() {
 
             {/* Right Content - Hero Card */}
             <motion.div
+              ref={heroRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -233,6 +269,7 @@ export default function Home() {
 
                 {/* Floating Elements */}
                 <motion.div
+                  style={{ x: parallaxX1, y: parallaxY1 }}
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                   className="absolute -top-4 -right-4 glass-card rounded-2xl p-4 shadow-lg"
@@ -244,6 +281,7 @@ export default function Home() {
                 </motion.div>
 
                 <motion.div
+                  style={{ x: parallaxX2, y: parallaxY2 }}
                   animate={{ y: [0, 10, 0] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                   className="absolute -bottom-4 -left-4 glass-card rounded-2xl p-4 shadow-lg"
@@ -305,8 +343,8 @@ export default function Home() {
                   <ul className="space-y-2 mb-6">
                     {course.features.map((feature) => (
                       <li key={feature} className="flex items-center gap-2 text-sm">
-                        <CheckCircle className="h-4 w-4 text-accent" />
-                        <span>{feature}</span>
+                        <AnimatedCheckmark className="text-accent" />
+                        <span className="text-muted-foreground">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -351,9 +389,13 @@ export default function Home() {
                     transition={{ delay: index * 0.1 }}
                     className="flex gap-4"
                   >
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <motion.div 
+                      className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center"
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                    >
                       <feature.icon className="h-6 w-6 text-primary" />
-                    </div>
+                    </motion.div>
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
                       <p className="text-sm text-muted-foreground">{feature.description}</p>
