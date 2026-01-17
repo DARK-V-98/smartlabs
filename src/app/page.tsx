@@ -649,14 +649,14 @@ export default function Home() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="relative aspect-[3/4] max-w-sm mx-auto lg:max-w-none lg:mx-0"
+              className="relative aspect-[3/4] max-w-sm mx-auto lg:max-w-none lg:mx-0 group"
             >
-              <div className="absolute -top-4 -left-4 w-full h-full bg-gradient-to-br from-accent-3/50 to-accent-1/50 rounded-3xl rotate-[-3deg]"></div>
+              <div className="absolute -top-4 -left-4 w-full h-full bg-gradient-to-br from-accent-3/50 to-accent-1/50 rounded-3xl rotate-[-3deg] transition-transform duration-300 group-hover:rotate-[-5deg] group-hover:scale-105"></div>
               <Image
                 src="/la.png"
                 alt="Lahiruka Weeraratne (Laheer), Founder of Smart Labs"
                 fill
-                className="rounded-3xl object-cover shadow-2xl z-10 relative"
+                className="rounded-3xl object-cover shadow-2xl z-10 relative transition-transform duration-300 group-hover:scale-105"
               />
             </motion.div>
 
@@ -678,21 +678,21 @@ export default function Home() {
               </p>
               
               <h3 className="font-semibold text-xl mb-4">Areas of Expertise</h3>
-              <ul className="space-y-4">
-                  <li className="flex items-start gap-4">
+              <ul className="space-y-2">
+                  <li className="flex items-start gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-muted/50 hover:shadow-inner cursor-pointer">
                       <div className="p-3 bg-accent-1/10 rounded-xl"><GraduationCap className="h-5 w-5 text-accent-1" /></div>
                       <div>
                           <h4 className="font-semibold">Competency Test Training</h4>
                           <p className="text-sm text-muted-foreground">PTE, IELTS, CELPIP</p>
                       </div>
                   </li>
-                  <li className="flex items-start gap-4">
+                  <li className="flex items-start gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-muted/50 hover:shadow-inner cursor-pointer">
                       <div className="p-3 bg-accent-2/10 rounded-xl"><Briefcase className="h-5 w-5 text-accent-2" /></div>
                       <div>
                           <h4 className="font-semibold">Corporate Language & Communication Development</h4>
                       </div>
                   </li>
-                  <li className="flex items-start gap-4">
+                  <li className="flex items-start gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-muted/50 hover:shadow-inner cursor-pointer">
                       <div className="p-3 bg-accent-3/10 rounded-xl"><Globe className="h-5 w-5 text-accent-3" /></div>
                       <div>
                           <h4 className="font-semibold">Study Abroad & Migration Guidance</h4>
