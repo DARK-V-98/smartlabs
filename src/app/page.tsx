@@ -16,7 +16,10 @@ import {
   Target,
   Zap,
   Globe,
-  Palette
+  Palette,
+  User,
+  Briefcase,
+  GraduationCap
 } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { AnimatedNumber } from "@/components/ui/animated-number";
@@ -632,6 +635,70 @@ export default function Home() {
                 <h3 className="font-display text-xl font-bold mb-2">See How It Works</h3>
                 <p className="text-muted-foreground">Watch our 2-minute overview to learn how Smart Labs can help you achieve your goals.</p>
               </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Meet The Founder Section */}
+      <section className="py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="relative aspect-[3/4] max-w-sm mx-auto lg:max-w-none lg:mx-0"
+            >
+              <div className="absolute -top-4 -left-4 w-full h-full bg-gradient-to-br from-accent-3/50 to-accent-1/50 rounded-3xl rotate-[-3deg]"></div>
+              <Image
+                src="/la.png"
+                alt="Lahiruka Weeraratne (Laheer), Founder of Smart Labs"
+                fill
+                className="rounded-3xl object-cover shadow-2xl z-10 relative"
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+                <User className="h-4 w-4" />
+                <span>Meet Our Founder</span>
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
+                Lahiruka Weeraratne (Laheer)
+              </h2>
+              <p className="text-muted-foreground mb-8 leading-relaxed">
+                Our Founder and Director, Lahiruka Weeraratne, known in the industry as Laheer, is a distinguished expert trainer officially trained by Pearson UK. She specializes in PTE, IELTS, and CELPIP exams—the essential pathways for students and professionals seeking to study, migrate, or settle abroad. With over 6 years of professional experience, she has successfully trained more than 5,000 students, empowering them to achieve their global aspirations.
+              </p>
+              
+              <h3 className="font-semibold text-xl mb-4">Areas of Expertise</h3>
+              <ul className="space-y-4">
+                  <li className="flex items-start gap-4">
+                      <div className="p-3 bg-accent-1/10 rounded-xl"><GraduationCap className="h-5 w-5 text-accent-1" /></div>
+                      <div>
+                          <h4 className="font-semibold">Competency Test Training</h4>
+                          <p className="text-sm text-muted-foreground">PTE, IELTS, CELPIP</p>
+                      </div>
+                  </li>
+                  <li className="flex items-start gap-4">
+                      <div className="p-3 bg-accent-2/10 rounded-xl"><Briefcase className="h-5 w-5 text-accent-2" /></div>
+                      <div>
+                          <h4 className="font-semibold">Corporate Language & Communication Development</h4>
+                      </div>
+                  </li>
+                  <li className="flex items-start gap-4">
+                      <div className="p-3 bg-accent-3/10 rounded-xl"><Globe className="h-5 w-5 text-accent-3" /></div>
+                      <div>
+                          <h4 className="font-semibold">Study Abroad & Migration Guidance</h4>
+                      </div>
+                  </li>
+              </ul>
             </motion.div>
           </div>
         </div>
