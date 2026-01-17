@@ -84,15 +84,14 @@ export default function Header() {
             "flex items-center justify-between h-20",
             isElectron && !isMac && "pr-[140px]" // Reserve space for window controls
           )}
-          style={(isElectron && !isMac) ? { WebkitAppRegion: 'no-drag' } as React.CSSProperties : {}}
         >
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group" style={(isElectron && !isMac) ? { WebkitAppRegion: 'no-drag' } as React.CSSProperties : {}}>
             <Image src="/logo.png" alt="Smart Labs Logo" width={48} height={48} className="relative z-10" />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1" style={(isElectron && !isMac) ? { WebkitAppRegion: 'no-drag' } as React.CSSProperties : {}}>
             {/* Courses Dropdown */}
             <div 
               className="relative"
@@ -153,7 +152,7 @@ export default function Header() {
           </div>
 
           {/* CTA Buttons */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3" style={(isElectron && !isMac) ? { WebkitAppRegion: 'no-drag' } as React.CSSProperties : {}}>
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -202,6 +201,7 @@ export default function Header() {
           <button
             className="lg:hidden p-2 rounded-lg hover:bg-muted transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            style={(isElectron && !isMac) ? { WebkitAppRegion: 'no-drag' } as React.CSSProperties : {}}
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
