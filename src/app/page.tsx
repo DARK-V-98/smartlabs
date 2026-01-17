@@ -487,7 +487,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-blue-600 p-12 lg:p-16 text-center"
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-purple-600 to-primary p-12 lg:p-16 text-center"
           >
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
@@ -505,7 +505,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   size="xl" 
-                  className="bg-white text-foreground hover:bg-white/90 shadow-xl"
+                  className="bg-white text-primary hover:bg-white/90 shadow-xl"
                   asChild
                 >
                   <Link href="/signup">
