@@ -95,27 +95,216 @@ const features = [
 ];
 
 const testimonials = [
-  {
-    name: "Priya Sharma",
-    role: "PTE Score: 85",
-    content: "Smart Labs transformed my preparation journey. The AI feedback and personalized study plan helped me achieve my target score in just 3 weeks!",
-    avatar: "PS",
-    color: "from-accent-1/80 to-accent-3/80"
-  },
-  {
-    name: "Mohammed Al-Hassan",
-    role: "IELTS Band: 8.0",
-    content: "The instructors are incredibly knowledgeable. Their strategies for the speaking section were game-changers. Highly recommended!",
-    avatar: "MA",
-    color: "from-accent-2/80 to-accent-4/80"
-  },
-  {
-    name: "Sarah Chen",
-    role: "CELPIP Score: 12",
-    content: "The self-paced CELPIP course was perfect for my schedule. The materials are comprehensive and the practice tests are very close to the real exam.",
-    avatar: "SC",
-    color: "from-primary/80 to-accent-2/80"
-  },
+    {
+        name: 'Priya Sharma',
+        role: 'PTE Score: 85 | Sri Lanka',
+        content: 'Smart Labs transformed my preparation journey. The AI feedback and personalized study plan helped me achieve my target score in just 3 weeks!',
+        avatar: 'PS',
+        color: 'from-accent-1/80 to-accent-3/80',
+    },
+    {
+        name: 'Liam Smith',
+        role: 'IELTS Band: 8.5 | Australia',
+        content: 'The instructors are incredibly knowledgeable. Their strategies for the speaking section were game-changers. Highly recommended for anyone in Australia!',
+        avatar: 'LS',
+        color: 'from-accent-2/80 to-accent-4/80',
+    },
+    {
+        name: 'Nimali Perera',
+        role: 'CELPIP Score: 12 | Sri Lanka',
+        content: 'The self-paced CELPIP course was perfect for my schedule. The materials are comprehensive and the practice tests are very close to the real exam.',
+        avatar: 'NP',
+        color: 'from-primary/80 to-accent-2/80',
+    },
+    {
+        name: 'Olivia Wilson',
+        role: 'PTE Score: 90 | Australia',
+        content: "The AI scoring for PTE is spot on. It's like having a personal tutor 24/7. I couldn't have achieved a perfect score without it.",
+        avatar: 'OW',
+        color: 'from-accent-1/80 to-accent-4/80',
+    },
+    {
+        name: 'Chaminda Silva',
+        role: 'IELTS Band: 8.0 | Sri Lanka',
+        content: 'I was struggling with the writing section, but the detailed feedback from my instructor helped me improve immensely. Thank you, Smart Labs!',
+        avatar: 'CS',
+        color: 'from-accent-3/80 to-primary/80',
+    },
+    {
+        name: 'Noah Taylor',
+        role: 'PTE Score: 88 | Australia',
+        content: 'Fantastic course structure and brilliant teachers. The live classes were engaging and very helpful. A big thank you from Melbourne!',
+        avatar: 'NT',
+        color: 'from-accent-2/80 to-accent-1/80',
+    },
+    {
+        name: 'Fathima Rizwan',
+        role: 'IELTS General: 8.0 | Sri Lanka',
+        content: 'As a working professional, the weekend classes were perfect for me. The study materials are top-notch and very comprehensive.',
+        avatar: 'FR',
+        color: 'from-accent-4/80 to-accent-3/80',
+    },
+    {
+        name: 'Charlotte Clark',
+        role: 'CELPIP Score: 11 | Australia',
+        content: 'I needed a high CELPIP score for my PR application. Smart Labs provided exactly the focused preparation I needed. The instructors are experts.',
+        avatar: 'CC',
+        color: 'from-primary/80 to-accent-4/80',
+    },
+    {
+        name: 'Dinesh Jayasuriya',
+        role: 'PTE Score: 82 | Sri Lanka',
+        content: 'The AI-powered practice platform is amazing. It identified my weaknesses in speaking and helped me improve my pronunciation and fluency.',
+        avatar: 'DJ',
+        color: 'from-accent-1/80 to-accent-2/80',
+    },
+    {
+        name: 'William Brown',
+        role: 'IELTS Band: 7.5 | Australia',
+        content: 'A great learning experience. The small class sizes meant I got a lot of individual attention. I felt very prepared on exam day.',
+        avatar: 'WB',
+        color: 'from-accent-3/80 to-accent-4/80',
+    },
+    {
+        name: 'Sanjeewa Pathirana',
+        role: 'PTE Score: 79+ | Sri Lanka',
+        content: "Achieved my target for Australian PR! The strategies for 'describe image' and 'retell lecture' were pure gold. Highly recommend their Boostify sessions.",
+        avatar: 'SP',
+        color: 'from-primary/80 to-accent-1/80',
+    },
+    {
+        name: 'Isabelle Tremblay',
+        role: 'IELTS Band: 8.0 | Australia',
+        content: 'The writing feedback was so detailed and constructive. It helped me understand my mistakes and improve my essay structure. Fantastic support!',
+        avatar: 'IT',
+        color: 'from-accent-2/80 to-accent-3/80',
+    },
+    {
+        name: 'Ruwan Dias',
+        role: 'CELPIP Score: 10 | Sri Lanka',
+        content: 'The self-paced CELPIP course is excellent for busy people. I could study whenever I had free time and still get a great score.',
+        avatar: 'RD',
+        color: 'from-accent-4/80 to-primary/80',
+    },
+    {
+        name: 'Lucas Nguyen',
+        role: 'PTE Score: 84 | Australia',
+        content: 'The AI scoring is incredibly accurate. It gave me the confidence I needed to face the real exam. The platform is very user-friendly.',
+        avatar: 'LN',
+        color: 'from-accent-1/80 to-accent-2/80',
+    },
+    {
+        name: 'Niluka Fernando',
+        role: 'IELTS General: 7.5 | Sri Lanka',
+        content: 'My speaking skills improved dramatically with the one-on-one practice sessions. The instructors are very patient and encouraging.',
+        avatar: 'NF',
+        color: 'from-accent-3/80 to-accent-4/80',
+    },
+    {
+        name: 'Mia Garcia',
+        role: 'PTE Score: 89 | Australia',
+        content: 'I was stuck at 75 for months. After joining Smart Labs, I jumped to 89 in my first attempt. Their methods just work!',
+        avatar: 'MG',
+        color: 'from-primary/80 to-accent-3/80',
+    },
+    {
+        name: 'Tharindu Ekanayake',
+        role: 'IELTS Academic: 7.5 | Sri Lanka',
+        content: 'The mock tests were very similar to the actual exam. It made me feel so prepared and confident on the test day. Thank you Smart Labs team!',
+        avatar: 'TE',
+        color: 'from-accent-2/80 to-primary/80',
+    },
+    {
+        name: 'Oliver King',
+        role: 'CELPIP Score: 11 | Australia',
+        content: 'A fantastic resource for anyone applying for Canadian PR. The course covers all the tricky parts of the CELPIP test perfectly.',
+        avatar: 'OK',
+        color: 'from-accent-4/80 to-accent-1/80',
+    },
+    {
+        name: 'Ayesha Maduwanthi',
+        role: 'PTE Score: 81 | Sri Lanka',
+        content: 'The Google Drive access to all materials was super helpful. I could download and study them anytime. Great value for money.',
+        avatar: 'AM',
+        color: 'from-primary/80 to-accent-4/80',
+    },
+    {
+        name: 'Chloe Lee',
+        role: 'IELTS Band: 8.5 | Australia',
+        content: "I can't thank my instructor enough for the personalized attention. They really focused on my weak areas in reading and writing.",
+        avatar: 'CL',
+        color: 'from-accent-1/80 to-accent-3/80',
+    },
+    {
+        name: 'Kasun Rajapakse',
+        role: 'PTE Score: 86 | Sri Lanka',
+        content: 'The best PTE class in Colombo! The AI platform is a game-changer for practice, especially for the speaking module. I finally got my desired score for migration.',
+        avatar: 'KR',
+        color: 'from-accent-2/80 to-accent-1/80',
+    },
+    {
+        name: 'Emily White',
+        role: 'IELTS Band: 8.0 | Australia',
+        content: 'The weekend group class for IELTS was perfect for my busy schedule. The instructors create a very supportive and interactive learning environment.',
+        avatar: 'EW',
+        color: 'from-accent-3/80 to-accent-4/80',
+    },
+    {
+        name: 'Sachini Gamage',
+        role: 'CELPIP Score: 10 | Sri Lanka',
+        content: 'I was new to the CELPIP exam, but the self-paced program made it easy to understand. The video guides are clear and very helpful.',
+        avatar: 'SG',
+        color: 'from-primary/80 to-accent-2/80',
+    },
+    {
+        name: 'Jack Robinson',
+        role: 'PTE Score: 90 | Australia',
+        content: 'Perfect score! The strategies and continuous practice on the Smart Labs platform were key. The instant AI feedback is incredibly accurate and useful.',
+        avatar: 'JR',
+        color: 'from-accent-1/80 to-accent-4/80',
+    },
+    {
+        name: 'Isuru Bandara',
+        role: 'IELTS General: 8.0 | Sri Lanka',
+        content: 'My writing score improved from 6.5 to 8.0 thanks to the detailed feedback and essay correction service. I highly recommend Smart Labs.',
+        avatar: 'IB',
+        color: 'from-accent-2/80 to-accent-3/80',
+    },
+    {
+        name: 'Grace Wilson',
+        role: 'PTE Score: 84 | Australia',
+        content: 'The online Boostify session was intense but so effective. Covered all the important topics and strategies in just two weeks. Fantastic!',
+        avatar: 'GW',
+        color: 'from-accent-4/80 to-primary/80',
+    },
+    {
+        name: 'Hashan Madushka',
+        role: 'IELTS Academic: 7.5 | Sri Lanka',
+        content: 'The physical classes in Rajagiriya were great. The small group size allowed for a lot of interaction with the teacher. I felt very supported.',
+        avatar: 'HM',
+        color: 'from-primary/80 to-accent-1/80',
+    },
+    {
+        name: 'Zoe Johnson',
+        role: 'CELPIP Score: 12 | Australia',
+        content: 'I achieved the highest score in CELPIP! The practice materials were spot on and covered all the scenarios I faced in the actual test.',
+        avatar: 'ZJ',
+        color: 'from-accent-2/80 to-accent-4/80',
+    },
+    {
+        name: 'Dilini Weerasinghe',
+        role: 'PTE Score: 80 | Sri Lanka',
+        content: 'The flexibility of the online classes was a huge plus. I could join from home after work. The recordings were also very useful for revision.',
+        avatar: 'DW',
+        color: 'from-accent-3/80 to-accent-2/80',
+    },
+    {
+        name: 'Max Evans',
+        role: 'IELTS Band: 8.0 | Australia',
+        content: 'A truly professional and effective program. The course structure is logical, and the instructors are experts in their field. Worth every penny.',
+        avatar: 'ME',
+        color: 'from-accent-1/80 to-primary/80',
+    },
 ];
 
 const containerVariants = {
@@ -248,7 +437,7 @@ export default function Home() {
                 {/* Main Card */}
                 <div className="glass-card rounded-3xl p-8 shadow-xl">
                   <div className="flex flex-col items-center gap-4 mb-6">
-                    <Image src="/logo.png" alt="Smart Labs Logo" width={120} height={120} />
+                    <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} />
                     <div>
                       <div className="font-display font-semibold text-lg text-center">Your Learning Journey</div>
                       <div className="text-sm text-muted-foreground text-center">Personalized path to success</div>
@@ -476,7 +665,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="grid md:grid-cols-3 gap-8"
           >
-            {testimonials.map((testimonial) => (
+            {testimonials.slice(0, 3).map((testimonial) => (
               <motion.div
                 key={testimonial.name}
                 variants={itemVariants}
