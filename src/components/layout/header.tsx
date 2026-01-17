@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -59,7 +60,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <Image src="/logo.png" alt="Smart Labs Logo" width={40} height={40} className="relative z-10" />
+            <Image src="/logo.png" alt="Smart Labs Logo" width={48} height={48} className="relative z-10" />
           </Link>
 
           {/* Desktop Navigation */}
