@@ -61,7 +61,7 @@ export default function PracticeTestsPage() {
               <BookOpen className="h-8 w-8 text-primary" />
               <div>
                 <CardTitle>Practice Tests</CardTitle>
-                <CardDescription>Hone your skills with our library of mock tests and practice exercises.</CardDescription>
+                <CardDescription>AI Scoring Tests</CardDescription>
               </div>
             </div>
             <Dialog open={isDialogOpen} onOpenChange={(open) => {
