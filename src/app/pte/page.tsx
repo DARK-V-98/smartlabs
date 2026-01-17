@@ -131,6 +131,7 @@ export default function PTE() {
                     loop
                     muted
                     playsInline
+                    disablePictureInPicture
                     className="w-full h-full rounded-2xl shadow-2xl object-cover"
                 >
                     Your browser does not support the video tag.
