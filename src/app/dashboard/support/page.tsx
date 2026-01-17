@@ -105,7 +105,6 @@ export default function SupportPage() {
                 <div key={msg.id} className={cn('flex items-end gap-2', isSender ? 'justify-end' : 'justify-start')}>
                     {!isSender && (
                         <Avatar className="h-8 w-8">
-                            <AvatarImage src="/logo.png" alt="Support" />
                             <AvatarFallback>S</AvatarFallback>
                         </Avatar>
                     )}
@@ -144,5 +143,3 @@ export default function SupportPage() {
     </div>
   );
 }
-
-    

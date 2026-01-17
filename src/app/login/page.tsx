@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { LogIn } from 'lucide-react';
+import { LogIn, GraduationCap } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -159,7 +159,9 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           <Card className="shadow-lg">
             <CardHeader className="text-center items-center">
-              <Image src="/logo.png" alt="Smart Labs Logo" width={500} height={500} className="h-48 w-48 mb-4" />
+              <div className="p-6 bg-primary/10 rounded-full mb-4">
+                <GraduationCap className="h-24 w-24 text-primary" />
+              </div>
               <CardTitle className="font-headline text-3xl">Login</CardTitle>
               <CardDescription>Access your student dashboard.</CardDescription>
             </CardHeader>

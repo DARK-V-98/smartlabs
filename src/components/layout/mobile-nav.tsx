@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu } from 'lucide-react';
+import { Menu, GraduationCap } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -32,7 +32,10 @@ export function MobileNav() {
         <SheetHeader>
           <SheetTitle asChild>
             <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-              <Image src="/logo.png" alt="Smart Labs logo" width={96} height={96} className="h-24 w-24" />
+              <GraduationCap className="h-8 w-8 text-primary" />
+              <span className="font-display font-bold text-xl">
+                Smart<span className="text-primary">Labs</span>
+              </span>
             </Link>
           </SheetTitle>
         </SheetHeader>
