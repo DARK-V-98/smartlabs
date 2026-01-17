@@ -6,9 +6,8 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from '@/components/ui/card';
-import { BookOpen, ArrowLeft, ArrowRight, Search, Sparkles } from 'lucide-react';
+import { BookOpen, ArrowLeft, Sparkles, Target, Globe, Zap, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import {
@@ -138,7 +137,7 @@ const practiceTests = [
   {
     exam: 'PTE',
     section: 'Reading',
-    title: 'Reading: Multiple-Choice, Single Answer',
+    title: 'Reading: Multiple-Choice',
     description: 'Practice your reading comprehension skills for the PTE Academic exam.',
     href: '/dashboard/practice-tests/pte-reading-test',
     status: 'Available',
@@ -281,12 +280,29 @@ const sectionsByExam = exams.reduce(
   {} as Record<string, string[]>
 );
 
-export default function PracticeTestsPage() {
-  const featuredTests = [
-    ...practiceTests.filter((t) => t.status === 'Available'),
-    ...practiceTests.filter((t) => t.status === 'Coming Soon'),
-  ].slice(0, 3);
+const examDetails: { [key: string]: { icon: any; color: string; iconColor: string; description: string } } = {
+  PTE: {
+    icon: Target,
+    color: 'from-accent-1/20 to-accent-1/5',
+    iconColor: 'text-accent-1',
+    description: "Practice all PTE question types with AI feedback."
+  },
+  IELTS: {
+    icon: Globe,
+    color: 'from-accent-2/20 to-accent-2/5',
+    iconColor: 'text-accent-2',
+    description: "Prepare for your IELTS exam with targeted exercises."
+  },
+  CELPIP: {
+    icon: Zap,
+    color: 'from-accent-4/20 to-accent-4/5',
+    iconColor: 'text-accent-4',
+    description: "Hone your skills for Canadian English proficiency."
+  }
+}
 
+
+export default function PracticeTestsPage() {
   return (
     <div className="container mx-auto py-10">
       <Button asChild variant="ghost" className="mb-4">
@@ -301,105 +317,84 @@ export default function PracticeTestsPage() {
             <div className="flex items-center gap-4">
               <BookOpen className="h-8 w-8 text-primary" />
               <div>
-                <CardTitle>AI Scoring Tests</CardTitle>
+                <CardTitle className="text-2xl md:text-3xl">AI Scoring Tests</CardTitle>
                 <CardDescription>
-                  Hone your skills with our library of mock tests and practice exercises.
+                  Select an exam below to browse available practice tests.
                 </CardDescription>
               </div>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button>
-                  <Search className="mr-2 h-4 w-4" />
-                  Browse All Tests
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64">
-                <DropdownMenuLabel>Browse by Exam</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {exams.map((exam) => (
-                  <DropdownMenuSub key={exam}>
-                    <DropdownMenuSubTrigger>{exam}</DropdownMenuSubTrigger>
-                    <DropdownMenuPortal>
-                      <DropdownMenuSubContent>
-                        <DropdownMenuLabel>{exam} Sections</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {sectionsByExam[exam].map((section) => (
-                          <DropdownMenuSub key={`${exam}-${section}`}>
-                            <DropdownMenuSubTrigger>{section}</DropdownMenuSubTrigger>
-                            <DropdownMenuPortal>
-                              <DropdownMenuSubContent>
-                                <DropdownMenuLabel>{section} Tests</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                {practiceTests
-                                  .filter((t) => t.exam === exam && t.section === section)
-                                  .map((test) => (
-                                    <DropdownMenuItem
-                                      key={test.title}
-                                      disabled={test.status === 'Coming Soon'}
-                                    >
-                                      <Link
-                                        href={test.status !== 'Coming Soon' ? test.href : '#'}
-                                        className="flex w-full items-center justify-between"
-                                      >
-                                        <span>{test.title}</span>
-                                        <div className="flex items-center gap-1">
-                                          {test.status === 'Coming Soon' && (
-                                            <Badge variant="outline">Soon</Badge>
-                                          )}
-                                          {test.hasAiScore && (
-                                            <Badge
-                                              variant="secondary"
-                                              className="bg-primary/10 text-primary"
-                                            >
-                                              <Sparkles className="mr-1 h-3 w-3" />
-                                              AI
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      </Link>
-                                    </DropdownMenuItem>
-                                  ))}
-                              </DropdownMenuSubContent>
-                            </DropdownMenuPortal>
-                          </DropdownMenuSub>
-                        ))}
-                      </DropdownMenuSubContent>
-                    </DropdownMenuPortal>
-                  </DropdownMenuSub>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </CardHeader>
         <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {featuredTests.map((test) => (
-            <Card key={test.title} className="flex flex-col">
-              <CardHeader>
-                <div className="flex items-start justify-between gap-2">
-                  <CardTitle>{test.title}</CardTitle>
-                  {test.hasAiScore && (
-                    <Badge
-                      variant="secondary"
-                      className="flex-shrink-0 bg-primary/10 text-primary"
-                    >
-                      <Sparkles className="mr-1 h-3 w-3" />
-                      AI Score
-                    </Badge>
-                  )}
-                </div>
-                <CardDescription>{test.description}</CardDescription>
-              </CardHeader>
-              <CardFooter className="mt-auto">
-                <Button asChild className="w-full" disabled={test.status === 'Coming Soon'}>
-                  <Link href={test.href}>
-                    {test.status === 'Coming Soon' ? 'Coming Soon' : 'Start Test'}
-                    {test.status !== 'Coming Soon' && <ArrowRight className="ml-2 h-4 w-4" />}
-                  </Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+          {exams.map((exam) => {
+            const details = examDetails[exam];
+            const Icon = details.icon;
+            return (
+              <DropdownMenu key={exam}>
+                <DropdownMenuTrigger asChild>
+                  <Card className="group cursor-pointer overflow-hidden text-left shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    <CardHeader className={`bg-gradient-to-br ${details.color} p-6`}>
+                      <div className="flex items-start justify-between">
+                         <div className={`p-3 rounded-xl bg-white shadow-md`}>
+                            <Icon className={`h-7 w-7 ${details.iconColor}`} />
+                         </div>
+                         <ChevronDown className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      </div>
+                      <CardTitle className="pt-4 text-xl">{exam} Practice Tests</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 pt-2">
+                       <CardDescription>{details.description}</CardDescription>
+                    </CardContent>
+                  </Card>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-64">
+                    <DropdownMenuLabel>{exam} Sections</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {sectionsByExam[exam].map((section) => (
+                      <DropdownMenuSub key={`${exam}-${section}`}>
+                        <DropdownMenuSubTrigger>{section}</DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                          <DropdownMenuSubContent>
+                            <DropdownMenuLabel>{section} Tests</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {practiceTests
+                              .filter((t) => t.exam === exam && t.section === section)
+                              .map((test) => (
+                                <DropdownMenuItem
+                                  key={test.title}
+                                  disabled={test.status === 'Coming Soon'}
+                                  asChild
+                                >
+                                  <Link
+                                    href={test.status !== 'Coming Soon' ? test.href : '#'}
+                                    className="flex w-full items-center justify-between gap-2"
+                                  >
+                                    <span className="flex-1 truncate">{test.title}</span>
+                                    <div className="flex items-center gap-1 flex-shrink-0">
+                                      {test.status === 'Coming Soon' && (
+                                        <Badge variant="outline">Soon</Badge>
+                                      )}
+                                      {test.hasAiScore && (
+                                        <Badge
+                                          variant="secondary"
+                                          className="bg-primary/10 text-primary"
+                                        >
+                                          <Sparkles className="mr-1 h-3 w-3" />
+                                          AI
+                                        </Badge>
+                                      )}
+                                    </div>
+                                  </Link>
+                                </DropdownMenuItem>
+                              ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                      </DropdownMenuSub>
+                    ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )
+          })}
         </CardContent>
       </Card>
     </div>
