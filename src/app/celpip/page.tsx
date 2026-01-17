@@ -1,4 +1,5 @@
 'use client';
+import type { Metadata } from 'next';
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
@@ -15,6 +16,12 @@ import {
   Flag
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: 'CELPIP Preparation Course | Self-Paced Learning',
+  description: 'Your key to Canadian immigration. Prepare for the CELPIP test with our self-paced program, featuring comprehensive study materials and guidance videos.',
+  keywords: 'CELPIP preparation, CELPIP course, Canadian immigration, English test Canada, Smart Labs',
+};
 
 const celpipSkills = [
   { icon: Headphones, title: "Listening", description: "Understand everyday conversations and discussions" },

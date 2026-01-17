@@ -1,4 +1,5 @@
 'use client';
+import type { Metadata } from 'next';
 import Link from "next/link";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import React, { useRef } from "react";

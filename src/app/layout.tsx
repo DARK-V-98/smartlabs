@@ -9,10 +9,27 @@ import Script from 'next/script';
 import { CookieBanner } from '@/components/cookie-banner';
 
 export const metadata: Metadata = {
-  title: 'Smart Labs - Your Partner in Test Preparation',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  title: {
+    default: 'Smart Labs - AI-Powered English Exam Prep for PTE, IELTS & More',
+    template: '%s | Smart Labs',
+  },
   description:
-    'Smart Labs offers expert coaching and personalized study plans for IELTS, OET, PTE, and TOEFL.',
+    'Achieve your target score with Smart Labs. We offer expert-led courses for PTE, IELTS, and CELPIP, featuring AI-powered practice tests and personalized feedback.',
   manifest: '/manifest.json',
+  openGraph: {
+    title: 'Smart Labs | AI-Powered English Exam Prep',
+    description: 'Join thousands of successful students who achieved their dream scores with our AI-powered learning platform and expert instructors.',
+    url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    siteName: 'Smart Labs',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Smart Labs | AI-Powered English Exam Prep',
+    description: 'Achieve your dream score in PTE, IELTS, and CELPIP with AI-powered practice and expert guidance.',
+  },
 };
 
 export default function RootLayout({
