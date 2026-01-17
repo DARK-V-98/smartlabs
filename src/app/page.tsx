@@ -246,11 +246,11 @@ export default function Home() {
               <div className="relative">
                 {/* Main Card */}
                 <div className="glass-card rounded-3xl p-8 shadow-xl">
-                  <div className="flex items-center gap-4 mb-6">
-                    <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} />
+                  <div className="flex flex-col items-center gap-4 mb-6">
+                    <Image src="/logo.png" alt="Smart Labs Logo" width={240} height={240} />
                     <div>
-                      <div className="font-display font-semibold text-lg">Your Learning Journey</div>
-                      <div className="text-sm text-muted-foreground">Personalized path to success</div>
+                      <div className="font-display font-semibold text-lg text-center">Your Learning Journey</div>
+                      <div className="text-sm text-muted-foreground text-center">Personalized path to success</div>
                     </div>
                   </div>
                   
