@@ -1,3 +1,4 @@
+
 'use client';
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -103,24 +104,24 @@ export default function IELTS() {
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-6">
-              {ieltsSkills.map((skill, index) => (
-                <motion.div
-                  key={skill.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="glass-card rounded-2xl p-6"
+            <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="relative aspect-video"
+            >
+                <video
+                    src="/ielts.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    disablePictureInPicture
+                    className="w-full h-full rounded-2xl shadow-2xl object-cover"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-4">
-                    <skill.icon className="h-6 w-6 text-accent" />
-                  </div>
-                  <h3 className="font-semibold text-foreground mb-2">{skill.title}</h3>
-                  <p className="text-sm text-muted-foreground">{skill.description}</p>
-                </motion.div>
-              ))}
-            </div>
+                    Your browser does not support the video tag.
+                </video>
+            </motion.div>
           </motion.div>
         </div>
       </section>

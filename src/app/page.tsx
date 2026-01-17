@@ -437,7 +437,7 @@ export default function Home() {
                 {/* Main Card */}
                 <div className="glass-card rounded-3xl p-8 shadow-xl">
                   <div className="flex flex-col items-center gap-4 mb-6">
-                    <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} />
+                    <Image src="/logo.png" alt="Smart Labs Logo" width={160} height={160} />
                     <div>
                       <div className="font-display font-semibold text-lg text-center">Your Learning Journey</div>
                       <div className="text-sm text-muted-foreground text-center">Personalized path to success</div>
