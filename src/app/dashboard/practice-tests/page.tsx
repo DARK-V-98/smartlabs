@@ -14,16 +14,17 @@ import Link from 'next/link';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+
 
 const practiceTests = [
   // --- PTE ---
@@ -333,7 +334,7 @@ export default function PracticeTestsPage() {
             return (
               <DropdownMenu key={exam}>
                 <DropdownMenuTrigger asChild>
-                  <Card className="group cursor-pointer overflow-hidden text-left shadow-lg hover:shadow-2xl transition-all duration-300">
+                   <Card className="group cursor-pointer overflow-hidden text-left shadow-lg hover:shadow-2xl transition-all duration-300">
                     <CardHeader className={`bg-gradient-to-br ${details.color} p-6`}>
                       <div className="flex items-start justify-between">
                          <div className={`p-3 rounded-xl bg-white shadow-md`}>
@@ -348,50 +349,48 @@ export default function PracticeTestsPage() {
                     </CardContent>
                   </Card>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-64">
-                    <DropdownMenuLabel>{exam} Sections</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {sectionsByExam[exam].map((section) => (
-                      <DropdownMenuSub key={`${exam}-${section}`}>
-                        <DropdownMenuSubTrigger>{section}</DropdownMenuSubTrigger>
-                        <DropdownMenuPortal>
-                          <DropdownMenuSubContent>
-                            <DropdownMenuLabel>{section} Tests</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            {practiceTests
-                              .filter((t) => t.exam === exam && t.section === section)
-                              .map((test) => (
-                                <DropdownMenuItem
-                                  key={test.title}
-                                  disabled={test.status === 'Coming Soon'}
-                                  asChild
-                                >
-                                  <Link
-                                    href={test.status !== 'Coming Soon' ? test.href : '#'}
-                                    className="flex w-full items-center justify-between gap-2"
-                                  >
-                                    <span className="flex-1 truncate">{test.title}</span>
-                                    <div className="flex items-center gap-1 flex-shrink-0">
-                                      {test.status === 'Coming Soon' && (
-                                        <Badge variant="outline">Soon</Badge>
-                                      )}
-                                      {test.hasAiScore && (
-                                        <Badge
-                                          variant="secondary"
-                                          className="bg-primary/10 text-primary"
-                                        >
-                                          <Sparkles className="mr-1 h-3 w-3" />
-                                          AI
-                                        </Badge>
-                                      )}
+                <DropdownMenuContent className="w-64 p-0">
+                    <Accordion type="single" collapsible className="w-full">
+                        {sectionsByExam[exam].map((section) => (
+                            <AccordionItem value={section} key={section} className="border-b-0 last:border-b-0">
+                                <AccordionTrigger className="px-3 py-2 text-sm font-medium hover:no-underline hover:bg-muted/50 rounded-md">
+                                    {section}
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <div className="flex flex-col space-y-1 px-2 pb-2">
+                                        {practiceTests
+                                            .filter((t) => t.exam === exam && t.section === section)
+                                            .map((test) => (
+                                            <Link
+                                                key={test.title}
+                                                href={test.status !== 'Coming Soon' ? test.href : '#'}
+                                                className={cn(
+                                                "flex w-full items-center justify-between gap-2 rounded-md p-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground",
+                                                test.status === 'Coming Soon' && "pointer-events-none opacity-50"
+                                                )}
+                                            >
+                                                <span className="flex-1 truncate">{test.title}</span>
+                                                <div className="flex items-center gap-1 flex-shrink-0">
+                                                {test.status === 'Coming Soon' && (
+                                                    <Badge variant="outline">Soon</Badge>
+                                                )}
+                                                {test.hasAiScore && (
+                                                    <Badge
+                                                    variant="secondary"
+                                                    className="bg-primary/10 text-primary"
+                                                    >
+                                                    <Sparkles className="mr-1 h-3 w-3" />
+                                                    AI
+                                                    </Badge>
+                                                )}
+                                                </div>
+                                            </Link>
+                                            ))}
                                     </div>
-                                  </Link>
-                                </DropdownMenuItem>
-                              ))}
-                          </DropdownMenuSubContent>
-                        </DropdownMenuPortal>
-                      </DropdownMenuSub>
-                    ))}
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
                 </DropdownMenuContent>
               </DropdownMenu>
             )
