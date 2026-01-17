@@ -12,6 +12,7 @@ import {
   Users,
   ArrowRight,
   Sparkles,
+  BookOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -70,6 +71,68 @@ export default function PTE() {
                 <Link href="/contact">Book Free Consultation</Link>
               </Button>
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* About PTE Section */}
+      <section className="py-20 bg-secondary/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid lg:grid-cols-2 gap-16 items-center"
+          >
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-1/10 text-accent-1 text-sm font-medium mb-4">
+                <BookOpen className="h-4 w-4" />
+                <span>About the Exam</span>
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-6">
+                About the PTE Exam
+              </h2>
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                PTE (Pearson Test of English) Academic is an English language test used for study, work, and migration purposes. Preparing for PTE focuses on building strong communication skills and understanding the exam format. The test covers four main areas: Speaking, Writing, Reading, and Listening.
+              </p>
+              <h3 className="font-semibold text-lg mb-4">PTE preparation helps students improve:</h3>
+              <ul className="space-y-3 mb-6">
+                  <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
+                      <span>Fluency and pronunciation for speaking clearly and confidently</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
+                      <span>Grammar and structure for writing well-organized responses</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
+                      <span>Reading skills to understand texts quickly and accurately</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
+                      <span>Listening skills to follow different accents and speech patterns</span>
+                  </li>
+              </ul>
+              <p className="text-muted-foreground leading-relaxed">
+                Training includes practice with real exam-style questions, time management techniques, and regular feedback to help students improve where needed. With proper guidance and consistent practice, students can achieve their target scores.
+              </p>
+            </div>
+
+            <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="relative aspect-video"
+            >
+                <video
+                    src="/pte.mp4"
+                    controls
+                    className="w-full h-full rounded-2xl shadow-2xl"
+                >
+                    Your browser does not support the video tag.
+                </video>
+            </motion.div>
           </motion.div>
         </div>
       </section>
