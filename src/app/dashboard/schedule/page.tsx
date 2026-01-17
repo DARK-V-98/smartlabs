@@ -6,24 +6,16 @@ import Link from 'next/link';
 
 export default function SchedulePage() {
   return (
-    <div className="container mx-auto py-10">
-       <Button asChild variant="ghost" className="mb-4">
-        <Link href="/dashboard">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Dashboard
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-4">
-            <Calendar className="h-8 w-8 text-primary" />
-            <div>
-              <CardTitle>Class Schedule</CardTitle>
-              <CardDescription>This page will display your class schedule.</CardDescription>
-            </div>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-4">
+          <Calendar className="h-8 w-8 text-primary" />
+          <div>
+            <CardTitle>Class Schedule</CardTitle>
+            <CardDescription>This page will display your class schedule.</CardDescription>
           </div>
-        </CardHeader>
-      </Card>
-    </div>
+        </div>
+      </CardHeader>
+    </Card>
   );
 }

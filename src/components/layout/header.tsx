@@ -53,6 +53,13 @@ export default function Header() {
     await signOut(auth);
     router.push('/login');
   };
+  
+  const isSpecialLayout = pathname.startsWith('/dashboard') || pathname.startsWith('/admin') || pathname === '/login' || pathname === '/signup' || pathname === '/forgot-password' || pathname === '/welcome' || pathname.startsWith('/payment');
+
+  if (isSpecialLayout) {
+    return null;
+  }
+
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -60,7 +67,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <Image src="/logo.png" alt="Smart Labs Logo" width={128} height={128} className="relative z-10" />
+            <Image src="/logo.png" alt="Smart Labs Logo" width={32} height={32} className="relative z-10" />
           </Link>
 
           {/* Desktop Navigation */}

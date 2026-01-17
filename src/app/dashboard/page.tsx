@@ -1,12 +1,9 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { useUser, useAuth, useFirebase, useCollection, useMemoFirebase } from '@/firebase';
+import { useRouter } from 'next/navigation';
+import { useUser, useFirebase, useCollection, useMemoFirebase } from '@/firebase';
 import { doc, getDoc, collection } from 'firebase/firestore';
-import { signOut } from 'firebase/auth';
-import Image from 'next/image';
-
 import {
   Card,
   CardContent,
@@ -17,9 +14,9 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, ChevronRight, ListVideo, FileText, LogOut, BookOpen, BarChart3, Settings, MessageSquare, Briefcase, LayoutDashboard, GraduationCap } from 'lucide-react';
+import { ChevronRight, ListVideo, FileText, BookOpen, BarChart3, Calendar, MessageSquare, Briefcase, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 const lmsFeatures = [
@@ -31,22 +28,11 @@ const lmsFeatures = [
     { title: 'Support Chat', description: 'Get help from your teacher or our support team.', href: '/dashboard/support', icon: MessageSquare },
 ];
 
-const navItems = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/dashboard/recordings", label: "Recordings", icon: ListVideo },
-    { href: "/resources", label: "Materials", icon: FileText },
-    { href: "/dashboard/practice-tests", label: "Practice", icon: BookOpen },
-    { href: "/dashboard/progress", label: "Progress", icon: BarChart3 },
-    { href: "/dashboard/settings", label: "Settings", icon: Settings },
-];
-
 
 export default function DashboardPage() {
   const { user, isUserLoading } = useUser();
-  const auth = useAuth();
   const { firestore } = useFirebase();
   const router = useRouter();
-  const pathname = usePathname();
   const [userRole, setUserRole] = useState('');
   
   const enrollmentsQuery = useMemoFirebase(
@@ -74,122 +60,91 @@ export default function DashboardPage() {
     }
   }, [user, isUserLoading, router, firestore]);
   
-  const handleLogout = async () => {
-    if (auth) {
-        await signOut(auth);
-        router.push('/login');
-    }
-  };
-  
   const isLoading = isUserLoading || enrollmentsLoading || !userRole;
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center flex flex-col items-center gap-4">
-            <Image src="/logo.png" alt="Smart Labs Logo" width={80} height={80} className="animate-pulse-glow" />
-            <p className="text-lg font-semibold">Loading Your Dashboard...</p>
-            <p className="text-sm text-muted-foreground">Please wait a moment.</p>
+        <div className="space-y-8">
+            <Skeleton className="h-12 w-1/3" />
+            <Skeleton className="h-40 w-full" />
+            <Skeleton className="h-40 w-full" />
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <Skeleton className="h-64 w-full" />
+                <Skeleton className="h-64 w-full" />
+                <Skeleton className="h-64 w-full" />
+            </div>
         </div>
-      </div>
     );
   }
 
   const isAdminOrDev = userRole === 'admin' || userRole === 'developer' || userRole === 'teacher';
 
   return (
-    <div className="w-full min-h-screen">
-      <section className="py-8 md:py-12">
-        <div className="container mx-auto">
-            <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-                <div>
-                    <h1 className="text-2xl md:text-3xl font-headline font-bold">Student Dashboard</h1>
-                    <p className="text-md text-muted-foreground mt-1">Welcome back, {user?.displayName}!</p>
-                </div>
-                 <div className="flex items-center gap-4">
-                    {userRole && <Badge variant={isAdminOrDev ? "destructive" : "outline"} className="capitalize">{userRole}</Badge>}
-                    <Button onClick={handleLogout} variant="outline" size="sm">
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Logout
+    <>
+        <header className="mb-8">
+            <h1 className="text-2xl md:text-3xl font-headline font-bold">Dashboard</h1>
+            <p className="text-md text-muted-foreground mt-1">Welcome back, {user?.displayName}!</p>
+        </header>
+        
+        {isAdminOrDev && (
+            <Card className="mb-8 border-amber-500 bg-amber-500/10">
+                <CardHeader className="flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Admin Access</CardTitle>
+                        <CardDescription>Manage users and content from the admin panel.</CardDescription>
+                    </div>
+                    <Button asChild>
+                        <Link href="/admin/dashboard" className="flex items-center gap-2">
+                            <Briefcase /> Go to Admin
+                        </Link>
                     </Button>
-                </div>
-            </header>
-            
-            <Tabs defaultValue="/dashboard" value={pathname} className="w-full">
-                <TabsList className="grid w-full sm:w-auto sm:inline-grid grid-cols-3 sm:grid-cols-6 mb-8 h-auto">
-                    {navItems.map((item) => (
-                        <TabsTrigger key={item.href} value={item.href} asChild>
-                             <Link href={item.href} className="flex flex-col sm:flex-row items-center gap-2 p-2 h-auto sm:h-10">
-                                <item.icon className="h-5 w-5" />
-                                <span>{item.label}</span>
-                            </Link>
-                        </TabsTrigger>
-                    ))}
-                </TabsList>
-                <TabsContent value={pathname}>
-                    {isAdminOrDev && (
-                        <Card className="mb-8 border-amber-500 bg-amber-500/10">
-                            <CardHeader className="flex-row items-center justify-between">
-                                <div>
-                                    <CardTitle>Admin Access</CardTitle>
-                                    <CardDescription>Manage users and content from the admin panel.</CardDescription>
-                                </div>
-                                <Button asChild>
-                                    <Link href="/admin/dashboard" className="flex items-center gap-2">
-                                        <Briefcase /> Go to Admin
-                                    </Link>
-                                </Button>
-                            </CardHeader>
-                        </Card>
-                    )}
+                </CardHeader>
+            </Card>
+        )}
 
-                     <div className="mb-8">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2"><GraduationCap />My Enrolled Courses</CardTitle>
-                                <CardDescription>Here are the courses you are currently enrolled in.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {enrollments && enrollments.length > 0 ? (
-                                    <div className="flex flex-wrap gap-2">
-                                        {enrollments.map(e => <Badge key={e.id} variant="secondary">{e.courseId}</Badge>)}
-                                    </div>
-                                ) : (
-                                    <p className="text-sm text-muted-foreground">You are not enrolled in any courses yet. <Link href="/courses" className="font-semibold text-primary hover:underline">Explore courses</Link></p>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </div>
-                    
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      {lmsFeatures.map((feature) => {
-                          const Icon = feature.icon;
-                          return (
-                            <Card key={feature.title} className="group shadow-lg hover:shadow-xl transition-shadow flex flex-col">
-                                <CardHeader className="flex-row items-center gap-4">
-                                    <div className="p-3 bg-primary/10 rounded-lg">
-                                        <Icon className="h-6 w-6 text-primary" />
-                                    </div>
-                                    <CardTitle className="font-headline text-xl">{feature.title}</CardTitle>
-                                </CardHeader>
-                                <CardContent className="flex-grow">
-                                    <p className="text-muted-foreground">{feature.description}</p>
-                                </CardContent>
-                                <CardFooter>
-                                    <Button asChild variant="outline" className="w-full">
-                                        <Link href={feature.href}>
-                                            Go to {feature.title} <ChevronRight className="w-4 h-4 ml-2" />
-                                        </Link>
-                                    </Button>
-                                </CardFooter>
-                            </Card>
-                          );
-                      })}
-                    </div>
-                </TabsContent>
-            </Tabs>
+         <div className="mb-8">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><GraduationCap />My Enrolled Courses</CardTitle>
+                    <CardDescription>Here are the courses you are currently enrolled in.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {enrollments && enrollments.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                            {enrollments.map(e => <Badge key={e.id} variant="secondary">{e.courseId}</Badge>)}
+                        </div>
+                    ) : (
+                        <p className="text-sm text-muted-foreground">You are not enrolled in any courses yet. <Link href="/courses" className="font-semibold text-primary hover:underline">Explore courses</Link></p>
+                    )}
+                </CardContent>
+            </Card>
         </div>
-      </section>
-    </div>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {lmsFeatures.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <Card key={feature.title} className="group shadow-lg hover:shadow-xl transition-shadow flex flex-col">
+                    <CardHeader className="flex-row items-center gap-4">
+                        <div className="p-3 bg-primary/10 rounded-lg">
+                            <Icon className="h-6 w-6 text-primary" />
+                        </div>
+                        <CardTitle className="font-headline text-xl">{feature.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                        <p className="text-muted-foreground">{feature.description}</p>
+                    </CardContent>
+                    <CardFooter>
+                        <Button asChild variant="outline" className="w-full">
+                            <Link href={feature.href}>
+                                Go to {feature.title} <ChevronRight className="w-4 h-4 ml-2" />
+                            </Link>
+                        </Button>
+                    </CardFooter>
+                </Card>
+              );
+          })}
+        </div>
+    </>
   );
 }

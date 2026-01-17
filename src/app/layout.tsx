@@ -7,6 +7,7 @@ import { FirebaseClientProvider } from '@/firebase';
 import './globals.css';
 import Script from 'next/script';
 import { CookieBanner } from '@/components/cookie-banner';
+import { LayoutManager } from '@/components/layout/layout-manager';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
@@ -45,10 +46,11 @@ export default function RootLayout({
       <body
         className={cn(
           'min-h-screen font-sans antialiased',
-          'flex flex-col pt-20' // Add padding-top to body to account for fixed header
+          'flex flex-col' // pt-20 is now managed by LayoutManager
         )}
       >
         <FirebaseClientProvider>
+          <LayoutManager />
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

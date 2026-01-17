@@ -6,24 +6,16 @@ import Link from 'next/link';
 
 export default function RecordingsPage() {
   return (
-    <div className="container mx-auto py-10">
-      <Button asChild variant="ghost" className="mb-4">
-        <Link href="/dashboard">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Dashboard
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-4">
-            <ListVideo className="h-8 w-8 text-primary" />
-            <div>
-              <CardTitle>Class Recordings</CardTitle>
-              <CardDescription>This page will contain recordings of your classes.</CardDescription>
-            </div>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-4">
+          <ListVideo className="h-8 w-8 text-primary" />
+          <div>
+            <CardTitle>Class Recordings</CardTitle>
+            <CardDescription>This page will contain recordings of your classes.</CardDescription>
           </div>
-        </CardHeader>
-      </Card>
-    </div>
+        </div>
+      </CardHeader>
+    </Card>
   );
 }

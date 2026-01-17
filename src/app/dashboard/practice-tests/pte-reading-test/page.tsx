@@ -58,11 +58,7 @@ export default function PteReadingTestPage() {
 
   return (
     <div className="w-full">
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto max-w-4xl">
-            <Button asChild variant="ghost" className="mb-4">
-                <Link href="/dashboard/practice-tests"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Practice Tests</Link>
-            </Button>
+        <div className="mx-auto max-w-4xl">
             <Card>
                 <CardHeader>
                     <CardTitle className="text-3xl font-headline">PTE Reading: Multiple-Choice, Single Answer</CardTitle>
@@ -144,7 +140,6 @@ export default function PteReadingTestPage() {
                 </CardContent>
             </Card>
         </div>
-      </section>
     </div>
   );
 }
