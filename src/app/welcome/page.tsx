@@ -6,7 +6,7 @@ import { useUser, useFirebase } from '@/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Edit, GraduationCap } from 'lucide-react';
+import { ArrowRight, Edit } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect } from 'react';
 
@@ -47,9 +47,7 @@ export default function WelcomePage() {
     <div className="w-full bg-muted/30">
       <div className="container mx-auto flex min-h-screen items-center justify-center py-12">
         <div className="w-full max-w-4xl text-center">
-          <div className="mx-auto mb-6 inline-block rounded-full bg-primary/10 p-4">
-              <GraduationCap className="h-24 w-24 text-primary sm:h-32 sm:w-32" />
-          </div>
+          <Image src="/logo.png" alt="Smart Labs Logo" width={128} height={128} className="mx-auto mb-6" />
           <h1 className="text-3xl md:text-4xl font-headline font-bold">Welcome to Smart Labs, {user.displayName}!</h1>
           <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
             Your journey to success starts now. What would you like to do first?

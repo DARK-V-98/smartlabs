@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { GraduationCap, Facebook, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import Image from "next/image";
+import { Facebook, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from "lucide-react";
 
 const footerLinks = {
   courses: [
@@ -37,7 +38,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <GraduationCap className="h-8 w-8 text-primary" />
+              <Image src="/logo.png" alt="Smart Labs Logo" width={32} height={32} />
               <span className="font-display font-bold text-xl">
                 Smart<span className="text-primary">Labs</span>
               </span>

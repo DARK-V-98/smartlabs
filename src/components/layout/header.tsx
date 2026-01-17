@@ -4,10 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, GraduationCap, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/firebase";
+import Image from "next/image";
 
 const courses = [
   { name: "PTE", href: "/pte", description: "Pearson Test of English" },
@@ -35,10 +36,7 @@ export default function Header() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="relative">
-                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/30 transition-all" />
-                <GraduationCap className="h-8 w-8 text-primary relative z-10" />
-              </div>
+              <Image src="/logo.png" alt="Smart Labs Logo" width={32} height={32} />
               <span className="font-display font-bold text-xl text-foreground">
                 Smart<span className="text-primary">Labs</span>
               </span>
