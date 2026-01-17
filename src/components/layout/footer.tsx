@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { GraduationCap, Facebook, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from "lucide-react";
 
 const footerLinks = {
   courses: [
@@ -39,9 +39,6 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
                <Image src="/logo.png" alt="Smart Labs Logo" width={40} height={40} />
-               <span className="font-display font-bold text-xl">
-                Smart<span className="text-primary">Labs</span>
-              </span>
             </Link>
             <p className="text-muted-foreground mb-6 max-w-sm">
               Empowering learners worldwide with expert-led exam preparation and professional development courses.
@@ -69,7 +66,7 @@ export default function Footer() {
                 <a
                   key={social.label}
                   href={social.href}
-                  className="p-2 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="p-2 rounded-lg bg-secondary hover:bg-primary/20 hover:text-primary transition-colors"
                   aria-label={social.label}
                 >
                   <social.icon className="h-5 w-5" />

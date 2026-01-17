@@ -8,11 +8,6 @@ export function AnimatedCheckmark({ className }: { className?: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-  const circleVariants = {
-    hidden: { pathLength: 0 },
-    visible: { pathLength: 1 },
-  };
-
   const checkVariants = {
     hidden: { pathLength: 0 },
     visible: { pathLength: 1 },
@@ -26,26 +21,16 @@ export function AnimatedCheckmark({ className }: { className?: string }) {
       className={cn("h-4 w-4", className)}
       initial="hidden"
       animate={isInView ? 'visible' : 'hidden'}
+      fill="none"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      <motion.circle
-        cx="12"
-        cy="12"
-        r="10"
-        fill="none"
-        strokeWidth="2"
-        className="stroke-current"
-        variants={circleVariants}
-        transition={{ duration: 0.3 }}
-      />
       <motion.path
-        d="M9 12l2 2 4-4"
-        fill="none"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M5 13l4 4L19 7"
         className="stroke-current"
         variants={checkVariants}
-        transition={{ duration: 0.2, delay: 0.3 }}
+        transition={{ duration: 0.3, delay: 0.2, ease: "circOut" }}
       />
     </motion.svg>
   );

@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={cn(
           'min-h-screen font-sans antialiased',
-          'flex flex-col'
+          'flex flex-col pt-20' // Add padding-top to body to account for fixed header
         )}
       >
         <FirebaseClientProvider>

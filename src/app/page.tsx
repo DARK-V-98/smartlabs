@@ -3,10 +3,10 @@ import Link from "next/link";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import React, { useRef } from "react";
 import { 
-  GraduationCap, 
-  Users, 
-  Trophy, 
-  BookOpen, 
+  Book,
+  Feather,
+  TrendingUp,
+  Award, 
   Star, 
   ArrowRight,
   Play,
@@ -14,17 +14,17 @@ import {
   Target,
   Zap,
   Globe,
-  CheckCircle
+  Palette
 } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { AnimatedNumber } from "@/components/ui/animated-number";
 import { AnimatedCheckmark } from "@/components/ui/animated-checkmark";
 
 const stats = [
-  { value: 10000, suffix: "+", label: "Students Trained" },
-  { value: 95, suffix: "%", label: "Success Rate" },
-  { value: 50, suffix: "+", label: "Expert Instructors" },
-  { value: 4.9, suffix: "", label: "Average Rating", decimals: 1 },
+  { value: 10000, suffix: "+", label: "Students Trained", color: "text-accent-1" },
+  { value: 95, suffix: "%", label: "Success Rate", color: "text-accent-2" },
+  { value: 50, suffix: "+", label: "Expert Instructors", color: "text-accent-3" },
+  { value: 4.9, suffix: "", label: "Average Rating", decimals: 1, color: "text-accent-4" },
 ];
 
 const courses = [
@@ -33,7 +33,8 @@ const courses = [
     description: "Master the Pearson Test of English with AI-powered practice and expert strategies.",
     icon: Target,
     href: "/pte",
-    color: "from-primary to-blue-500",
+    color: "from-accent-1/20 to-accent-1/5",
+    iconColor: "text-accent-1",
     features: ["AI Scoring Practice", "Live Classes", "Full Materials Access"],
   },
   {
@@ -41,7 +42,8 @@ const courses = [
     description: "Achieve your target band score with comprehensive IELTS preparation.",
     icon: Globe,
     href: "/ielts",
-    color: "from-accent to-yellow-400",
+    color: "from-accent-2/20 to-accent-2/5",
+    iconColor: "text-accent-2",
     features: ["Speaking Practice", "Writing Feedback", "Mock Tests"],
   },
   {
@@ -49,31 +51,36 @@ const courses = [
     description: "Your pathway to Canadian immigration with focused CELPIP training.",
     icon: Zap,
     href: "/celpip",
-    color: "from-accent to-yellow-400",
+    color: "from-accent-4/20 to-accent-4/5",
+    iconColor: "text-accent-4",
     features: ["Self-Paced Learning", "Video Guides", "Practice Tests"],
   },
 ];
 
 const features = [
   {
-    icon: BookOpen,
+    icon: Feather,
     title: "Expert-Led Courses",
     description: "Learn from certified instructors with years of exam preparation experience.",
+    color: "bg-accent-1/10 text-accent-1"
   },
   {
     icon: Sparkles,
     title: "AI-Powered Practice",
     description: "Get instant feedback on your practice tests with our advanced AI scoring system.",
+    color: "bg-accent-2/10 text-accent-2"
   },
   {
-    icon: Trophy,
+    icon: Award,
     title: "Proven Results",
     description: "Join thousands of successful students who achieved their target scores.",
+    color: "bg-accent-3/10 text-accent-3"
   },
   {
-    icon: Users,
-    title: "Community Support",
-    description: "Connect with fellow learners and get support from our dedicated team.",
+    icon: Palette,
+    title: "Creative Tools",
+    description: "Engage with content through interactive and creative learning modules.",
+    color: "bg-accent-4/10 text-accent-4"
   },
 ];
 
@@ -83,18 +90,21 @@ const testimonials = [
     role: "PTE Score: 85",
     content: "Smart Labs transformed my preparation journey. The AI feedback and personalized study plan helped me achieve my target score in just 3 weeks!",
     avatar: "PS",
+    color: "from-accent-1/80 to-accent-3/80"
   },
   {
     name: "Mohammed Al-Hassan",
     role: "IELTS Band: 8.0",
     content: "The instructors are incredibly knowledgeable. Their strategies for the speaking section were game-changers. Highly recommended!",
     avatar: "MA",
+    color: "from-accent-2/80 to-accent-4/80"
   },
   {
     name: "Sarah Chen",
     role: "CELPIP Score: 12",
     content: "The self-paced CELPIP course was perfect for my schedule. The materials are comprehensive and the practice tests are very close to the real exam.",
     avatar: "SC",
+    color: "from-primary/80 to-accent-2/80"
   },
 ];
 
@@ -148,8 +158,8 @@ export default function Home() {
       <section className="relative overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent-1/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
         </div>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
@@ -162,13 +172,13 @@ export default function Home() {
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                 <Sparkles className="h-4 w-4" />
-                <span>#1 Exam Prep Platform in Sri Lanka</span>
+                <span>#1 Exam Prep Platform</span>
               </div>
               
               <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
                 Master Your{" "}
                 <span className="gradient-text">English Exams</span>{" "}
-                with Confidence
+                with a Splash of Fun
               </h1>
               
               <p className="text-lg text-muted-foreground mb-8 max-w-lg">
@@ -182,7 +192,7 @@ export default function Home() {
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button variant="heroOutline" size="xl" asChild>
+                <Button variant="outline" size="xl" asChild>
                   <Link href="/about">
                     <Play className="mr-2 h-5 w-5" />
                     Watch Demo
@@ -200,7 +210,7 @@ export default function Home() {
                     transition={{ delay: 0.3 + index * 0.1 }}
                     className="text-center sm:text-left"
                   >
-                    <div className="text-2xl sm:text-3xl font-bold text-foreground">
+                    <div className={`text-3xl sm:text-4xl font-bold ${stat.color}`}>
                       <AnimatedNumber value={stat.value} decimals={stat.decimals || 0} />{stat.suffix}
                     </div>
                     <div className="text-sm text-muted-foreground">{stat.label}</div>
@@ -224,7 +234,7 @@ export default function Home() {
                 <div className="glass-card rounded-3xl p-8 shadow-xl">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="p-3 rounded-2xl bg-primary/10">
-                      <GraduationCap className="h-8 w-8 text-primary" />
+                      <Book className="h-8 w-8 text-primary" />
                     </div>
                     <div>
                       <div className="font-display font-semibold text-lg">Your Learning Journey</div>
@@ -249,14 +259,14 @@ export default function Home() {
                         {["PS", "MH", "SC", "+"].map((avatar, i) => (
                           <div
                             key={i}
-                            className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold ring-2 ring-card"
+                            className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent-1 flex items-center justify-center text-white text-xs font-bold ring-2 ring-card"
                           >
                             {avatar}
                           </div>
                         ))}
                       </div>
                       <div className="text-right">
-                        <div className="flex items-center gap-1 text-accent">
+                        <div className="flex items-center gap-1 text-accent-4">
                           {[...Array(5)].map((_, i) => (
                             <Star key={i} className="h-4 w-4 fill-current" />
                           ))}
@@ -275,8 +285,8 @@ export default function Home() {
                   className="absolute -top-4 -right-4 glass-card rounded-2xl p-4 shadow-lg"
                 >
                   <div className="flex items-center gap-2">
-                    <Trophy className="h-6 w-6 text-accent" />
-                    <span className="font-semibold">95% Pass Rate</span>
+                    <TrendingUp className="h-6 w-6 text-accent-2" />
+                    <span className="font-semibold">95% Success</span>
                   </div>
                 </motion.div>
 
@@ -287,7 +297,7 @@ export default function Home() {
                   className="absolute -bottom-4 -left-4 glass-card rounded-2xl p-4 shadow-lg"
                 >
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-6 w-6 text-accent" />
+                    <Sparkles className="h-6 w-6 text-accent-3" />
                     <span className="font-semibold">AI-Powered</span>
                   </div>
                 </motion.div>
@@ -306,8 +316,8 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
-              <BookOpen className="h-4 w-4" />
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+              <Book className="h-4 w-4" />
               <span>Our Courses</span>
             </div>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
@@ -329,10 +339,10 @@ export default function Home() {
               <motion.div key={course.title} variants={itemVariants}>
                 <Link
                   href={course.href}
-                  className="group block h-full glass-card rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
+                  className="group block h-full glass-card rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-gradient-to-br"
                 >
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${course.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                    <course.icon className="h-7 w-7 text-white" />
+                  <div className={`w-16 h-16 rounded-2xl bg-white flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-md`}>
+                    <course.icon className={`h-8 w-8 ${course.iconColor}`} />
                   </div>
                   <h3 className="font-display text-xl font-bold text-foreground mb-3">
                     {course.title}
@@ -343,12 +353,12 @@ export default function Home() {
                   <ul className="space-y-2 mb-6">
                     {course.features.map((feature) => (
                       <li key={feature} className="flex items-center gap-2 text-sm">
-                        <AnimatedCheckmark className="text-accent" />
+                        <AnimatedCheckmark className={course.iconColor} />
                         <span className="text-muted-foreground">{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <div className="flex items-center text-primary font-semibold group-hover:gap-3 gap-2 transition-all">
+                  <div className="flex items-center text-primary font-semibold group-hover:gap-3 gap-2 transition-all mt-auto">
                     Learn More <ArrowRight className="h-4 w-4" />
                   </div>
                 </Link>
@@ -390,11 +400,11 @@ export default function Home() {
                     className="flex gap-4"
                   >
                     <motion.div 
-                      className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center"
+                      className={`flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center ${feature.color}`}
                       animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: index * 0.5 }}
                     >
-                      <feature.icon className="h-6 w-6 text-primary" />
+                      <feature.icon className="h-6 w-6" />
                     </motion.div>
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
@@ -412,7 +422,7 @@ export default function Home() {
               className="relative"
             >
               <div className="glass-card rounded-3xl p-8 shadow-xl">
-                <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center mb-6">
+                <div className="aspect-video bg-gradient-to-br from-accent-3/20 to-primary/20 rounded-2xl flex items-center justify-center mb-6">
                   <div className="w-20 h-20 rounded-full bg-white/90 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
                     <Play className="h-8 w-8 text-primary ml-1" />
                   </div>
@@ -434,7 +444,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-4/10 text-accent-4 text-sm font-medium mb-4">
               <Star className="h-4 w-4" />
               <span>Success Stories</span>
             </div>
@@ -457,21 +467,21 @@ export default function Home() {
               <motion.div
                 key={testimonial.name}
                 variants={itemVariants}
-                className="glass-card rounded-2xl p-8"
+                className="glass-card rounded-3xl p-8 h-full flex flex-col"
               >
-                <div className="flex items-center gap-1 text-accent mb-4">
+                <div className="flex items-center gap-1 text-accent-4 mb-4">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 fill-current" />
                   ))}
                 </div>
-                <p className="text-foreground mb-6 leading-relaxed">"{testimonial.content}"</p>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold">
+                <p className="text-foreground mb-6 leading-relaxed flex-grow">"{testimonial.content}"</p>
+                <div className="flex items-center gap-4 mt-auto">
+                  <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${testimonial.color} flex items-center justify-center text-white font-bold`}>
                     {testimonial.avatar}
                   </div>
                   <div>
                     <div className="font-semibold text-foreground">{testimonial.name}</div>
-                    <div className="text-sm text-accent font-medium">{testimonial.role}</div>
+                    <div className="text-sm text-primary font-medium">{testimonial.role}</div>
                   </div>
                 </div>
               </motion.div>
@@ -487,7 +497,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-purple-600 to-primary p-12 lg:p-16 text-center"
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-accent-3 to-accent-1 p-12 lg:p-16 text-center"
           >
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
@@ -496,10 +506,10 @@ export default function Home() {
             </div>
 
             <div className="relative z-10">
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mb-6">
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
                 Ready to Ace Your Exam?
               </h2>
-              <p className="text-lg text-primary-foreground/80 max-w-2xl mx-auto mb-8">
+              <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8">
                 Join thousands of successful students. Start your free trial today and take the first step towards achieving your dream score.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
