@@ -15,62 +15,97 @@ import {
   BookOpen,
   Headphones,
   PenTool,
-  MessageSquare
+  MessageSquare,
+  ListChecks,
+  Mic,
+  Book as BookIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-const pteSections = [
-  {
-    title: "Speaking",
-    icon: MessageSquare,
-    items: [
-      { name: "Read Aloud", hasAiScore: true },
-      { name: "Repeat Sentence", hasAiScore: true },
-      { name: "Describe Image", hasAiScore: true },
-      { name: "Retell Lecture", hasAiScore: true },
-      { name: "Answer Short Question", hasAiScore: true },
-      { name: "Summarize Group Discussion", hasAiScore: true },
-      { name: "Respond to a Situation", hasAiScore: true },
-      { name: "Respond to a Situation (Core)", hasAiScore: false },
-    ],
-  },
-  {
-    title: "Writing",
-    icon: PenTool,
-    items: [
-      { name: "Summarize Written Text", hasAiScore: true },
-      { name: "Write Essay", hasAiScore: true },
-      { name: "Summarize Written Text (Core)", hasAiScore: false },
-      { name: "Write Email (Core)", hasAiScore: false },
-    ],
-  },
-  {
-    title: "Reading",
-    icon: BookOpen,
-    items: [
-      { name: "Fill in the Blanks (Dropdown)", hasAiScore: false },
-      { name: "Multiple Choice (Multiple)", hasAiScore: false },
-      { name: "Reorder Paragraph", hasAiScore: false },
-      { name: "Fill in the Blanks (Drag and Drop)", hasAiScore: false },
-      { name: "Multiple Choice (Single)", hasAiScore: false },
-    ],
-  },
-  {
-    title: "Listening",
-    icon: Headphones,
-    items: [
-      { name: "Summarize Spoken Text", hasAiScore: true },
-      { name: "Multiple Choice (Multiple)", hasAiScore: false },
-      { name: "Fill in the Blanks", hasAiScore: false },
-      { name: "Highlight Correct Summary", hasAiScore: false },
-      { name: "Multiple Choice (Single)", hasAiScore: false },
-      { name: "Select Missing Word", hasAiScore: false },
-      { name: "Highlight Incorrect Words", hasAiScore: false },
-      { name: "Write from Dictation", hasAiScore: false },
-    ],
-  },
+
+const pteAcademicSections = [
+    {
+      title: "Speaking",
+      icon: Mic,
+      items: [
+        { name: "Read Aloud", new: true, ai: true, href: "#" },
+        { name: "Repeat Sentence", new: false, ai: true, href: "#" },
+        { name: "Describe Image", new: false, ai: true, href: "#" },
+        { name: "Retell Lecture", new: false, ai: true, href: "#" },
+        { name: "Answer Short Question", new: false, ai: true, href: "#" },
+        { name: "Summarize Group Discussion", new: true, ai: true, href: "#" },
+        { name: "Respond to a Situation", new: true, ai: true, href: "#" },
+      ],
+    },
+    {
+      title: "Writing",
+      icon: PenTool,
+      items: [
+        { name: "Summarize Written Text", new: false, ai: true, href: "#" },
+        { name: "Write Essay", new: false, ai: true, href: "#" },
+      ],
+    },
+    {
+      title: "Reading",
+      icon: BookIcon,
+      items: [
+        { name: "Fill in the Blanks (Dropdown)", new: false, ai: false, href: "#" },
+        { name: "Multiple Choice (Multiple)", new: false, ai: false, href: "#" },
+        { name: "Reorder Paragraph", new: false, ai: false, href: "#" },
+        { name: "Fill in the Blanks (Drag and Drop)", new: false, ai: false, href: "#" },
+        { name: "Multiple Choice (Single)", new: false, ai: true, href: "/dashboard/practice-tests/pte-reading-test" },
+      ],
+    },
+    {
+      title: "Listening",
+      icon: Headphones,
+      items: [
+        { name: "Summarize Spoken Text", new: false, ai: true, href: "#" },
+        { name: "Multiple Choice (Multiple)", new: false, ai: false, href: "#" },
+        { name: "Fill in the Blanks", new: false, ai: false, href: "#" },
+        { name: "Highlight Correct Summary", new: false, ai: false, href: "#" },
+        { name: "Multiple Choice (Single)", new: false, ai: false, href: "#" },
+        { name: "Select Missing Word", new: false, ai: false, href: "#" },
+        { name: "Highlight Incorrect Words", new: false, ai: false, href: "#" },
+        { name: "Write from Dictation", new: false, ai: false, href: "#" },
+      ],
+    },
+];
+
+const pteCoreSections = [
+    {
+      title: "Speaking",
+      icon: Mic,
+      items: [
+        { name: "Respond to a Situation", new: false, ai: false, href: "#" },
+        // ... other PTE Core speaking items
+      ],
+    },
+     {
+      title: "Writing",
+      icon: PenTool,
+      items: [
+        { name: "Write Email", new: false, ai: false, href: "#" },
+        { name: "Summarize Written Text", new: false, ai: false, href: "#" },
+        // ... other PTE Core writing items
+      ],
+    },
+     {
+      title: "Reading",
+      icon: BookIcon,
+      items: [
+        // ... PTE Core reading items
+      ],
+    },
+     {
+      title: "Listening",
+      icon: Headphones,
+      items: [
+        // ... PTE Core listening items
+      ],
+    },
 ];
 
 
@@ -95,7 +130,7 @@ export default function PTE() {
       <section className="relative overflow-hidden py-20 lg:py-28">
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-1/5 rounded-full blur-3xl" />
         </div>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -142,15 +177,15 @@ export default function PTE() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
-                <BookOpen className="h-4 w-4" />
+             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-2/10 text-accent-2 text-sm font-medium mb-4">
+                <ListChecks className="h-4 w-4" />
                 <span>Exam Structure</span>
               </div>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
               PTE Exam Question Types
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Understand the question types for each section of the PTE Academic exam.
+              Understand the question types for each section of the PTE exam.
             </p>
           </motion.div>
 
@@ -158,33 +193,43 @@ export default function PTE() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="max-w-4xl mx-auto">
-            <Accordion type="single" collapsible className="w-full" defaultValue="Speaking">
-              {pteSections.map((section) => (
-                <AccordionItem value={section.title} key={section.title}>
-                  <AccordionTrigger className="text-xl font-semibold hover:no-underline">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 rounded-xl bg-primary/10">
-                        <section.icon className="h-6 w-6 text-primary" />
-                      </div>
-                      {section.title}
+            className="max-w-7xl mx-auto">
+            <Tabs defaultValue="pte-academic" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto">
+                    <TabsTrigger value="pte-academic">PTE Academic / UKVI</TabsTrigger>
+                    <TabsTrigger value="pte-core">PTE Core</TabsTrigger>
+                </TabsList>
+                <TabsContent value="pte-academic" className="mt-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {pteAcademicSections.map((section) => (
+                        <div key={section.title}>
+                        <h3 className="flex items-center gap-3 text-lg font-semibold mb-4">
+                            <section.icon className="h-6 w-6 text-primary" />
+                            {section.title}
+                        </h3>
+                        <ul className="space-y-2">
+                            {section.items.map((item) => (
+                            <li key={item.name}>
+                                <Link href={item.href} className="flex items-center justify-between p-2 rounded-md hover:bg-muted-foreground/5 transition-colors group">
+                                <span className="text-muted-foreground group-hover:text-foreground">{item.name}</span>
+                                <div className="flex items-center gap-1">
+                                    {item.new && <Badge variant="secondary" className="bg-green-100 text-green-800">New</Badge>}
+                                    {item.ai && <Badge variant="secondary" className="bg-primary/10 text-primary">AI Score</Badge>}
+                                </div>
+                                </Link>
+                            </li>
+                            ))}
+                        </ul>
+                        </div>
+                    ))}
                     </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3 pt-4 pl-4">
-                      {section.items.map((item) => (
-                        <li key={item.name} className="flex items-center justify-between">
-                          <span className="text-muted-foreground">{item.name}</span>
-                          {item.hasAiScore && (
-                            <Badge variant="secondary" className="bg-primary/10 text-primary">AI Score</Badge>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+                </TabsContent>
+                <TabsContent value="pte-core" className="mt-8">
+                     <div className="text-center py-16 bg-card rounded-2xl">
+                        <p className="text-muted-foreground">PTE Core question types coming soon!</p>
+                    </div>
+                </TabsContent>
+            </Tabs>
           </motion.div>
         </div>
       </section>
@@ -228,7 +273,7 @@ export default function PTE() {
               <ul className="space-y-3 mb-8">
                 {boostifyFeatures.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-accent mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -259,11 +304,11 @@ export default function PTE() {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="glass-card rounded-3xl p-8 border-2 border-accent/20"
+              className="glass-card rounded-3xl p-8 border-2 border-accent-2/20"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 rounded-2xl bg-accent/10">
-                  <Users className="h-8 w-8 text-accent" />
+                <div className="p-3 rounded-2xl bg-accent-2/10">
+                  <Users className="h-8 w-8 text-accent-2" />
                 </div>
                 <div>
                   <h3 className="font-display text-2xl font-bold">PTE Physical Session</h3>
@@ -274,7 +319,7 @@ export default function PTE() {
               <ul className="space-y-3 mb-8">
                 {physicalFeatures.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-accent mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -282,20 +327,20 @@ export default function PTE() {
 
               <div className="space-y-4 p-4 rounded-xl bg-secondary/50 mb-6">
                 <div className="flex items-center gap-3 text-sm">
-                  <MapPin className="h-4 w-4 text-accent" />
+                  <MapPin className="h-4 w-4 text-accent-2" />
                   <span><strong>Location:</strong> Janajaya Building, Rajagiriya</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <Clock className="h-4 w-4 text-accent" />
+                  <Clock className="h-4 w-4 text-accent-2" />
                   <span><strong>Total Duration:</strong> 41 Hours</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <FileText className="h-4 w-4 text-accent" />
+                  <FileText className="h-4 w-4 text-accent-2" />
                   <span>Includes online Boostify + physical classes</span>
                 </div>
               </div>
 
-              <Button variant="accent" size="lg" className="w-full" asChild>
+              <Button variant="accent" size="lg" className="w-full bg-accent-2 hover:bg-accent-2/90" asChild>
                 <Link href="/signup">Enroll in Physical Session</Link>
               </Button>
             </motion.div>
