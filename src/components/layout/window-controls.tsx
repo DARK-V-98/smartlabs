@@ -9,7 +9,9 @@ import { cn } from '@/lib/utils';
 declare global {
   interface Window {
     electronAPI: {
-      send: (channel: 'window:minimize' | 'window:maximize' | 'window:close', data?: any) => void;
+      minimize: () => void;
+      maximize: () => void;
+      close: () => void;
     };
   }
 }
@@ -40,9 +42,9 @@ export function WindowControls() {
     return null;
   }
 
-  const handleMinimize = () => window.electronAPI.send('window:minimize');
-  const handleMaximize = () => window.electronAPI.send('window:maximize');
-  const handleClose = () => window.electronAPI.send('window:close');
+  const handleMinimize = () => window.electronAPI.minimize();
+  const handleMaximize = () => window.electronAPI.maximize();
+  const handleClose = () => window.electronAPI.close();
 
   const controlButtonClasses = "p-2 rounded-md hover:bg-black/10 transition-colors duration-150 flex items-center justify-center h-10 w-11 text-foreground";
 
