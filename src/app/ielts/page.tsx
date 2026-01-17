@@ -1,5 +1,4 @@
 'use client';
-import type { Metadata } from 'next';
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
@@ -17,12 +16,6 @@ import {
   Target
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-export const metadata: Metadata = {
-  title: 'IELTS Preparation Course | Weekend Classes',
-  description: 'Achieve your target band score with our comprehensive IELTS training. We offer weekend group classes in Rajagiriya, expert instructors, and mock tests to ensure your success.',
-  keywords: 'IELTS preparation, IELTS course, IELTS classes Colombo, IELTS weekend class, Smart Labs',
-};
 
 const ieltsSkills = [
   { icon: Headphones, title: "Listening", description: "Understand spoken English in various accents and contexts" },

@@ -1,5 +1,4 @@
 'use client';
-import type { Metadata } from 'next';
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
@@ -24,13 +23,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-export const metadata: Metadata = {
-  title: 'PTE Preparation Course | AI-Scored Mock Tests',
-  description: 'Master the PTE Academic exam with Smart Labs. Our comprehensive course offers AI-powered scoring, live online classes, and expert strategies to help you achieve your target score.',
-  keywords: 'PTE preparation, PTE course, PTE online, PTE mock test, PTE AI scoring, Smart Labs',
-};
-
 
 const pteAcademicSections = [
     {
