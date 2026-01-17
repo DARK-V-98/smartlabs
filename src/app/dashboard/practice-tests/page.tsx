@@ -1,24 +1,140 @@
-
 'use client';
 
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card';
 import { BookOpen, ArrowLeft, ArrowRight, Search, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useState } from 'react';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 
 const practiceTests = [
   // --- PTE ---
+  {
+    exam: 'PTE',
+    section: 'Speaking',
+    title: 'Read Aloud',
+    description: 'Practice reading a text aloud.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: true,
+  },
+  {
+    exam: 'PTE',
+    section: 'Speaking',
+    title: 'Repeat Sentence',
+    description: 'Listen and repeat a sentence.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: true,
+  },
+  {
+    exam: 'PTE',
+    section: 'Speaking',
+    title: 'Describe Image',
+    description: 'Describe an image in detail.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: true,
+  },
+  {
+    exam: 'PTE',
+    section: 'Speaking',
+    title: 'Retell Lecture',
+    description: 'Listen to a lecture and retell it.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: true,
+  },
+  {
+    exam: 'PTE',
+    section: 'Speaking',
+    title: 'Answer Short Question',
+    description: 'Answer simple questions.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: true,
+  },
+  {
+    exam: 'PTE',
+    section: 'Speaking',
+    title: 'Summarize Group Discussion',
+    description: 'Listen and summarize a discussion.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: true,
+  },
+  {
+    exam: 'PTE',
+    section: 'Speaking',
+    title: 'Respond to a Situation',
+    description: 'Respond to a daily life situation.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: true,
+  },
+  {
+    exam: 'PTE',
+    section: 'Speaking',
+    title: 'Respond to a Situation (Core)',
+    description: 'Core-specific situation response.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Writing',
+    title: 'Summarize Written Text',
+    description: 'Write a one-sentence summary of a text.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: true,
+  },
+  {
+    exam: 'PTE',
+    section: 'Writing',
+    title: 'Write Essay',
+    description: 'Write a 200-300 word argumentative essay.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: true,
+  },
+  {
+    exam: 'PTE',
+    section: 'Writing',
+    title: 'Summarize Written Text (Core)',
+    description: 'Core-specific summary writing.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Writing',
+    title: 'Write Email (Core)',
+    description: 'Core-specific email writing task.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
   {
     exam: 'PTE',
     section: 'Reading',
@@ -28,32 +144,114 @@ const practiceTests = [
     status: 'Available',
     hasAiScore: true,
   },
-  { exam: 'PTE', section: 'Speaking', title: 'Speaking: Read Aloud', description: 'Practice reading a text aloud.', href: '#', status: 'Coming Soon', hasAiScore: true },
-  { exam: 'PTE', section: 'Speaking', title: 'Speaking: Repeat Sentence', description: 'Listen and repeat a sentence.', href: '#', status: 'Coming Soon', hasAiScore: true },
-  { exam: 'PTE', section: 'Speaking', title: 'Speaking: Describe Image', description: 'Describe an image in detail.', href: '#', status: 'Coming Soon', hasAiScore: true },
-  { exam: 'PTE', section: 'Speaking', title: 'Speaking: Retell Lecture', description: 'Listen to a lecture and retell it.', href: '#', status: 'Coming Soon', hasAiScore: true },
-  { exam: 'PTE', section: 'Speaking', title: 'Speaking: Answer Short Question', description: 'Answer simple questions.', href: '#', status: 'Coming Soon', hasAiScore: true },
-  { exam: 'PTE', section: 'Speaking', title: 'Speaking: Summarize Group Discussion', description: 'Listen and summarize a discussion.', href: '#', status: 'Coming Soon', hasAiScore: true },
-  { exam: 'PTE', section: 'Speaking', title: 'Speaking: Respond to a Situation', description: 'Respond to a daily life situation.', href: '#', status: 'Coming Soon', hasAiScore: true },
-  { exam: 'PTE', section: 'Speaking', title: 'Speaking: Respond to a Situation (Core)', description: 'Core-specific situation response.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Writing', title: 'Writing: Summarize Written Text', description: 'Write a one-sentence summary of a text.', href: '#', status: 'Coming Soon', hasAiScore: true },
-  { exam: 'PTE', section: 'Writing', title: 'Writing: Write Essay', description: 'Write a 200-300 word argumentative essay.', href: '#', status: 'Coming Soon', hasAiScore: true },
-  { exam: 'PTE', section: 'Writing', title: 'Writing: Summarize Written Text (Core)', description: 'Core-specific summary writing.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Writing', title: 'Writing: Write Email (Core)', description: 'Core-specific email writing task.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Reading', title: 'Reading: Fill in the Blanks (Dropdown)', description: 'Select the most appropriate word from a dropdown.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Reading', title: 'Reading: Multiple-Choice, Multiple Answer', description: 'Select all correct responses from a list.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Reading', title: 'Reading: Reorder Paragraphs', description: 'Arrange text boxes in the correct order.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Reading', title: 'Reading: Fill in the Blanks (Drag & Drop)', description: 'Drag words to fill the blanks in a text.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Listening', title: 'Listening: Summarize Spoken Text', description: 'Summarize a lecture you hear.', href: '#', status: 'Coming Soon', hasAiScore: true },
-  { exam: 'PTE', section: 'Listening', title: 'Listening: Multiple-Choice, Multiple Answer', description: 'Select all correct responses from a list.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Listening', title: 'Listening: Fill in the Blanks', description: 'Type the missing word in a transcript.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Listening', title: 'Listening: Highlight Correct Summary', description: 'Choose the best summary of a recording.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Listening', title: 'Listening: Multiple-Choice, Single Answer', description: 'Select one correct response.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Listening', title: 'Listening: Select Missing Word', description: 'Choose the last word of a recording.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Listening', title: 'Listening: Highlight Incorrect Words', description: 'Find words that differ from a recording.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  { exam: 'PTE', section: 'Listening', title: 'Listening: Write from Dictation', description: 'Type a sentence you hear.', href: '#', status: 'Coming Soon', hasAiScore: false },
-  
-  // --- IELTS and CELPIP ---
+  {
+    exam: 'PTE',
+    section: 'Reading',
+    title: 'Fill in the Blanks (Dropdown)',
+    description: 'Select the most appropriate word from a dropdown.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Reading',
+    title: 'Multiple-Choice, Multiple Answer',
+    description: 'Select all correct responses from a list.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Reading',
+    title: 'Reorder Paragraphs',
+    description: 'Arrange text boxes in the correct order.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Reading',
+    title: 'Fill in the Blanks (Drag & Drop)',
+    description: 'Drag words to fill the blanks in a text.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Listening',
+    title: 'Summarize Spoken Text',
+    description: 'Summarize a lecture you hear.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: true,
+  },
+  {
+    exam: 'PTE',
+    section: 'Listening',
+    title: 'Multiple-Choice, Multiple Answer',
+    description: 'Select all correct responses from a list.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Listening',
+    title: 'Fill in the Blanks',
+    description: 'Type the missing word in a transcript.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Listening',
+    title: 'Highlight Correct Summary',
+    description: 'Choose the best summary of a recording.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Listening',
+    title: 'Multiple-Choice, Single Answer',
+    description: 'Select one correct response.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Listening',
+    title: 'Select Missing Word',
+    description: 'Choose the last word of a recording.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Listening',
+    title: 'Highlight Incorrect Words',
+    description: 'Find words that differ from a recording.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
+  {
+    exam: 'PTE',
+    section: 'Listening',
+    title: 'Write from Dictation',
+    description: 'Type a sentence you hear.',
+    href: '#',
+    status: 'Coming Soon',
+    hasAiScore: false,
+  },
   {
     exam: 'IELTS',
     section: 'Writing',
@@ -74,16 +272,19 @@ const practiceTests = [
   },
 ];
 
-
 const exams = ['PTE', 'IELTS', 'CELPIP'];
+const sectionsByExam = exams.reduce(
+  (acc, exam) => {
+    acc[exam] = [...new Set(practiceTests.filter((t) => t.exam === exam).map((t) => t.section))];
+    return acc;
+  },
+  {} as Record<string, string[]>
+);
 
 export default function PracticeTestsPage() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedExam, setSelectedExam] = useState<string | null>(null);
-
   const featuredTests = [
-      ...practiceTests.filter(t => t.status === 'Available'),
-      ...practiceTests.filter(t => t.status === 'Coming Soon')
+    ...practiceTests.filter((t) => t.status === 'Available'),
+    ...practiceTests.filter((t) => t.status === 'Coming Soon'),
   ].slice(0, 3);
 
   return (
@@ -100,99 +301,92 @@ export default function PracticeTestsPage() {
             <div className="flex items-center gap-4">
               <BookOpen className="h-8 w-8 text-primary" />
               <div>
-                <CardTitle>Practice Tests</CardTitle>
-                <CardDescription>AI Scoring Tests</CardDescription>
+                <CardTitle>AI Scoring Tests</CardTitle>
+                <CardDescription>
+                  Hone your skills with our library of mock tests and practice exercises.
+                </CardDescription>
               </div>
             </div>
-            <Dialog open={isDialogOpen} onOpenChange={(open) => {
-              setIsDialogOpen(open);
-              if (!open) {
-                setSelectedExam(null); // Reset state when dialog closes
-              }
-            }}>
-              <DialogTrigger asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <Button>
                   <Search className="mr-2 h-4 w-4" />
                   Browse All Tests
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>
-                    {selectedExam ? `Available ${selectedExam} Tests` : 'Browse by Exam'}
-                  </DialogTitle>
-                  <DialogDescription>
-                    {selectedExam ? `Select a test to start practicing.` : 'Select an exam category to see available tests.'}
-                  </DialogDescription>
-                </DialogHeader>
-
-                {selectedExam ? (
-                  <div className="py-4">
-                    <Button variant="ghost" onClick={() => setSelectedExam(null)} className="mb-4 px-0">
-                      <ArrowLeft className="mr-2 h-4 w-4" /> Back to Exams
-                    </Button>
-                    <div className="space-y-3">
-                      {practiceTests.filter(t => t.exam === selectedExam).length > 0 ? (
-                        practiceTests.filter(t => t.exam === selectedExam).map(test => (
-                          <Link
-                            key={test.title}
-                            href={test.status !== 'Coming Soon' ? test.href : '#'}
-                            onClick={(e) => {
-                                if (test.status === 'Coming Soon') {
-                                  e.preventDefault();
-                                } else {
-                                  setIsDialogOpen(false);
-                                  setSelectedExam(null);
-                                }
-                              }}
-                              className={cn(
-                                "block p-4 rounded-lg border hover:bg-muted transition-colors",
-                                test.status === 'Coming Soon' && 'cursor-not-allowed opacity-60'
-                              )}>
-                              <div className="flex justify-between items-center">
-                                <h4 className="font-semibold">{test.title}</h4>
-                                {test.hasAiScore && <Badge variant="secondary" className="bg-primary/10 text-primary"><Sparkles className="h-3 w-3 mr-1" />AI</Badge>}
-                              </div>
-                              <p className="text-sm text-muted-foreground mt-1">{test.description}</p>
-                              {test.status === 'Coming Soon' && <p className="text-xs font-bold text-amber-600 mt-2">Coming Soon</p>}
-                          </Link>
-                        ))
-                      ) : (
-                        <p className="text-sm text-muted-foreground text-center py-8">No tests available for {selectedExam} yet.</p>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 gap-4 py-4">
-                    {exams.map(exam => (
-                      <Button
-                        key={exam}
-                        variant="outline"
-                        className="h-auto p-4 justify-between items-center text-left flex"
-                        onClick={() => setSelectedExam(exam)}
-                      >
-                        <div>
-                          <p className="font-bold text-lg">{exam}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {practiceTests.filter(t => t.exam === exam).length} tests available
-                          </p>
-                        </div>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                    ))}
-                  </div>
-                )}
-              </DialogContent>
-            </Dialog>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-64">
+                <DropdownMenuLabel>Browse by Exam</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {exams.map((exam) => (
+                  <DropdownMenuSub key={exam}>
+                    <DropdownMenuSubTrigger>{exam}</DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuLabel>{exam} Sections</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {sectionsByExam[exam].map((section) => (
+                          <DropdownMenuSub key={`${exam}-${section}`}>
+                            <DropdownMenuSubTrigger>{section}</DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                              <DropdownMenuSubContent>
+                                <DropdownMenuLabel>{section} Tests</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                {practiceTests
+                                  .filter((t) => t.exam === exam && t.section === section)
+                                  .map((test) => (
+                                    <DropdownMenuItem
+                                      key={test.title}
+                                      disabled={test.status === 'Coming Soon'}
+                                    >
+                                      <Link
+                                        href={test.status !== 'Coming Soon' ? test.href : '#'}
+                                        className="flex w-full items-center justify-between"
+                                      >
+                                        <span>{test.title}</span>
+                                        <div className="flex items-center gap-1">
+                                          {test.status === 'Coming Soon' && (
+                                            <Badge variant="outline">Soon</Badge>
+                                          )}
+                                          {test.hasAiScore && (
+                                            <Badge
+                                              variant="secondary"
+                                              className="bg-primary/10 text-primary"
+                                            >
+                                              <Sparkles className="mr-1 h-3 w-3" />
+                                              AI
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </Link>
+                                    </DropdownMenuItem>
+                                  ))}
+                              </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                          </DropdownMenuSub>
+                        ))}
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardHeader>
         <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {featuredTests.map(test => (
+          {featuredTests.map((test) => (
             <Card key={test.title} className="flex flex-col">
               <CardHeader>
-                <div className="flex justify-between items-start gap-2">
-                    <CardTitle>{test.title}</CardTitle>
-                    {test.hasAiScore && <Badge variant="secondary" className="bg-primary/10 text-primary flex-shrink-0"><Sparkles className="h-3 w-3 mr-1" />AI Score</Badge>}
+                <div className="flex items-start justify-between gap-2">
+                  <CardTitle>{test.title}</CardTitle>
+                  {test.hasAiScore && (
+                    <Badge
+                      variant="secondary"
+                      className="flex-shrink-0 bg-primary/10 text-primary"
+                    >
+                      <Sparkles className="mr-1 h-3 w-3" />
+                      AI Score
+                    </Badge>
+                  )}
                 </div>
                 <CardDescription>{test.description}</CardDescription>
               </CardHeader>
