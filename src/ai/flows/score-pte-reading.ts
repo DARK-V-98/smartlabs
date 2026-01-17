@@ -19,7 +19,7 @@ For each question provided in the input, you must:
 5.  Provide some 'generalFeedback' in one or two sentences, encouraging the user and suggesting what to focus on next.
 
 Here is the test data:
-{{{JSON.stringify(questions)}}}
+{{json questions}}
 `,
 });
 
