@@ -2,19 +2,20 @@
 import Link from 'next/link';
 import { motion } from "framer-motion";
 import { useFirebase, useCollection, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 import { 
   BookOpen, 
   Calendar,
   Clock,
-  ArrowRight,
+  ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Blog() {
   const { firestore } = useFirebase();
   const postsQuery = useMemoFirebase(
-    () => (firestore ? collection(firestore, 'blog_posts') : null),
+    () => (firestore ? query(collection(firestore, 'blog_posts'), orderBy('publishDate', 'desc')) : null),
     [firestore]
   );
   const { data: blogPosts, isLoading } = useCollection(postsQuery);
@@ -84,51 +85,52 @@ export default function Blog() {
                 transition={{ delay: index * 0.1 }}
                 className="group glass-card rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
               >
-                <div className={`h-48 bg-gradient-to-br from-primary to-purple-500 relative bg-cover bg-center`} style={{backgroundImage: `url(${post.image})`}}>
-                  <div className="absolute inset-0 bg-black/30" />
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium">
-                      {post.category}
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="p-6">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>{post.publishDate?.toDate().toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span>5 min read</span>
+                <Link href={`/blog/${post.slug}`} className="block h-full">
+                  <div className={`h-48 bg-gradient-to-br from-primary to-purple-500 relative bg-cover bg-center`} style={{backgroundImage: `url(${post.image})`}}>
+                    <div className="absolute inset-0 bg-black/30" />
+                    <div className="absolute top-4 left-4">
+                      <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium">
+                        {post.category}
+                      </span>
                     </div>
                   </div>
                   
-                  <h2 className="font-display text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
-                    {post.title}
-                  </h2>
-                  
-                  <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
-                    {post.excerpt}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
-                        {post.authorId?.split(' ').map(n => n[0]).join('') || 'SL'}
+                  <div className="p-6 flex flex-col h-[calc(100%-12rem)]">
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        <span>{post.publishDate?.toDate().toLocaleDateString()}</span>
                       </div>
-                      <span className="text-sm text-muted-foreground">{post.authorId}</span>
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        <span>5 min read</span>
+                      </div>
                     </div>
                     
-                    <Link 
-                      href={`/blog/${post.slug}`} 
-                      className="flex items-center text-primary font-medium text-sm group-hover:gap-2 gap-1 transition-all"
-                    >
-                      Read <ArrowRight className="h-4 w-4" />
-                    </Link>
+                    <h2 className="font-display text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h2>
+                    
+                    <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-grow">
+                      {post.excerpt}
+                    </p>
+
+                    <div className="flex items-center justify-between mt-auto">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold">
+                          {post.authorId?.split(' ').map((n: string) => n[0]).join('') || 'SL'}
+                        </div>
+                        <span className="text-sm text-muted-foreground">{post.authorId}</span>
+                      </div>
+                      
+                      <div
+                        className="flex items-center text-primary font-medium text-sm group-hover:gap-2 gap-1 transition-all"
+                      >
+                        Read <ArrowRight className="h-4 w-4" />
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </motion.article>
             ))}
           </div>

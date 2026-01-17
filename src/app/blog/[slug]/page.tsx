@@ -55,11 +55,11 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-secondary/30">
         <section className="py-12 md:py-20">
             <div className="container mx-auto">
-                <div className="max-w-3xl mx-auto">
-                    <Button variant="ghost" asChild className="mb-4 md:mb-8">
+                <div className="max-w-3xl mx-auto glass-card rounded-2xl p-6 sm:p-8 lg:p-12">
+                    <Button variant="ghost" asChild className="mb-4 md:mb-8 -ml-4">
                         <Link href="/blog"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Blog</Link>
                     </Button>
                     
@@ -67,7 +67,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                     <article>
                         <header className="space-y-4">
                             <Badge variant="secondary" className="w-fit">{post.category}</Badge>
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-headline font-bold">{post.title}</h1>
+                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold">{post.title}</h1>
                             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
                                 <div className="flex items-center gap-2">
                                     <Avatar className="h-8 w-8">
@@ -77,8 +77,8 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                                     <span>{post.authorId || 'Smart Labs Admin'}</span>
                                 </div>
                                 <span className="hidden sm:inline">&bull;</span>
-                                <time dateTime={post.publishDate}>
-                                    {new Date(post.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                <time dateTime={post.publishDate?.toDate().toISOString()}>
+                                    {post.publishDate?.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                 </time>
                             </div>
                         </header>
@@ -94,7 +94,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                         </div>
                         
                         <div
-                            className="prose prose-lg max-w-none text-foreground prose-h3:font-headline prose-h3:text-foreground/90"
+                            className="prose prose-lg dark:prose-invert max-w-none prose-h2:font-display prose-p:text-muted-foreground prose-a:text-primary"
                             dangerouslySetInnerHTML={{ __html: post.content }}
                         />
                     </article>
