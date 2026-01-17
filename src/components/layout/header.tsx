@@ -72,26 +72,24 @@ export default function Header() {
     return null;
   }
 
+  const isDesktopClient = isElectron && !isMac;
 
   return (
     <header 
-      className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50"
-      style={(isElectron && !isMac) ? { WebkitAppRegion: 'drag' } as React.CSSProperties : {}}
+      className={cn(
+        "fixed left-0 right-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border/50",
+        isDesktopClient ? "top-8" : "top-0"
+      )}
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div 
-          className={cn(
-            "flex items-center justify-between h-20",
-            isElectron && !isMac && "pr-[140px]" // Reserve space for window controls
-          )}
-        >
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group" style={(isElectron && !isMac) ? { WebkitAppRegion: 'no-drag' } as React.CSSProperties : {}}>
+          <Link href="/" className="flex items-center gap-2 group">
             <Image src="/logo.png" alt="Smart Labs Logo" width={48} height={48} className="relative z-10" />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1" style={(isElectron && !isMac) ? { WebkitAppRegion: 'no-drag' } as React.CSSProperties : {}}>
+          <div className="hidden lg:flex items-center gap-1">
             {/* Courses Dropdown */}
             <div 
               className="relative"
@@ -152,7 +150,7 @@ export default function Header() {
           </div>
 
           {/* CTA Buttons */}
-          <div className="hidden lg:flex items-center gap-3" style={(isElectron && !isMac) ? { WebkitAppRegion: 'no-drag' } as React.CSSProperties : {}}>
+          <div className="hidden lg:flex items-center gap-3">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -201,7 +199,6 @@ export default function Header() {
           <button
             className="lg:hidden p-2 rounded-lg hover:bg-muted transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            style={(isElectron && !isMac) ? { WebkitAppRegion: 'no-drag' } as React.CSSProperties : {}}
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>

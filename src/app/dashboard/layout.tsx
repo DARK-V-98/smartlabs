@@ -16,6 +16,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 export default function DashboardLayout({
   children,
@@ -25,6 +27,18 @@ export default function DashboardLayout({
   const { user } = useUser();
   const auth = useAuth();
   const router = useRouter();
+  
+  const [isElectron, setIsElectron] = useState(false);
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    const runningInElectron = typeof window !== 'undefined' && !!window.electronAPI;
+    setIsElectron(runningInElectron);
+    if (runningInElectron) {
+      const runningOnMac = navigator.userAgent.includes('Mac');
+      setIsMac(runningOnMac);
+    }
+  }, []);
 
   const handleLogout = async () => {
     if (auth) {
@@ -32,10 +46,15 @@ export default function DashboardLayout({
       router.push('/login');
     }
   };
+  
+  const isDesktopClient = isElectron && !isMac;
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <header className="sticky top-0 z-30 flex h-20 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-lg sm:px-6">
+    <div className={cn("min-h-screen bg-muted/30", isDesktopClient && "pt-8")}>
+      <header className={cn(
+          "sticky z-30 flex h-20 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-lg sm:px-6",
+          isDesktopClient ? "top-8" : "top-0"
+        )}>
         <Link href="/dashboard" className="flex items-center gap-3 font-semibold">
           <Image src="/logo.png" alt="Smart Labs Logo" width={32} height={32} />
           <span className="font-bold text-lg">Dashboard</span>

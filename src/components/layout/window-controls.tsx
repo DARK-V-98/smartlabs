@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -17,21 +16,19 @@ declare global {
 }
 
 /**
- * A component that renders window control buttons (minimize, maximize, close)
- * only when the application is running within an Electron environment.
- * It does not render on macOS, as it has native window controls.
+ * A component that renders a custom title bar with window controls
+ * (minimize, maximize, close) only when the application is running 
+ * within an Electron environment on Windows/Linux.
  */
 export function WindowControls() {
   const [isElectron, setIsElectron] = useState(false);
   const [isMac, setIsMac] = useState(false);
 
   useEffect(() => {
-    // Detect if the app is running in Electron by checking for the API exposed by the preload script.
     const runningInElectron = typeof window !== 'undefined' && !!window.electronAPI;
     setIsElectron(runningInElectron);
     
     if (runningInElectron) {
-      // Also check the user agent to determine if the OS is macOS.
       const runningOnMac = navigator.userAgent.includes('Mac');
       setIsMac(runningOnMac);
     }
@@ -46,23 +43,22 @@ export function WindowControls() {
   const handleMaximize = () => window.electronAPI.maximize();
   const handleClose = () => window.electronAPI.close();
 
-  const controlButtonClasses = "p-2 rounded-md hover:bg-black/10 transition-colors duration-150 flex items-center justify-center h-10 w-11 text-foreground";
+  const controlButtonClasses = "p-2 rounded-md hover:bg-black/10 transition-colors duration-150 flex items-center justify-center h-8 w-11 text-foreground";
 
   return (
-    <div
-      className='fixed top-0 right-0 z-[101] h-20 flex items-center px-1'
-      // This style ensures the buttons themselves are not draggable, allowing them to be clicked.
-      style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
+    <div 
+      className="fixed top-0 left-0 right-0 h-8 bg-background/80 backdrop-blur-lg border-b border-border/50 z-[100] flex justify-end"
+      style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
     >
-      <div className="flex">
+      <div className="flex" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
         <button onClick={handleMinimize} className={controlButtonClasses} title="Minimize">
-          <Minus size={16} />
+          <Minus size={14} />
         </button>
         <button onClick={handleMaximize} className={controlButtonClasses} title="Maximize">
-          <Square size={14} />
+          <Square size={12} />
         </button>
         <button onClick={handleClose} className={cn(controlButtonClasses, "hover:bg-red-500 hover:text-white")} title="Close">
-          <X size={18} />
+          <X size={16} />
         </button>
       </div>
     </div>
