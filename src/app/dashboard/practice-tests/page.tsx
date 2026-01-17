@@ -333,7 +333,7 @@ export default function PracticeTestsPage() {
             return (
               <DropdownMenu key={exam}>
                 <DropdownMenuTrigger asChild>
-                  <Card className="group cursor-pointer overflow-hidden text-left shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                  <Card className="group cursor-pointer overflow-hidden text-left shadow-lg hover:shadow-2xl transition-all duration-300">
                     <CardHeader className={`bg-gradient-to-br ${details.color} p-6`}>
                       <div className="flex items-start justify-between">
                          <div className={`p-3 rounded-xl bg-white shadow-md`}>
