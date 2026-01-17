@@ -20,11 +20,19 @@ import { Button } from '@/components/ui/button';
 import { AnimatedNumber } from "@/components/ui/animated-number";
 import { AnimatedCheckmark } from "@/components/ui/animated-checkmark";
 
-const stats = [
-  { value: 10000, suffix: "+", label: "Students Trained", color: "text-accent-1" },
+type Stat = {
+  value?: number;
+  valueString?: string;
+  suffix: string;
+  label: string;
+  color: string;
+  decimals?: number;
+};
+
+const stats: Stat[] = [
+  { value: 5000, suffix: "+", label: "Students Trained", color: "text-accent-1" },
   { value: 95, suffix: "%", label: "Success Rate", color: "text-accent-2" },
-  { value: 50, suffix: "+", label: "Expert Instructors", color: "text-accent-3" },
-  { value: 4.9, suffix: "", label: "Average Rating", decimals: 1, color: "text-accent-4" },
+  { valueString: "6–8", suffix: " Weeks", label: "Typical Target Achievement", color: "text-accent-3" },
 ];
 
 const courses = [
@@ -172,7 +180,7 @@ export default function Home() {
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                 <Sparkles className="h-4 w-4" />
-                <span>#1 Exam Prep Platform</span>
+                <span>Achieve Your Target Score with the Right Guidance.</span>
               </div>
               
               <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
@@ -201,7 +209,7 @@ export default function Home() {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
                 {stats.map((stat, index) => (
                   <motion.div
                     key={stat.label}
@@ -211,7 +219,12 @@ export default function Home() {
                     className="text-center sm:text-left"
                   >
                     <div className={`text-3xl sm:text-4xl font-bold ${stat.color}`}>
-                      <AnimatedNumber value={stat.value} decimals={stat.decimals || 0} />{stat.suffix}
+                      {stat.value ? (
+                        <AnimatedNumber value={stat.value} decimals={stat.decimals || 0} />
+                      ) : (
+                        stat.valueString
+                      )}
+                      {stat.suffix}
                     </div>
                     <div className="text-sm text-muted-foreground">{stat.label}</div>
                   </motion.div>
