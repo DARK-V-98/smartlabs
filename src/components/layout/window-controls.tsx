@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -47,7 +48,7 @@ export function WindowControls() {
 
   return (
     <div
-      className='fixed top-0 right-0 z-[101] h-12 flex items-center px-1'
+      className='fixed top-0 right-0 z-[101] h-20 flex items-center px-1'
       // This style ensures the buttons themselves are not draggable, allowing them to be clicked.
       style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
     >

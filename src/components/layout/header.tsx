@@ -79,10 +79,13 @@ export default function Header() {
       style={(isElectron && !isMac) ? { WebkitAppRegion: 'drag' } as React.CSSProperties : {}}
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className={cn(
+          "flex items-center justify-between h-20",
+          isElectron && !isMac && "pr-[140px]" // Reserve space for window controls
+        )}>
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <Image src="/logo.png" alt="Smart Labs Logo" width={40} height={40} className="relative z-10" />
+            <Image src="/logo.png" alt="Smart Labs Logo" width={48} height={48} className="relative z-10" />
           </Link>
 
           {/* Desktop Navigation */}
