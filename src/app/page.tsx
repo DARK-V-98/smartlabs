@@ -193,9 +193,9 @@ export default function Home() {
                   </Link>
                 </Button>
                 <Button variant="outline" size="xl" asChild>
-                  <Link href="/about">
-                    <Play className="mr-2 h-5 w-5" />
-                    Watch Demo
+                  <Link href="/dashboard/practice-tests">
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Explore AI Tests
                   </Link>
                 </Button>
               </div>
