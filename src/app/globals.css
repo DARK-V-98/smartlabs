@@ -9,7 +9,7 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 240 35% 15%;
+    --foreground: 240 35% 15%; /* Navy Blue for text */
 
     --card: 0 0% 100%;
     --card-foreground: 240 35% 15%;
@@ -17,8 +17,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 35% 15%;
 
-    --primary: 240 35% 15%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 210 90% 55%; /* New Light Blue */
+    --primary-foreground: 0 0% 100%; /* White text on light blue buttons */
 
     --secondary: 210 40% 96%;
     --secondary-foreground: 240 35% 15%;
@@ -26,37 +26,37 @@
     --muted: 210 40% 96%;
     --muted-foreground: 240 20% 45%;
 
-    --accent: 45 95% 55%;
+    --accent: 45 95% 55%; /* Yellow */
     --accent-foreground: 240 35% 15%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 20% 90%;
-    --input: 240 20% 90%;
-    --ring: 240 35% 15%;
+    --border: 210 30% 90%; /* Lighter blue border */
+    --input: 210 30% 90%; /* Lighter blue input border */
+    --ring: 210 90% 55%; /* Light blue for focus rings */
 
     --radius: 0.75rem;
 
-    --gradient-hero: linear-gradient(135deg, hsl(240 35% 15%) 0%, hsl(240 35% 25%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(240 20% 98%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(210 90% 55%) 0%, hsl(220 90% 65%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
     --gradient-accent: linear-gradient(135deg, hsl(45 95% 55%) 0%, hsl(45 95% 65%) 100%);
     
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    --shadow-glow: 0 0 40px -10px hsl(240 35% 50% / 0.4);
+    --shadow-glow: 0 0 40px -10px hsl(210 90% 55% / 0.4);
     --shadow-accent: 0 0 40px -10px hsl(45 95% 55% / 0.4);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-primary: 210 90% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 240 35% 15%;
+    --sidebar-border: 210 30% 90%;
+    --sidebar-ring: 210 90% 55%;
   }
 
   .dark {
@@ -69,14 +69,14 @@
     --popover: 240 35% 12%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 45 95% 55%;
+    --primary: 210 90% 60%; /* Light Blue for dark mode */
     --primary-foreground: 240 35% 10%;
 
     --secondary: 210 30% 20%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 210 30% 20%;
-    --muted-foreground: 240 20% 65%;
+    --muted-foreground: 210 20% 65%;
 
     --accent: 45 95% 55%;
     --accent-foreground: 240 35% 10%;
@@ -84,24 +84,24 @@
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 35% 20%;
-    --input: 240 35% 20%;
-    --ring: 45 95% 55%;
+    --border: 210 30% 25%;
+    --input: 210 30% 25%;
+    --ring: 210 90% 60%;
     
-    --gradient-hero: linear-gradient(135deg, hsl(240 35% 15%) 0%, hsl(240 35% 25%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(210 90% 55%) 0%, hsl(220 90% 65%) 100%);
     --gradient-card: linear-gradient(180deg, hsl(240 35% 12%) 0%, hsl(240 35% 10%) 100%);
     
-    --shadow-glow: 0 0 60px -10px hsl(45 95% 55% / 0.5);
+    --shadow-glow: 0 0 60px -10px hsl(210 90% 55% / 0.5);
     --shadow-accent: 0 0 60px -10px hsl(45 95% 55% / 0.5);
 
     --sidebar-background: 240 35% 6%;
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 45 95% 55%;
+    --sidebar-primary: 210 90% 60%;
     --sidebar-primary-foreground: 240 35% 10%;
     --sidebar-accent: 240 35% 12%;
     --sidebar-accent-foreground: 0 0% 97%;
     --sidebar-border: 240 35% 15%;
-    --sidebar-ring: 45 95% 55%;
+    --sidebar-ring: 210 90% 60%;
   }
 }
 
@@ -120,7 +120,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    @apply font-display;
   }
 }
 

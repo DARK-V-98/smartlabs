@@ -30,7 +30,7 @@ const courses = [
     description: "Master the Pearson Test of English with AI-powered practice and expert strategies.",
     icon: Target,
     href: "/pte",
-    color: "from-primary to-purple-500",
+    color: "from-primary to-blue-500",
     features: ["AI Scoring Practice", "Live Classes", "Full Materials Access"],
   },
   {
@@ -38,7 +38,7 @@ const courses = [
     description: "Achieve your target band score with comprehensive IELTS preparation.",
     icon: Globe,
     href: "/ielts",
-    color: "from-accent to-teal-400",
+    color: "from-accent to-yellow-400",
     features: ["Speaking Practice", "Writing Feedback", "Mock Tests"],
   },
   {
@@ -46,7 +46,7 @@ const courses = [
     description: "Your pathway to Canadian immigration with focused CELPIP training.",
     icon: Zap,
     href: "/celpip",
-    color: "from-accent to-orange-400",
+    color: "from-accent to-yellow-400",
     features: ["Self-Paced Learning", "Video Guides", "Practice Tests"],
   },
 ];
@@ -445,7 +445,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-purple-600 to-primary p-12 lg:p-16 text-center"
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-blue-600 p-12 lg:p-16 text-center"
           >
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
@@ -454,16 +454,16 @@ export default function Home() {
             </div>
 
             <div className="relative z-10">
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mb-6">
                 Ready to Ace Your Exam?
               </h2>
-              <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8">
+              <p className="text-lg text-primary-foreground/80 max-w-2xl mx-auto mb-8">
                 Join thousands of successful students. Start your free trial today and take the first step towards achieving your dream score.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   size="xl" 
-                  className="bg-white text-primary hover:bg-white/90 shadow-xl"
+                  className="bg-white text-foreground hover:bg-white/90 shadow-xl"
                   asChild
                 >
                   <Link href="/signup">
@@ -472,7 +472,7 @@ export default function Home() {
                   </Link>
                 </Button>
                 <Button 
-                  variant="heroOutline" 
+                  variant="outline" 
                   size="xl" 
                   className="border-white/30 text-white hover:bg-white/10 hover:border-white/50"
                   asChild

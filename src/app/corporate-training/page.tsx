@@ -216,7 +216,7 @@ export default function CorporateTraining() {
                 transition={{ delay: index * 0.1 }}
                 className="glass-card rounded-2xl p-8 text-center hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
               >
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center mb-6 mx-auto">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center mb-6 mx-auto">
                   <area.icon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="font-display text-lg font-bold text-foreground mb-3">
@@ -238,7 +238,7 @@ export default function CorporateTraining() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-purple-600 to-primary p-12 lg:p-16 text-center"
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-blue-600 to-primary p-12 lg:p-16 text-center"
           >
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-0 left-1/4 w-64 h-64 bg-white rounded-full blur-3xl" />
@@ -250,15 +250,15 @@ export default function CorporateTraining() {
                 <Building2 className="h-4 w-4" />
                 <span>Partner With Us</span>
               </div>
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mb-6">
                 Partner with Smart Labs
               </h2>
-              <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8">
+              <p className="text-lg text-primary-foreground/80 max-w-2xl mx-auto mb-8">
                 Investing in your team's skills is an investment in your company's future. Let us help you build a more capable, confident workforce.
               </p>
               <Button 
                 size="xl" 
-                className="bg-white text-primary hover:bg-white/90 shadow-xl"
+                className="bg-white text-foreground hover:bg-white/90 shadow-xl"
                 asChild
               >
                 <Link href="/contact">
