@@ -51,7 +51,6 @@ type CourseFormValues = z.infer<typeof courseSchema>;
 const batchSchema = z.object({
     name: z.string().min(3, 'Batch name is required'),
     schedule: z.string().optional(),
-    zoomLink: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
     teacherId: z.string().optional(),
 });
 
@@ -127,7 +126,7 @@ export default function CourseManagementPage() {
   const handleBatchDialogOpen = (course: any) => {
       setCourseForBatches(course);
       setSelectedBatch(null);
-      batchForm.reset({ name: '', schedule: '', zoomLink: '', teacherId: '' });
+      batchForm.reset({ name: '', schedule: '', teacherId: '' });
       setIsBatchDialogOpen(true);
   }
 
@@ -148,7 +147,7 @@ export default function CourseManagementPage() {
               toast({ title: 'Success', description: 'Batch added.' });
           }
           setSelectedBatch(null);
-          batchForm.reset({ name: '', schedule: '', zoomLink: '', teacherId: '' });
+          batchForm.reset({ name: '', schedule: '', teacherId: '' });
       } catch (error) {
           console.error('Error saving batch:', error);
           toast({ variant: 'destructive', title: 'Error', description: 'Could not save batch.' });
@@ -330,9 +329,6 @@ export default function CourseManagementPage() {
                         <FormField control={batchForm.control} name="schedule" render={({ field }) => (
                             <FormItem><FormLabel>Schedule</FormLabel><FormControl><Input placeholder="e.g., Sat & Sun, 10am - 12pm" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <FormField control={batchForm.control} name="zoomLink" render={({ field }) => (
-                            <FormItem><FormLabel>Zoom Link (Optional)</FormLabel><FormControl><Input placeholder="https://zoom.us/j/..." {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
                         <div className="flex justify-end gap-2 mt-4">
                             {selectedBatch && <Button type="button" variant="ghost" onClick={() => { setSelectedBatch(null); batchForm.reset(); }}>Cancel Edit</Button>}
                             <Button type="submit">{selectedBatch ? 'Update Batch' : 'Add Batch'}</Button>
@@ -364,3 +360,5 @@ export default function CourseManagementPage() {
     </div>
   );
 }
+
+    
