@@ -67,7 +67,8 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
     return { success: false, message: "Payment gateway is not configured." };
   }
   
-  const order_id = `${formValues.userId}__${formValues.courseId}__${formValues.batchId}__${Date.now()}`;
+  // Simplified order_id to make it more robust for parsing.
+  const order_id = `${formValues.userId}__${formValues.courseId}__${formValues.batchId}`;
   const amount_formatted = amount.toFixed(2);
   const currency = 'LKR';
   
