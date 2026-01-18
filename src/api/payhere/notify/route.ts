@@ -53,17 +53,16 @@ export async function POST(request: NextRequest) {
                 if (!adminDb) {
                     throw new Error("Firebase Admin DB is not initialized.");
                 }
-
-                // Fetch batch name first to denormalize it into the enrollment record
+                
+                // 1. Fetch the batch name. This is a single, isolated read operation.
                 const batchRef = adminDb.collection('courses').doc(courseId).collection('batches').doc(batchId);
                 const batchDoc = await batchRef.get();
                 const batchName = batchDoc.exists ? batchDoc.data()?.name : 'Default Batch';
 
-                // Prepare document references
+                // 2. Prepare the data payloads and document references.
                 const enrollmentRef = adminDb.collection('users').doc(userId).collection('enrollments').doc(payment_id as string);
                 const paymentRef = adminDb.collection('payments').doc(payment_id as string);
-
-                // Prepare data payloads
+                
                 const enrollmentData = {
                     userId: userId,
                     courseId: courseId,
@@ -87,9 +86,12 @@ export async function POST(request: NextRequest) {
                     paymentTimestamp: FieldValue.serverTimestamp(),
                 };
 
-                // Perform writes directly for robustness.
-                await enrollmentRef.set(enrollmentData);
-                await paymentRef.set(paymentData);
+                // 3. Perform the writes in an atomic batch.
+                const writeBatch = adminDb.batch();
+                writeBatch.set(enrollmentRef, enrollmentData);
+                writeBatch.set(paymentRef, paymentData);
+                
+                await writeBatch.commit();
 
                 console.log(`Successfully created pending enrollment for user ${userId} in course ${courseId}`);
 
