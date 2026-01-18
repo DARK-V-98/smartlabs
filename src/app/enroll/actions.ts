@@ -1,7 +1,9 @@
+
 'use server';
 
 import { createHash } from 'crypto';
-import { payhereUrls, coursePrices, detailedCourseData } from '@/lib/payhere';
+import { payhereUrls } from '@/lib/payhere';
+import { adminDb } from '@/lib/firebase-admin';
 
 export type ServerActionState = {
     success: boolean;
@@ -14,7 +16,7 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
     fullName: formData.get('fullName') as string,
     email: formData.get('email') as string,
     phone: formData.get('phone') as string,
-    course: formData.get('course') as string,
+    courseId: formData.get('course') as string,
     freeDemo: formData.get('freeDemo') === 'on',
     userId: formData.get('userId') as string,
   };
@@ -30,14 +32,26 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
       return { success: true, message: 'Free demo requested! We will contact you shortly.' };
   }
   
-  const selectedCourse = detailedCourseData.find(c => c.title === formValues.course);
-  if (!selectedCourse) {
+  if (!adminDb) {
+    return { success: false, message: "Server configuration error." };
+  }
+  if (!formValues.courseId) {
       return { success: false, message: 'Invalid course selected.' };
   }
 
-  const amount = coursePrices[formValues.course];
-  if (!amount) {
-      return { success: false, message: 'Invalid course price.' };
+  const courseRef = adminDb.collection('courses').doc(formValues.courseId);
+  const courseDoc = await courseRef.get();
+
+  if (!courseDoc.exists) {
+      return { success: false, message: 'Selected course not found.' };
+  }
+
+  const courseData = courseDoc.data();
+  const amount = courseData?.price;
+  const courseName = courseData?.name;
+
+  if (!amount || !courseName) {
+      return { success: false, message: 'Invalid course price or name.' };
   }
 
   const merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID;
@@ -48,7 +62,7 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
     return { success: false, message: "Payment gateway is not configured." };
   }
   
-  const order_id = `${formValues.userId}__${selectedCourse.id}__${Date.now()}`;
+  const order_id = `${formValues.userId}__${formValues.courseId}__${Date.now()}`;
   const amount_formatted = amount.toFixed(2);
   const currency = 'LKR';
   
@@ -64,7 +78,7 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/cancel`,
     notify_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/payhere/notify`,
     order_id: order_id,
-    items: formValues.course,
+    items: courseName,
     currency: currency,
     amount: amount_formatted,
     first_name: formValues.fullName.split(' ')[0],
@@ -79,3 +93,5 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
 
   return { success: true, message: 'Redirecting to payment...', payload };
 }
+
+    

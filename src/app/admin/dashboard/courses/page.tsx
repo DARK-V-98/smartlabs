@@ -24,7 +24,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { GraduationCap, MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft } from 'lucide-react';
+import { GraduationCap, MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, DollarSign } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 
@@ -32,6 +32,7 @@ const courseSchema = z.object({
   name: z.string().min(3, 'Course name is required'),
   description: z.string().min(10, 'Description is required'),
   duration: z.string().min(1, 'Duration is required'),
+  price: z.coerce.number().min(0, 'Price must be a positive number'),
   syllabus: z.string().optional(),
   targetAudience: z.string().optional(),
 });
@@ -56,6 +57,7 @@ export default function CourseManagementPage() {
       name: '',
       description: '',
       duration: '',
+      price: 0,
       syllabus: '',
       targetAudience: '',
     },
@@ -66,7 +68,7 @@ export default function CourseManagementPage() {
     if (course) {
       form.reset(course);
     } else {
-      form.reset({ name: '', description: '', duration: '', syllabus: '', targetAudience: '' });
+      form.reset({ name: '', description: '', duration: '', price: 0, syllabus: '', targetAudience: '' });
     }
     setIsDialogOpen(true);
   };
@@ -133,7 +135,7 @@ export default function CourseManagementPage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Course Name</TableHead>
-                        <TableHead>Description</TableHead>
+                        <TableHead>Price (LKR)</TableHead>
                         <TableHead>Duration</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
@@ -141,8 +143,8 @@ export default function CourseManagementPage() {
                     <TableBody>
                       {courses?.map((course) => (
                         <TableRow key={course.id}>
-                          <TableCell className="font-medium">{course.name}</TableCell>
-                          <TableCell className="max-w-xs truncate">{course.description}</TableCell>
+                          <TableCell className="font-medium max-w-sm truncate">{course.name}</TableCell>
+                          <TableCell> {course.price?.toLocaleString()}</TableCell>
                           <TableCell>{course.duration}</TableCell>
                           <TableCell className="text-right">
                             <DropdownMenu>
@@ -169,7 +171,7 @@ export default function CourseManagementPage() {
               </CardContent>
             </Card>
 
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-2xl">
               <DialogHeader>
                 <DialogTitle>{selectedCourse ? 'Edit Course' : 'Add New Course'}</DialogTitle>
                 <DialogDescription>
@@ -177,77 +179,55 @@ export default function CourseManagementPage() {
                 </DialogDescription>
               </DialogHeader>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4 max-h-[80vh] overflow-y-auto pr-4">
+                  <FormField control={form.control} name="name" render={({ field }) => (
                       <FormItem>
                         <FormLabel>Course Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g., IELTS Academic" {...field} />
-                        </FormControl>
+                        <FormControl><Input placeholder="e.g., IELTS Academic" {...field} /></FormControl>
                         <FormMessage />
                       </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
+                  )} />
+                   <FormField control={form.control} name="price" render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder="A brief summary of the course." {...field} />
-                        </FormControl>
+                        <FormLabel>Price (LKR)</FormLabel>
+                        <FormControl><Input type="number" placeholder="e.g., 25000" {...field} /></FormControl>
                         <FormMessage />
                       </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="duration"
-                    render={({ field }) => (
+                  )} />
+                  <FormField control={form.control} name="duration" render={({ field }) => (
                       <FormItem>
                         <FormLabel>Duration</FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g., 6 Weeks" {...field} />
-                        </FormControl>
+                        <FormControl><Input placeholder="e.g., 6 Weeks" {...field} /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                  )} />
+                  <FormField control={form.control} name="description" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl><Textarea placeholder="A brief summary of the course." {...field} /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="syllabus"
-                    render={({ field }) => (
+                  <FormField control={form.control} name="syllabus" render={({ field }) => (
                       <FormItem>
                         <FormLabel>Syllabus</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder="List syllabus topics, separated by commas." {...field} />
-                        </FormControl>
+                        <FormControl><Textarea placeholder="List syllabus topics, separated by commas." {...field} /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                   <FormField
-                    control={form.control}
-                    name="targetAudience"
-                    render={({ field }) => (
+                   <FormField control={form.control} name="targetAudience" render={({ field }) => (
                       <FormItem>
                         <FormLabel>Target Audience</FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g., Students and professionals" {...field} />
-                        </FormControl>
+                        <FormControl><Input placeholder="e.g., Students and professionals" {...field} /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <DialogFooter>
+                  <DialogFooter className="mt-4">
                     <DialogClose asChild>
-                      <Button type="button" variant="secondary">
-                        Cancel
-                      </Button>
+                      <Button type="button" variant="secondary">Cancel</Button>
                     </DialogClose>
                     <Button type="submit" disabled={form.formState.isSubmitting}>
                       {form.formState.isSubmitting ? 'Saving...' : 'Save Course'}

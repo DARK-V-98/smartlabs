@@ -11,17 +11,4 @@ export const payhereUrls = {
     checkout: 'https://sandbox.payhere.lk/pay/checkout',
 };
 
-
-export const coursePrices: { [key: string]: number } = {
-    'PTE - Online Boostify Session': 25000,
-    'PTE - Physical + Online Hybrid': 30000,
-    'IELTS - Weekend Group Class': 30000,
-    'CELPIP - Self-Paced Program': 25000,
-};
-
-export const detailedCourseData = [
-    { id: "pte-online", title: 'PTE - Online Boostify Session' },
-    { id: "pte-hybrid", title: 'PTE - Physical + Online Hybrid' },
-    { id: "ielts-weekend", title: 'IELTS - Weekend Group Class' },
-    { id: "celpip-self", title: 'CELPIP - Self-Paced Program' },
-];
+    

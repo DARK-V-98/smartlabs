@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useActionState, useState } from 'react';
@@ -33,9 +34,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { CreditCard, UserPlus, Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import { useUser } from '@/firebase';
-import { payhereUrls, coursePrices, detailedCourseData } from '@/lib/payhere';
+import { useUser, useFirebase, useCollection, useMemoFirebase } from '@/firebase';
+import { payhereUrls } from '@/lib/payhere';
 import { enrollAction, type ServerActionState } from './actions';
+import { collection } from 'firebase/firestore';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
@@ -51,8 +53,15 @@ type FormValues = z.infer<typeof formSchema>;
 export default function EnrollPage() {
   const { toast } = useToast();
   const { user } = useUser();
+  const { firestore } = useFirebase();
   const [state, formAction] = useActionState(enrollAction, { success: false, message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const coursesQuery = useMemoFirebase(
+    () => (firestore ? collection(firestore, 'courses') : null),
+    [firestore]
+  );
+  const { data: courses, isLoading: coursesLoading } = useCollection(coursesQuery);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -193,11 +202,15 @@ export default function EnrollPage() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {detailedCourseData.map((course) => (
-                                <SelectItem key={course.id} value={course.title}>
-                                  {course.title} - LKR {coursePrices[course.title]?.toLocaleString() || 'N/A'}
-                                </SelectItem>
-                              ))}
+                               {coursesLoading ? (
+                                <SelectItem value="loading" disabled>Loading courses...</SelectItem>
+                               ) : (
+                                courses?.map((course) => (
+                                    <SelectItem key={course.id} value={course.id}>
+                                    {course.name} - LKR {course.price?.toLocaleString() || 'N/A'}
+                                    </SelectItem>
+                                ))
+                               )}
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -227,7 +240,7 @@ export default function EnrollPage() {
                             After submitting, you will be redirected to our secure payment gateway. For free demos, no payment is required.
                         </p>
                     </div>
-                    <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+                    <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || coursesLoading}>
                       {isSubmitting ? (
                         <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
                       ) : (
@@ -252,3 +265,5 @@ export default function EnrollPage() {
     </div>
   );
 }
+
+    
