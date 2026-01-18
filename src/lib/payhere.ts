@@ -20,3 +20,10 @@ export const coursePrices: { [key: string]: number } = {
     'IELTS - Weekend Group Class': 30000,
     'CELPIP - Self-Paced Program': 25000,
 };
+
+export const detailedCourseData = [
+    { id: "pte-online", title: 'PTE - Online Boostify Session' },
+    { id: "pte-hybrid", title: 'PTE - Physical + Online Hybrid' },
+    { id: "ielts-weekend", title: 'IELTS - Weekend Group Class' },
+    { id: "celpip-self", title: 'CELPIP - Self-Paced Program' },
+];
