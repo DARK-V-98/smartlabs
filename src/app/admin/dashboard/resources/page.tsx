@@ -24,14 +24,14 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, Video, FileText } from 'lucide-react';
+import { MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, Video, FileText, Upload, Loader2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 
 const resourceSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   description: z.string().min(10, 'Description is required'),
-  url: z.string().url('Must be a valid URL'),
+  url: z.string().url('Must be a valid URL').optional(),
   resourceType: z.enum(['video', 'test', 'list', 'document'], { required_error: 'Resource type is required' }),
   courseId: z.string({ required_error: 'Course is required' }),
 });
@@ -43,6 +43,8 @@ export default function ResourceManagementPage() {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedResource, setSelectedResource] = useState<any>(null);
+  const [fileToUpload, setFileToUpload] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const resourcesQuery = useMemoFirebase(
     () => (firestore ? collection(firestore, 'resources') : null),
@@ -62,6 +64,7 @@ export default function ResourceManagementPage() {
 
   const handleDialogOpen = (resource: any = null) => {
     setSelectedResource(resource);
+    setFileToUpload(null);
     if (resource) {
       form.reset(resource);
     } else {
@@ -73,20 +76,54 @@ export default function ResourceManagementPage() {
   const onSubmit = async (data: ResourceFormValues) => {
     if (!firestore) return;
 
+    setIsUploading(true);
+
+    let fileUrl = selectedResource?.url; // Keep existing URL if not changed
+
     try {
+      // 1. If a new file is selected, upload it first
+      if (fileToUpload) {
+        const formData = new FormData();
+        formData.append('file', fileToUpload);
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.error || 'File upload failed');
+        }
+        fileUrl = result.url;
+      }
+
+      if (!fileUrl && !selectedResource) {
+        throw new Error('A file upload or an existing URL is required.');
+      }
+      
+      const resourceData = { ...data, url: fileUrl };
+
+      // 2. Add/Update Firestore document
       if (selectedResource) {
         const resourceRef = doc(firestore, 'resources', selectedResource.id);
-        await updateDoc(resourceRef, data);
+        await updateDoc(resourceRef, resourceData);
         toast({ title: 'Success', description: 'Resource updated successfully.' });
       } else {
-        await addDoc(collection(firestore, 'resources'), data);
+        await addDoc(collection(firestore, 'resources'), resourceData);
         toast({ title: 'Success', description: 'Resource added successfully.' });
       }
+
       setIsDialogOpen(false);
       form.reset();
+      setFileToUpload(null);
     } catch (error) {
       console.error('Error saving resource:', error);
-      toast({ variant: 'destructive', title: 'Error', description: 'Could not save the resource.' });
+      const errorMessage = error instanceof Error ? error.message : 'Could not save the resource.';
+      toast({ variant: 'destructive', title: 'Error', description: errorMessage });
+    } finally {
+        setIsUploading(false);
     }
   };
 
@@ -193,13 +230,22 @@ export default function ResourceManagementPage() {
                         <FormMessage />
                       </FormItem>
                   )} />
-                  <FormField control={form.control} name="url" render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>URL</FormLabel>
-                        <FormControl><Input placeholder="https://example.com/resource.pdf" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                  )} />
+                   <FormItem>
+                     <FormLabel>File Upload</FormLabel>
+                     <FormControl>
+                        <Input 
+                            type="file" 
+                            onChange={(e) => setFileToUpload(e.target.files?.[0] || null)}
+                        />
+                     </FormControl>
+                     <FormDescription>
+                        {selectedResource?.url && !fileToUpload && `Current file: ${selectedResource.url.split('/').pop()}`}
+                        {fileToUpload && `New file: ${fileToUpload.name}`}
+                        {!selectedResource?.url && !fileToUpload && "Upload a file for this resource."}
+                     </FormDescription>
+                     <FormMessage />
+                   </FormItem>
+
                  <div className="grid grid-cols-2 gap-4">
                     <FormField control={form.control} name="resourceType" render={({ field }) => (
                         <FormItem>
@@ -236,8 +282,9 @@ export default function ResourceManagementPage() {
                     <DialogClose asChild>
                       <Button type="button" variant="secondary">Cancel</Button>
                     </DialogClose>
-                    <Button type="submit" disabled={form.formState.isSubmitting}>
-                      {form.formState.isSubmitting ? 'Saving...' : 'Save Resource'}
+                    <Button type="submit" disabled={isUploading}>
+                      {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                      {isUploading ? 'Saving...' : 'Save Resource'}
                     </Button>
                   </DialogFooter>
                 </form>
