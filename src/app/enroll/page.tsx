@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useActionState, useState } from 'react';
+import { useEffect, useActionState, useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -44,8 +44,13 @@ const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }).optional().or(z.literal('')),
   phone: z.string().min(10, { message: 'Please enter a valid phone number.' }),
   course: z.string({ required_error: 'Please select a course.' }),
+  batch: z.string().optional(),
   freeDemo: z.boolean().default(false),
+}).refine(data => data.freeDemo || data.batch, {
+    message: "Please select a batch.",
+    path: ["batch"],
 });
+
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -72,6 +77,16 @@ export default function EnrollPage() {
       freeDemo: false,
     },
   });
+
+  const selectedCourseId = form.watch("course");
+  const isFreeDemo = form.watch("freeDemo");
+
+  const batchesQuery = useMemoFirebase(
+    () => (firestore && selectedCourseId ? collection(firestore, 'courses', selectedCourseId, 'batches') : null),
+    [firestore, selectedCourseId]
+  );
+  const { data: batches, isLoading: batchesLoading } = useCollection(batchesQuery);
+
 
   useEffect(() => {
     if (state.message) {
@@ -114,7 +129,7 @@ export default function EnrollPage() {
     setIsSubmitting(true);
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value.toString());
+        if (value !== undefined) formData.append(key, value.toString());
     });
     if (user?.uid) formData.append('userId', user.uid);
     if (user?.email) formData.append('email', user.email);
@@ -150,90 +165,59 @@ export default function EnrollPage() {
               <CardContent>
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
-                    <FormField
-                      control={form.control}
-                      name="fullName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Full Name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="John Doe" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email Address</FormLabel>
-                          <FormControl>
-                            <Input type="email" placeholder="you@example.com" {...field} disabled={!!user?.email}/>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
-                          <FormControl>
-                            <Input type="tel" placeholder="+94 123 456 789" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="course"
-                      render={({ field }) => (
+                    <FormField control={form.control} name="fullName" render={({ field }) => (
+                        <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem>
+                    )}/>
+                    <FormField control={form.control} name="email" render={({ field }) => (
+                        <FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" placeholder="you@example.com" {...field} disabled={!!user?.email}/></FormControl><FormMessage /></FormItem>
+                    )}/>
+                    <FormField control={form.control} name="phone" render={({ field }) => (
+                        <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input type="tel" placeholder="+94 123 456 789" {...field} /></FormControl><FormMessage /></FormItem>
+                    )}/>
+                    <FormField control={form.control} name="course" render={({ field }) => (
                         <FormItem>
                           <FormLabel>Select Course</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value} name={field.name}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Choose your desired course" />
-                              </SelectTrigger>
-                            </FormControl>
+                          <Select onValueChange={(value) => { field.onChange(value); form.setValue('batch', ''); }} defaultValue={field.value} name={field.name}>
+                            <FormControl><SelectTrigger><SelectValue placeholder="Choose your desired course" /></SelectTrigger></FormControl>
                             <SelectContent>
-                               {coursesLoading ? (
-                                <SelectItem value="loading" disabled>Loading courses...</SelectItem>
-                               ) : (
+                               {coursesLoading ? <SelectItem value="loading" disabled>Loading courses...</SelectItem> : 
                                 courses?.map((course) => (
-                                    <SelectItem key={course.id} value={course.id}>
-                                    {course.name} - LKR {course.price?.toLocaleString() || 'N/A'}
-                                    </SelectItem>
-                                ))
-                               )}
+                                    <SelectItem key={course.id} value={course.id}>{course.name} - LKR {course.price?.toLocaleString() || 'N/A'}</SelectItem>
+                                ))}
                             </SelectContent>
                           </Select>
                           <FormMessage />
                         </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="freeDemo"
-                      render={({ field }) => (
+                    )}/>
+
+                    {selectedCourseId && !isFreeDemo && (
+                         <FormField control={form.control} name="batch" render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Select Batch</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value} name={field.name}>
+                                <FormControl><SelectTrigger><SelectValue placeholder="Choose a batch for your course" /></SelectTrigger></FormControl>
+                                <SelectContent>
+                                {batchesLoading ? <SelectItem value="loading" disabled>Loading batches...</SelectItem> :
+                                 batches && batches.length > 0 ? batches.map((batch) => (
+                                    <SelectItem key={batch.id} value={batch.id}>{batch.name} ({batch.schedule || 'Schedule TBD'})</SelectItem>
+                                 )) : <SelectItem value="no-batch" disabled>No batches available for this course.</SelectItem>
+                                }
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                            </FormItem>
+                        )}/>
+                    )}
+
+                    <FormField control={form.control} name="freeDemo" render={({ field }) => (
                         <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                          <FormControl>
-                            <Checkbox checked={field.value} onCheckedChange={field.onChange} name={field.name} />
-                          </FormControl>
+                          <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} name={field.name} /></FormControl>
                           <div className="space-y-1 leading-none">
                             <FormLabel>Request a Free Demo Class</FormLabel>
-                            <p className="text-sm text-muted-foreground">
-                                Check this box to schedule a free trial class before you commit. No payment required.
-                            </p>
+                            <p className="text-sm text-muted-foreground">Check this box to schedule a free trial class. No payment required.</p>
                           </div>
                         </FormItem>
-                      )}
-                    />
+                    )}/>
                     <div className="rounded-lg border bg-muted/50 p-4">
                         <h3 className="font-semibold flex items-center gap-2"><CreditCard className="w-5 h-5" /> Secure Payment</h3>
                         <p className="text-sm text-muted-foreground mt-2">
@@ -241,11 +225,9 @@ export default function EnrollPage() {
                         </p>
                     </div>
                     <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || coursesLoading}>
-                      {isSubmitting ? (
-                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
-                      ) : (
+                      {isSubmitting ? ( <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</> ) : (
                         <><UserPlus className="mr-2 h-4 w-4" />
-                        {form.watch("freeDemo") ? 'Request Free Demo' : 'Submit & Proceed to Payment'}</>
+                        {isFreeDemo ? 'Request Free Demo' : 'Submit & Proceed to Payment'}</>
                       )}
                     </Button>
                   </form>
@@ -265,5 +247,3 @@ export default function EnrollPage() {
     </div>
   );
 }
-
-    

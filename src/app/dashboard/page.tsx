@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
@@ -14,20 +15,21 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, ListVideo, FileText, BookOpen, BarChart3, Calendar, MessageSquare, Briefcase, GraduationCap, Clock } from 'lucide-react';
+import { ChevronRight, ListVideo, FileText, BookOpen, BarChart3, Calendar, MessageSquare, Briefcase, GraduationCap, Clock, Home } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 
 const lmsFeatures = [
-    { title: 'Enroll in New Course', description: 'Explore our courses and register for another one.', href: '/enroll', icon: GraduationCap },
     { title: 'Class Recordings', description: 'Access recordings of all your past classes.', href: '/dashboard/recordings', icon: ListVideo },
     { title: 'Templates & Study Materials', description: 'Find course materials, templates, and notes.', href: '/resources', icon: FileText },
     { title: 'Practice Test Area', description: 'Take mock exams to prepare for the real test.', href: '/dashboard/practice-tests', icon: BookOpen },
     { title: 'Progress & Feedback', description: 'View your assignment feedback and track your progress.', href: '/dashboard/progress', icon: BarChart3 },
-    { title: 'Class Schedule', description: 'Check your upcoming class timetable.', href: '/dashboard/schedule', icon: Calendar },
+    { title: 'Class Schedule', description: 'Check your upcoming class timetable and links.', href: '/dashboard/schedule', icon: Calendar },
     { title: 'Support Chat', description: 'Get help from your teacher or our support team.', href: '/dashboard/support', icon: MessageSquare },
+    { title: 'Enroll in New Course', description: 'Explore our courses and register for another one.', href: '/enroll', icon: GraduationCap },
+    { title: 'Back to Homepage', description: 'Return to the main website.', href: '/', icon: Home },
 ];
 
 
@@ -119,14 +121,14 @@ export default function DashboardPage() {
                                         <Alert variant="default" className="border-amber-500 bg-amber-500/10">
                                             <Clock className="h-4 w-4" />
                                             <AlertTitle>
-                                                {e.courseId} - Pending Verification
+                                                {e.courseId} ({e.batchName}) - Pending Verification
                                             </AlertTitle>
                                             <AlertDescription>
                                                 We're confirming your payment. This may take a few minutes. We'll grant you access to the course materials shortly. Please be patient.
                                             </AlertDescription>
                                         </Alert>
                                     ) : (
-                                        <Badge variant="secondary" className="text-base py-1 px-3">{e.courseId}</Badge>
+                                        <Badge variant="secondary" className="text-base py-1 px-3">{e.courseId} - {e.batchName}</Badge>
                                     )}
                                 </div>
                             ))}
@@ -138,7 +140,7 @@ export default function DashboardPage() {
             </Card>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {lmsFeatures.map((feature) => {
               const Icon = feature.icon;
               return (

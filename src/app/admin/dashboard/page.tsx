@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
@@ -7,7 +8,7 @@ import { doc, getDoc, collection } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
-import { LogOut, Users, UserCog, MessageSquare, GraduationCap, FileText, Library, DollarSign, UserCheck } from 'lucide-react';
+import { LogOut, Users, UserCog, MessageSquare, GraduationCap, FileText, Library, DollarSign, UserCheck, Home, LayoutDashboard } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -178,6 +179,30 @@ export default function AdminDashboardPage() {
                     <CardContent>
                         <div className="text-2xl font-bold">View All</div>
                         <p className="text-xs text-muted-foreground">Browse successful transactions.</p>
+                    </CardContent>
+                </Link>
+            </Card>
+            <Card className="hover:bg-muted/50 transition-colors">
+                <Link href="/dashboard">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Student Dashboard</CardTitle>
+                        <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">Go To</div>
+                        <p className="text-xs text-muted-foreground">Switch to student view.</p>
+                    </CardContent>
+                </Link>
+            </Card>
+            <Card className="hover:bg-muted/50 transition-colors">
+                <Link href="/">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Main Website</CardTitle>
+                        <Home className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">Go To</div>
+                        <p className="text-xs text-muted-foreground">View the public homepage.</p>
                     </CardContent>
                 </Link>
             </Card>

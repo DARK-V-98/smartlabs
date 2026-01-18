@@ -1,3 +1,4 @@
+
 import { NextRequest, NextResponse } from 'next/server';
 import { createHash } from 'crypto';
 import { adminDb } from '@/lib/firebase-admin';
@@ -17,6 +18,7 @@ export async function POST(request: NextRequest) {
             payhere_currency,
             status_code,
             md5sig,
+            payment_id
         } = data;
 
         const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET;
@@ -42,9 +44,9 @@ export async function POST(request: NextRequest) {
 
         if (status_code === '2') { // Payment success
             try {
-                const [userId, courseId] = (order_id as string).split('__');
+                const [userId, courseId, batchId] = (order_id as string).split('__');
                 
-                if (!userId || !courseId) {
+                if (!userId || !courseId || !batchId) {
                     throw new Error(`Invalid order_id format: ${order_id}`);
                 }
                 
@@ -52,26 +54,31 @@ export async function POST(request: NextRequest) {
                     throw new Error("Firebase Admin DB is not initialized.");
                 }
 
-                const enrollmentRef = adminDb.collection('users').doc(userId).collection('enrollments').doc(courseId);
-                const userRef = adminDb.collection('users').doc(userId);
-                const paymentRef = adminDb.collection('payments').doc(data.payment_id as string);
+                // Use the unique payment_id from Payhere as the enrollment document ID
+                const enrollmentRef = adminDb.collection('users').doc(userId).collection('enrollments').doc(payment_id as string);
+                const paymentRef = adminDb.collection('payments').doc(payment_id as string);
                 
                 await adminDb.runTransaction(async (transaction) => {
-                    const userDoc = await transaction.get(userRef);
+                    const batchRef = adminDb.collection('courses').doc(courseId).collection('batches').doc(batchId);
+                    const batchDoc = await transaction.get(batchRef);
+                    const batchName = batchDoc.exists ? batchDoc.data()?.name : 'Default Batch';
                     
-                    // Create enrollment record
+                    // Create enrollment record with 'pending' status
                     transaction.set(enrollmentRef, {
                         userId: userId,
                         courseId: courseId,
+                        batchId: batchId,
+                        batchName: batchName,
                         enrollmentDate: FieldValue.serverTimestamp(),
                         paymentStatus: 'paid',
+                        enrollmentStatus: 'pending', // Set status to pending for admin verification
                         orderId: order_id,
-                        paymentId: data.payment_id,
+                        paymentId: payment_id,
                     });
                     
                     // Create payment log record
                     transaction.set(paymentRef, {
-                        id: data.payment_id,
+                        id: payment_id,
                         userId: userId,
                         courseId: courseId,
                         orderId: order_id,
@@ -81,13 +88,9 @@ export async function POST(request: NextRequest) {
                         paymentTimestamp: FieldValue.serverTimestamp(),
                     });
 
-                    // Update user role if they are not yet a student or have a higher role
-                    if (userDoc.exists && userDoc.data()?.role === 'user') {
-                       transaction.update(userRef, { role: 'student' });
-                    }
                 });
 
-                console.log(`Successfully enrolled user ${userId} in course ${courseId}`);
+                console.log(`Successfully created pending enrollment for user ${userId} in course ${courseId}`);
 
             } catch (error) {
                 console.error('Error processing successful payment in DB:', error);

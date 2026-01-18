@@ -127,6 +127,21 @@
         "price"
       ]
     },
+     "Batch": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Batch",
+      "type": "object",
+      "description": "Represents a specific batch or class group for a course.",
+      "properties": {
+        "id": { "type": "string" },
+        "courseId": { "type": "string" },
+        "name": { "type": "string", "description": "Name of the batch (e.g., Weekend Batch, April Intake)." },
+        "schedule": { "type": "string", "description": "Schedule details for the batch." },
+        "teacherId": { "type": "string" },
+        "zoomLink": { "type": "string", "format": "uri" }
+      },
+      "required": ["id", "courseId", "name"]
+    },
     "StudyPlan": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "StudyPlan",
@@ -182,6 +197,14 @@
           "type": "string",
           "description": "Reference to Course. (Relationship: Course 1:N Enrollment)"
         },
+        "batchId": {
+          "type": "string",
+          "description": "Reference to the specific Batch the user is enrolled in."
+        },
+        "batchName": {
+          "type": "string",
+          "description": "Denormalized name of the batch for easier display."
+        },
         "enrollmentDate": {
           "type": "string",
           "description": "Date of enrollment.",
@@ -201,6 +224,7 @@
         "id",
         "userId",
         "courseId",
+        "batchId",
         "enrollmentDate",
         "paymentStatus"
       ]
@@ -611,6 +635,16 @@
         }
       },
       {
+        "path": "/users/{userId}/active_courses/{courseId}",
+        "definition": {
+          "description": "Denormalized data for checking active course enrollments in security rules. Document ID is the course ID. Writable only by trusted backend processes.",
+           "params": [
+            { "name": "userId", "description": "The user's unique ID." },
+            { "name": "courseId", "description": "The course ID." }
+          ]
+        }
+      },
+      {
         "path": "/courses/{courseId}",
         "definition": {
           "entityName": "Course",
@@ -622,6 +656,26 @@
             {
               "name": "courseId",
               "description": "The unique identifier of the course."
+            }
+          ]
+        }
+      },
+       {
+        "path": "/courses/{courseId}/batches/{batchId}",
+        "definition": {
+          "entityName": "Batch",
+          "schema": {
+            "$ref": "#/backend/entities/Batch"
+          },
+          "description": "Stores batches for each course. Publicly readable.",
+          "params": [
+            {
+              "name": "courseId",
+              "description": "The unique identifier of the course."
+            },
+            {
+              "name": "batchId",
+              "description": "The unique identifier of the batch."
             }
           ]
         }
@@ -845,8 +899,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to support the Smart Labs platform, focusing on user data (including new onboarding fields like targetExam), courses, study plans, resources, blog posts, practice tests, support chat, forums, reviews, and badges. A new top-level 'payments' collection has been added to provide a centralized, queryable log of all transactions for administrative purposes. The structure emphasizes authorization independence, clarity, and security. \n\n**Authorization Independence (Denormalization):**\n\n*   `StudyPlan`, `Enrollment`, `UserTestResult`, and `SupportChat` collections are created with user-specific data. This approach denormalizes the `userId` into each of these documents, avoiding the need for `get()` calls to the parent `User` document during security rule evaluation. This ensures atomic operations and simplifies security rules. For collaborative entities (none are explicitly specified, but could apply to shared study plans in the future), the 'members' map approach would be used, denormalizing relevant access control data into the document.\n\n**Structural Segregation:**\n\n*   `BlogPost`, `Resource`, `Badge`, and `Payment` are stored in separate top-level collections. This allows for specific access controls; e.g., public access for blogs, admin-only access for payments.\n*   `Course` data is stored in the top-level `/courses` collection to be accessible by all users.\n*   `SupportChat` is a top-level collection where each document represents a user's thread, secured by rules.\n*   `ForumPost`, `ForumReply`, and `CourseReview` are nested under their respective courses to enable course-specific access control.\n\n**Access Modeling:**\n\n*   Private user data (study plans, enrollments, test results) is stored under `/users/{userId}` to ensure that only the user has access.\n*   Courses and blog posts are stored in top-level collections to allow broader access.\n*   The `payments` collection is designed to be written to by a trusted server process and read by admins only.\n*   Support chat is designed so users can only access their own thread, while admins/teachers can access all threads.\n\n**QAPs (Rules are not Filters):**\n\n*   The structure enables secure `list` operations by segregating data based on access requirements. Listing courses or blog posts can be done securely at the collection level. Admin listing of payments and support chats is enabled at the collection level with role-based rules. User-specific data listing is secured via path-based rules under the `/users/{userId}` hierarchy.\n"
+    "reasoning": "The Firestore data structure has been updated to support a batch system for courses. \n\n**New `Batch` Entity and Subcollection:**\n* A `Batch` entity has been added to represent specific class groups with their own schedule and Zoom links.\n* These are stored in a subcollection: `/courses/{courseId}/batches/{batchId}`. This creates a clear hierarchical relationship.\n\n**Updated Enrollment Structure:**\n* The `Enrollment` path has been changed to `/users/{userId}/enrollments/{enrollmentId}` to allow for multiple enrollments per user, even in the same course (e.g., retakes or different batches). The `enrollmentId` is a unique ID (e.g., the payment ID).\n* The `Enrollment` entity now includes `batchId` and `batchName` to link an enrollment to a specific batch.\n\n**Security Rule Denormalization:**\n* To efficiently check if a user is enrolled in a course within security rules (e.g., for resource access), a new denormalized path has been added: `/users/{userId}/active_courses/{courseId}`.\n* When an admin approves an enrollment, a backend process will create a document at this path. This allows the `isEnrolled(courseId)` security rule function to use a simple and performant `exists()` check, avoiding disallowed queries in rules.\n* This `active_courses` collection is read-only for the user and writable only by the backend, ensuring data integrity.\n\nThis revised structure provides the flexibility to manage multiple batches per course while maintaining a secure and performant way to check enrollment status for access control."
   }
 }
-
-    

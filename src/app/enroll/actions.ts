@@ -17,6 +17,7 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
     email: formData.get('email') as string,
     phone: formData.get('phone') as string,
     courseId: formData.get('course') as string,
+    batchId: formData.get('batch') as string,
     freeDemo: formData.get('freeDemo') === 'on',
     userId: formData.get('userId') as string,
   };
@@ -35,8 +36,8 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
   if (!adminDb) {
     return { success: false, message: "Server configuration error." };
   }
-  if (!formValues.courseId) {
-      return { success: false, message: 'Invalid course selected.' };
+  if (!formValues.courseId || !formValues.batchId) {
+      return { success: false, message: 'Please select both a course and a batch.' };
   }
 
   const courseRef = adminDb.collection('courses').doc(formValues.courseId);
@@ -62,7 +63,7 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
     return { success: false, message: "Payment gateway is not configured." };
   }
   
-  const order_id = `${formValues.userId}__${formValues.courseId}__${Date.now()}`;
+  const order_id = `${formValues.userId}__${formValues.courseId}__${formValues.batchId}__${Date.now()}`;
   const amount_formatted = amount.toFixed(2);
   const currency = 'LKR';
   
@@ -93,5 +94,3 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
 
   return { success: true, message: 'Redirecting to payment...', payload };
 }
-
-    

@@ -1,8 +1,9 @@
+
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useFirebase, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, doc, getDocs, updateDoc, writeBatch } from 'firebase/firestore';
+import { collection, doc, writeBatch, collectionGroup, query } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -14,9 +15,10 @@ import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface Enrollment {
-  id: string; // This will be the courseId
+  id: string; // This will be the unique enrollmentId
   userId: string;
   courseId: string;
+  batchName?: string;
   enrollmentStatus: 'pending' | 'active';
   enrollmentDate: any;
   user: any; // To store fetched user data
@@ -25,62 +27,61 @@ interface Enrollment {
 export default function EnrollmentManagementPage() {
   const { firestore } = useFirebase();
   const { toast } = useToast();
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  
+  // Use a collection group query to get all enrollments across all users
+  const enrollmentsQuery = useMemoFirebase(() => 
+      firestore ? query(collectionGroup(firestore, 'enrollments')) : null, 
+      [firestore]
+  );
+  const { data: allEnrollments, isLoading: enrollmentsLoading } = useCollection(enrollmentsQuery);
 
   const usersQuery = useMemoFirebase(() => (firestore ? collection(firestore, 'users') : null), [firestore]);
   const { data: users, isLoading: usersLoading } = useCollection(usersQuery);
 
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  
+  const isLoading = enrollmentsLoading || usersLoading;
+
   useEffect(() => {
-    if (!firestore || !users) return;
+    if (isLoading || !allEnrollments || !users) return;
 
-    const fetchEnrollments = async () => {
-      setIsLoading(true);
-      const allEnrollments: Enrollment[] = [];
-      
-      const userMap = new Map(users.map(u => [u.id, u]));
+    const userMap = new Map(users.map(u => [u.id, u]));
+    
+    const populatedEnrollments = allEnrollments.map(e => ({
+        ...e,
+        user: userMap.get(e.userId)
+    })).filter(e => e.user); // Filter out enrollments where user might not be found
 
-      // This is an N+1 query pattern, which can be slow with many users.
-      // For a large-scale app, a better solution is a top-level `enrollments` collection
-      // or using Cloud Functions to aggregate data.
-      for (const user of users) {
-        try {
-          const enrollmentsSnapshot = await getDocs(collection(firestore, 'users', user.id, 'enrollments'));
-          enrollmentsSnapshot.forEach(doc => {
-            allEnrollments.push({ ...doc.data(), id: doc.id, user: userMap.get(doc.data().userId) } as Enrollment);
-          });
-        } catch (error) {
-          console.error(`Could not fetch enrollments for user ${user.id}:`, error);
-        }
-      }
+    // Sort by date, pending first
+    populatedEnrollments.sort((a, b) => {
+        if (a.enrollmentStatus === 'pending' && b.enrollmentStatus !== 'pending') return -1;
+        if (a.enrollmentStatus !== 'pending' && b.enrollmentStatus === 'pending') return 1;
+        if (!a.enrollmentDate) return 1;
+        if (!b.enrollmentDate) return -1;
+        return b.enrollmentDate.toMillis() - a.enrollmentDate.toMillis();
+    });
 
-      // Sort by date, pending first
-      allEnrollments.sort((a, b) => {
-          if (a.enrollmentStatus === 'pending' && b.enrollmentStatus !== 'pending') return -1;
-          if (a.enrollmentStatus !== 'pending' && b.enrollmentStatus === 'pending') return 1;
-          return b.enrollmentDate.toMillis() - a.enrollmentDate.toMillis();
-      });
+    setEnrollments(populatedEnrollments as Enrollment[]);
 
-      setEnrollments(allEnrollments);
-      setIsLoading(false);
-    };
-
-    fetchEnrollments();
-  }, [firestore, users]);
+  }, [allEnrollments, users, isLoading]);
 
   const handleApprove = async (enrollment: Enrollment) => {
-    if (!firestore) return;
+    if (!firestore || !enrollment.user) return;
     
     try {
       const batch = writeBatch(firestore);
 
       // 1. Update the enrollment status
-      const enrollmentRef = doc(firestore, 'users', enrollment.userId, 'enrollments', enrollment.courseId);
+      const enrollmentRef = doc(firestore, 'users', enrollment.userId, 'enrollments', enrollment.id);
       batch.update(enrollmentRef, { enrollmentStatus: 'active' });
 
-      // 2. Update the user role to 'student' if they are just a 'user'
-      const userRef = doc(firestore, 'users', enrollment.userId);
+      // 2. Denormalize active course for security rules
+      const activeCourseRef = doc(firestore, 'users', enrollment.userId, 'active_courses', enrollment.courseId);
+      batch.set(activeCourseRef, { enrolledAt: new Date() });
+
+      // 3. Update the user role to 'student' if they are just a 'user'
       if (enrollment.user.role === 'user') {
+          const userRef = doc(firestore, 'users', enrollment.userId);
           batch.update(userRef, { role: 'student' });
       }
       
@@ -92,7 +93,7 @@ export default function EnrollmentManagementPage() {
       });
       // Refresh local state to update UI
       setEnrollments(enrollments.map(e => 
-        e.userId === enrollment.userId && e.courseId === enrollment.courseId
+        e.id === enrollment.id
           ? { ...e, enrollmentStatus: 'active' }
           : e
       ));
@@ -143,6 +144,7 @@ export default function EnrollmentManagementPage() {
                     <TableRow>
                       <TableHead>Student</TableHead>
                       <TableHead>Course</TableHead>
+                      <TableHead>Batch</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead className="text-right">Action</TableHead>
@@ -151,7 +153,7 @@ export default function EnrollmentManagementPage() {
                   <TableBody>
                     {isLoading ? renderSkeleton() : (
                         enrollments.map((enrollment) => (
-                            <TableRow key={`${enrollment.userId}-${enrollment.courseId}`}>
+                            <TableRow key={enrollment.id}>
                                 <TableCell>
                                     <div className="flex items-center gap-3">
                                         <Avatar className="hidden h-9 w-9 sm:flex">
@@ -164,7 +166,8 @@ export default function EnrollmentManagementPage() {
                                         </div>
                                     </div>
                                 </TableCell>
-                                <TableCell><Badge variant="secondary">{enrollment.courseId}</Badge></TableCell>
+                                <TableCell><Badge variant="outline">{enrollment.courseId}</Badge></TableCell>
+                                <TableCell><Badge variant="secondary">{enrollment.batchName || 'N/A'}</Badge></TableCell>
                                 <TableCell>
                                     <Badge variant={enrollment.enrollmentStatus === 'active' ? 'default' : 'destructive'} className="capitalize">
                                         {enrollment.enrollmentStatus}

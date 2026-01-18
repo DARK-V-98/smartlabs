@@ -58,7 +58,8 @@ service cloud.firestore {
 
     function isEnrolled(courseId) {
       // Check if an enrollment document exists AND its status is 'active'.
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)/enrollments/$(courseId)).data.enrollmentStatus == 'active';
+      // This relies on a denormalized record created by a trusted server/admin process.
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid)/active_courses/$(courseId));
     }
     
     /**
@@ -73,6 +74,13 @@ service cloud.firestore {
       // Allow user to update their own profile, and admins to update specific fields.
       allow update: if isOwner(userId) || (isAdminOrDeveloper() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'displayName', 'photoURL', 'lastLogin', 'hasCompletedOnboarding', 'achievements']));
       allow delete: if isOwner(userId) || isAdminOrDeveloper();
+
+      // Denormalized collection for checking active enrollments in rules.
+      // Only readable by the owner. Writable only by backend functions.
+      match /active_courses/{courseId} {
+        allow read: if isOwner(userId);
+        allow write: if false; // Deny all client writes
+      }
     }
 
     /**
@@ -82,6 +90,14 @@ service cloud.firestore {
     match /courses/{courseId} {
       allow get, list: if true;
       allow write: if isSupportStaff(); 
+
+       /**
+       * @description Batches are public to see schedules but only writable by staff.
+       */
+      match /batches/{batchId} {
+        allow get, list: if true;
+        allow write: if isSupportStaff();
+      }
 
       /**
        * @description Course-specific forums.
@@ -145,9 +161,9 @@ service cloud.firestore {
      * Read access for owner. Write/update for owner and admins (for verification).
      */
     match /users/{userId}/enrollments/{enrollmentId} {
-      allow read: if isOwner(userId) || isSupportStaff();
+      allow read, list: if isOwner(userId) || isSupportStaff();
       allow create: if isOwner(userId);
-      allow update: if isSupportStaff();
+      allow update: if isOwner(userId) || isSupportStaff(); // User can create, admin can update status
       allow delete: if isSupportStaff();
     }
 
@@ -156,7 +172,7 @@ service cloud.firestore {
      * Write access is restricted to support staff.
      */
     match /resources/{resourceId} {
-      allow get: if isAuthenticated() && isEnrolled(resource.data.courseId);
+      allow get, list: if isEnrolled(resource.data.courseId);
       allow write: if isSupportStaff();
     }
 
