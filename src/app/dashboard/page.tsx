@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
@@ -15,7 +14,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, ListVideo, FileText, BookOpen, BarChart3, Calendar, MessageSquare, Briefcase, GraduationCap, Clock, Home } from 'lucide-react';
+import { ChevronRight, ListVideo, FileText, BookOpen, BarChart3, Calendar, MessageSquare, Briefcase, GraduationCap, Clock, Home, BookCheck, Check } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -45,6 +44,14 @@ export default function DashboardPage() {
   );
   const { data: enrollments, isLoading: enrollmentsLoading } = useCollection(enrollmentsQuery);
 
+  const activeEnrollments = useMemo(() => {
+    return enrollments?.filter(e => e.enrollmentStatus === 'active') || [];
+  }, [enrollments]);
+
+  const pendingEnrollments = useMemo(() => {
+    return enrollments?.filter(e => e.enrollmentStatus === 'pending') || [];
+  }, [enrollments]);
+
   useEffect(() => {
     if (!isUserLoading && !user) {
       router.push('/login');
@@ -70,7 +77,6 @@ export default function DashboardPage() {
     return (
         <div className="space-y-8">
             <Skeleton className="h-12 w-1/3" />
-            <Skeleton className="h-40 w-full" />
             <Skeleton className="h-40 w-full" />
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <Skeleton className="h-64 w-full" />
@@ -109,8 +115,8 @@ export default function DashboardPage() {
          <div className="mb-8">
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><GraduationCap />My Enrolled Courses</CardTitle>
-                    <CardDescription>Here are the courses you are currently enrolled in.</CardDescription>
+                    <CardTitle className="flex items-center gap-2"><GraduationCap />My Enrollment Status</CardTitle>
+                    <CardDescription>Here are your current course enrollments and their status.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     {enrollments && enrollments.length > 0 ? (
@@ -124,11 +130,19 @@ export default function DashboardPage() {
                                                 {e.courseId} ({e.batchName}) - Pending Verification
                                             </AlertTitle>
                                             <AlertDescription>
-                                                We're confirming your payment. This may take a few minutes. We'll grant you access to the course materials shortly. Please be patient.
+                                                We're confirming your payment. Access to course materials will be granted shortly. Please be patient.
                                             </AlertDescription>
                                         </Alert>
                                     ) : (
-                                        <Badge variant="secondary" className="text-base py-1 px-3">{e.courseId} - {e.batchName}</Badge>
+                                        <Alert variant="default" className="border-green-500 bg-green-500/10 text-green-900 dark:text-green-100">
+                                            <Check className="h-4 w-4 text-green-600" />
+                                            <AlertTitle>
+                                                {e.courseId} ({e.batchName}) - Active
+                                            </AlertTitle>
+                                            <AlertDescription>
+                                                You have full access to this course.
+                                            </AlertDescription>
+                                        </Alert>
                                     )}
                                 </div>
                             ))}
@@ -140,31 +154,58 @@ export default function DashboardPage() {
             </Card>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {lmsFeatures.map((feature) => {
-              const Icon = feature.icon;
-              return (
-                <Card key={feature.title} className="group shadow-lg hover:shadow-xl transition-shadow flex flex-col">
-                    <CardHeader className="flex-row items-center gap-4">
-                        <div className="p-3 bg-primary/10 rounded-lg">
-                            <Icon className="h-6 w-6 text-primary" />
-                        </div>
-                        <CardTitle className="font-headline text-xl">{feature.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                        <p className="text-muted-foreground">{feature.description}</p>
-                    </CardContent>
-                    <CardFooter>
-                        <Button asChild variant="outline" className="w-full">
-                            <Link href={feature.href}>
-                                Go to {feature.title} <ChevronRight className="w-4 h-4 ml-2" />
-                            </Link>
+        {activeEnrollments.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {lmsFeatures.map((feature) => {
+                const Icon = feature.icon;
+                return (
+                    <Card key={feature.title} className="group shadow-lg hover:shadow-xl transition-shadow flex flex-col">
+                        <CardHeader className="flex-row items-center gap-4">
+                            <div className="p-3 bg-primary/10 rounded-lg">
+                                <Icon className="h-6 w-6 text-primary" />
+                            </div>
+                            <CardTitle className="font-headline text-xl">{feature.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex-grow">
+                            <p className="text-muted-foreground">{feature.description}</p>
+                        </CardContent>
+                        <CardFooter>
+                            <Button asChild variant="outline" className="w-full">
+                                <Link href={feature.href}>
+                                    Go to {feature.title} <ChevronRight className="w-4 h-4 ml-2" />
+                                </Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                );
+            })}
+            </div>
+        ) : (
+            <Card>
+                <CardHeader>
+                    <CardTitle>Your Learning Hub is Almost Ready!</CardTitle>
+                    <CardDescription>
+                        {pendingEnrollments.length > 0 
+                            ? "Once your enrollment is approved, all your learning materials and tools will appear here."
+                            : "Enroll in a course to unlock your personalized learning dashboard."
+                        }
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="text-center text-muted-foreground pt-6">
+                     <BookCheck className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
+                    <p>
+                        {pendingEnrollments.length > 0 
+                            ? "We are currently verifying your enrollment. Please check back shortly." 
+                            : "You don't have any active courses yet."}
+                    </p>
+                    {pendingEnrollments.length === 0 && (
+                        <Button asChild className="mt-4">
+                            <Link href="/courses">Explore Courses</Link>
                         </Button>
-                    </CardFooter>
-                </Card>
-              );
-          })}
-        </div>
+                    )}
+                </CardContent>
+            </Card>
+        )}
     </>
   );
 }
