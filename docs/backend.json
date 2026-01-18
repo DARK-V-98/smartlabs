@@ -57,6 +57,26 @@
             "type": "string",
             "description": "The user's planned exam date.",
             "format": "date"
+        },
+        "phone": {
+            "type": "string",
+            "description": "User's primary contact number."
+        },
+        "homeContact": {
+            "type": "string",
+            "description": "User's secondary/home contact number."
+        },
+        "address": {
+            "type": "string",
+            "description": "User's physical address."
+        },
+        "country": {
+            "type": "string",
+            "description": "User's country of residence."
+        },
+        "aboutSelf": {
+            "type": "string",
+            "description": "A short bio or note from the user about their goals."
         }
       },
       "required": [

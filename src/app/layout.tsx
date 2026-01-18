@@ -5,7 +5,6 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { FirebaseClientProvider } from '@/firebase';
 import './globals.css';
-import Script from 'next/script';
 import { CookieBanner } from '@/components/cookie-banner';
 import { LayoutManager } from '@/components/layout/layout-manager';
 import { WindowControls } from '@/components/layout/window-controls';
@@ -43,7 +42,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#4f46e5" />
-        <Script src="https://sandbox.payhere.lk/lib/payhere.js" strategy="beforeInteractive" />
       </head>
       <body
         className={cn(

@@ -1,13 +1,11 @@
 'use client';
 
-import { useEffect, useActionState } from 'react';
+import { useEffect, useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { getApp } from 'firebase/app';
-import { getFirestore as getClientFirestore, doc as clientDoc, updateDoc as clientUpdateDoc, setDoc as clientSetDoc, serverTimestamp as clientServerTimestamp } from 'firebase/firestore';
-
+import { createHash } from 'crypto';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -35,10 +33,10 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { CreditCard, UserPlus } from 'lucide-react';
+import { CreditCard, UserPlus, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useUser } from '@/firebase';
-import { payhereConfig, coursePrices } from '@/lib/payhere';
+import { payhereUrls, coursePrices } from '@/lib/payhere';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
@@ -53,8 +51,7 @@ type FormValues = z.infer<typeof formSchema>;
 type ServerActionState = {
     success: boolean;
     message: string;
-    payment?: any; // To hold payment details for Payhere
-    courseId?: string; // To hold the ID of the selected course
+    payload?: any; 
 }
 
 const detailedCourseData = [
@@ -65,6 +62,8 @@ const detailedCourseData = [
 ];
 
 async function enrollAction(prevState: ServerActionState, formData: FormData): Promise<ServerActionState> {
+  'use server';
+
   const formValues = {
     fullName: formData.get('fullName') as string,
     email: formData.get('email') as string,
@@ -76,11 +75,12 @@ async function enrollAction(prevState: ServerActionState, formData: FormData): P
   
   const userEmail = formValues.email;
 
-  if (!userEmail) {
-      return { success: false, message: 'User email not found. Please log in to enroll.' };
+  if (!userEmail || !formValues.userId) {
+      return { success: false, message: 'User not found. Please log in to enroll.' };
   }
   
   if (formValues.freeDemo) {
+      // Here you could add logic to save the demo request to your database
       return { success: true, message: 'Free demo requested! We will contact you shortly.' };
   }
   
@@ -89,40 +89,62 @@ async function enrollAction(prevState: ServerActionState, formData: FormData): P
       return { success: false, message: 'Invalid course selected.' };
   }
 
-  const amount = coursePrices[formValues.course] || 0;
-  if (amount === 0) {
-      return { success: false, message: 'Invalid course selected for payment.' };
+  const amount = coursePrices[formValues.course];
+  if (!amount) {
+      return { success: false, message: 'Invalid course price.' };
   }
 
-  const paymentDetails = {
-    ...payhereConfig,
-    order_id: `SL-${formValues.userId?.slice(0, 5)}-${Date.now()}`,
+  const merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID;
+  const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET;
+
+  if (!merchantId || !merchantSecret) {
+    console.error("Payhere credentials are not set in environment variables.");
+    return { success: false, message: "Payment gateway is not configured." };
+  }
+  
+  const order_id = `${formValues.userId}__${selectedCourse.id}__${Date.now()}`;
+  const amount_formatted = amount.toFixed(2);
+  const currency = 'LKR';
+  
+  const md5 = (data: string) => createHash('md5').update(data).digest('hex').toUpperCase();
+
+  const hashed_secret = md5(merchantSecret);
+  const hash_string = merchantId + order_id + amount_formatted + currency + hashed_secret;
+  const hash = md5(hash_string);
+
+  const payload = {
+    merchant_id: merchantId,
+    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/success`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/cancel`,
+    notify_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/payhere/notify`,
+    order_id: order_id,
     items: formValues.course,
-    amount: amount.toFixed(2),
-    currency: 'LKR',
+    currency: currency,
+    amount: amount_formatted,
     first_name: formValues.fullName.split(' ')[0],
     last_name: formValues.fullName.split(' ').slice(1).join(' ') || formValues.fullName.split(' ')[0],
     email: userEmail,
     phone: formValues.phone,
-    address: 'N/A',
-    city: 'N/A',
+    address: '',
+    city: '',
     country: 'Sri Lanka',
+    hash: hash,
   };
 
-  return { success: true, message: 'Proceeding to payment...', payment: paymentDetails, courseId: selectedCourse.id };
+  return { success: true, message: 'Redirecting to payment...', payload };
 }
 
 export default function EnrollPage() {
-  const router = useRouter();
   const { toast } = useToast();
   const { user } = useUser();
   const [state, formAction] = useActionState(enrollAction, { success: false, message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: user?.displayName || '',
-      email: user?.email || '',
+      fullName: '',
+      email: '',
       phone: '',
       freeDemo: false,
     },
@@ -130,91 +152,51 @@ export default function EnrollPage() {
 
   useEffect(() => {
     if (state.message) {
-      if (state.success) {
-        if (state.payment && state.courseId) {
-          
-          const attemptPayment = (tries = 0) => {
-            if (window.payhere) {
-              // Gateway is loaded, set up callbacks and start payment
-              window.payhere.onCompleted = async (orderId: string) => {
-                toast({ title: 'Payment Successful!', description: 'Finalizing your enrollment...' });
-                
-                const clientFirestore = getClientFirestore(getApp());
-                if (clientFirestore && user && state.courseId) {
-                    try {
-                        const userRef = clientDoc(clientFirestore, 'users', user.uid);
-                        const enrollmentDocRef = clientDoc(clientFirestore, `users/${user.uid}/enrollments`, state.courseId);
-
-                        // Using client-side updates.
-                        await clientUpdateDoc(userRef, { role: 'student' });
-
-                        await clientSetDoc(enrollmentDocRef, {
-                            userId: user.uid,
-                            courseId: state.courseId,
-                            enrollmentDate: clientServerTimestamp(),
-                            paymentStatus: 'paid',
-                            orderId: orderId,
-                        });
-
-                        // Manually redirect after DB operations are complete
-                        router.push(`/payment/success?order_id=${orderId}`);
-
-                    } catch(dbError) {
-                         console.error("Database update failed:", dbError);
-                         toast({ variant: 'destructive', title: 'Enrollment Failed', description: 'Your payment was successful, but we failed to update your account. Please contact support.' });
-                    }
-                } else {
-                     toast({ variant: 'destructive', title: 'Enrollment Failed', description: 'Could not find user or course details to complete enrollment. Please contact support.' });
-                }
-              };
-              window.payhere.onDismissed = () => {
-                console.log("Payment dismissed");
-                toast({ variant: 'destructive', title: 'Payment Canceled', description: 'Your payment process was canceled.' });
-              };
-              window.payhere.onError = (error: string) => {
-                console.log("Payhere Error:" + error);
-                toast({ variant: 'destructive', title: 'Payment Error', description: error });
-              };
-
-              window.payhere.startPayment(state.payment);
-
-            } else if (tries < 15) { // Try for ~3 seconds
-              setTimeout(() => attemptPayment(tries + 1), 200);
-            } else {
-              toast({ variant: 'destructive', title: 'Error', description: 'Payment gateway could not be loaded. Please check your connection and try again.' });
-            }
-          };
-          
-          attemptPayment();
-
+        setIsSubmitting(false); // Stop loading indicator
+        if (state.success && state.payload) {
+            // This is the payment redirection case, the form will submit automatically
+        } else if (state.success) {
+            // This is for non-payment cases like free demo
+            toast({ title: 'Success!', description: state.message });
+            form.reset();
         } else {
-          // This handles the free demo success case
-          toast({
-            title: 'Success!',
-            description: state.message,
-          });
-          form.reset();
+            // This is for errors
+            toast({ variant: 'destructive', title: 'Error', description: state.message });
         }
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: state.message,
-        });
-      }
     }
-  }, [state, toast, form, user, router]);
-
+  }, [state, toast, form]);
 
   useEffect(() => {
-    if(user) {
+    if (user) {
         form.reset({
             fullName: user.displayName || '',
             email: user.email || '',
-        })
+        });
     }
   }, [user, form]);
+  
+  // Dynamic form submission
+  useEffect(() => {
+    if (state.success && state.payload) {
+      const form = document.getElementById('payhere-form') as HTMLFormElement;
+      if (form) {
+        form.submit();
+      }
+    }
+  }, [state.success, state.payload]);
 
+  const handleFormSubmit = (data: FormValues) => {
+    setIsSubmitting(true);
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value.toString());
+    });
+    if (user?.uid) formData.append('userId', user.uid);
+    if (user?.email) formData.append('email', user.email);
+
+    // use a timeout to allow the action to be called
+    setTimeout(() => formAction(formData), 0);
+  };
 
   return (
     <div className="w-full">
@@ -242,9 +224,7 @@ export default function EnrollPage() {
               </CardHeader>
               <CardContent>
                 <Form {...form}>
-                  <form action={formAction} className="space-y-6">
-                    {user?.uid && <input type="hidden" name="userId" value={user.uid} />}
-                    {user?.email && <input type="hidden" name="email" value={user.email} />}
+                  <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
                     <FormField
                       control={form.control}
                       name="fullName"
@@ -331,9 +311,13 @@ export default function EnrollPage() {
                             After submitting, you will be redirected to our secure payment gateway. For free demos, no payment is required.
                         </p>
                     </div>
-                    <Button type="submit" className="w-full" size="lg" disabled={form.formState.isSubmitting}>
-                      <UserPlus className="mr-2 h-4 w-4" />
-                      {form.getValues("freeDemo") ? 'Request Free Demo' : form.formState.isSubmitting ? 'Processing...' : 'Submit & Proceed to Payment'}
+                    <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+                      {isSubmitting ? (
+                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
+                      ) : (
+                        <><UserPlus className="mr-2 h-4 w-4" />
+                        {form.watch("freeDemo") ? 'Request Free Demo' : 'Submit & Proceed to Payment'}</>
+                      )}
                     </Button>
                   </form>
                 </Form>
@@ -342,6 +326,13 @@ export default function EnrollPage() {
           </div>
         </div>
       </section>
+      {state.success && state.payload && (
+        <form id="payhere-form" method="post" action={payhereUrls.checkout} className="hidden">
+            {Object.entries(state.payload).map(([key, value]) => (
+                <input type="hidden" name={key} value={value as string} key={key} />
+            ))}
+        </form>
+      )}
     </div>
   );
 }
