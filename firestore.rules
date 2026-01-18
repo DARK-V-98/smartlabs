@@ -57,9 +57,8 @@ service cloud.firestore {
     }
 
     function isEnrolled(courseId) {
-      // Check if an enrollment document exists for the user and course.
-      // This is efficient because it checks for a document with a known path.
-      return exists(/databases/$(database)/documents/users/$(request.auth.uid)/enrollments/$(courseId));
+      // Check if an enrollment document exists AND its status is 'active'.
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)/enrollments/$(courseId)).data.enrollmentStatus == 'active';
     }
     
     /**
@@ -143,19 +142,20 @@ service cloud.firestore {
 
     /**
      * @description User-specific enrollment records.
-     * Only accessible by the owner. Stored with a known ID (courseId) for easy checking.
+     * Read access for owner. Write/update for owner and admins (for verification).
      */
     match /users/{userId}/enrollments/{enrollmentId} {
-      allow read, write: if isOwner(userId);
+      allow read: if isOwner(userId) || isSupportStaff();
+      allow create: if isOwner(userId);
+      allow update: if isSupportStaff();
+      allow delete: if isSupportStaff();
     }
 
     /**
-     * @description Course resources are readable by any user enrolled in the course.
+     * @description Course resources are readable by any user with an active enrollment in the course.
      * Write access is restricted to support staff.
      */
     match /resources/{resourceId} {
-      // For queries (list), Firestore will use the 'get' rule on each document.
-      // This is secure because the client only queries for course IDs it is enrolled in.
       allow get: if isAuthenticated() && isEnrolled(resource.data.courseId);
       allow write: if isSupportStaff();
     }

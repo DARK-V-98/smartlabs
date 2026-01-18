@@ -185,6 +185,11 @@
         "paymentStatus": {
           "type": "string",
           "description": "Payment status for the enrollment."
+        },
+        "enrollmentStatus": {
+          "type": "string",
+          "description": "The verification status of the enrollment, controlled by an admin.",
+          "enum": ["pending", "active"]
         }
       },
       "required": [

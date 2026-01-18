@@ -14,9 +14,10 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, ListVideo, FileText, BookOpen, BarChart3, Calendar, MessageSquare, Briefcase, GraduationCap } from 'lucide-react';
+import { ChevronRight, ListVideo, FileText, BookOpen, BarChart3, Calendar, MessageSquare, Briefcase, GraduationCap, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 
 const lmsFeatures = [
@@ -111,8 +112,24 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                     {enrollments && enrollments.length > 0 ? (
-                        <div className="flex flex-wrap gap-2">
-                            {enrollments.map(e => <Badge key={e.id} variant="secondary">{e.courseId}</Badge>)}
+                        <div className="space-y-4">
+                            {enrollments.map(e => (
+                                <div key={e.id}>
+                                    {e.enrollmentStatus === 'pending' ? (
+                                        <Alert variant="default" className="border-amber-500 bg-amber-500/10">
+                                            <Clock className="h-4 w-4" />
+                                            <AlertTitle>
+                                                {e.courseId} - Pending Verification
+                                            </AlertTitle>
+                                            <AlertDescription>
+                                                We're confirming your payment. This may take a few minutes. We'll grant you access to the course materials shortly. Please be patient.
+                                            </AlertDescription>
+                                        </Alert>
+                                    ) : (
+                                        <Badge variant="secondary" className="text-base py-1 px-3">{e.courseId}</Badge>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     ) : (
                         <p className="text-sm text-muted-foreground">You are not enrolled in any courses yet. <Link href="/courses" className="font-semibold text-primary hover:underline">Explore courses</Link></p>
