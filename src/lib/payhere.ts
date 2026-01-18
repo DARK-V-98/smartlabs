@@ -2,7 +2,6 @@
 export const payhereConfig = {
     sandbox: process.env.NODE_ENV !== 'production',
     merchant_id: process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || '1232775', // Use your sandbox merchant ID
-    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/success`,
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/cancel`,
     notify_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/payhere/notify`,
 };

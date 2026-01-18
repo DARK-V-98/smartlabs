@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useActionState, useState } from 'react';
+import { useEffect, useActionState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -112,6 +113,7 @@ async function enrollAction(prevState: ServerActionState, formData: FormData): P
 }
 
 export default function EnrollPage() {
+  const router = useRouter();
   const { toast } = useToast();
   const { user } = useUser();
   const [state, formAction] = useActionState(enrollAction, { success: false, message: '' });
@@ -135,23 +137,34 @@ export default function EnrollPage() {
             if (window.payhere) {
               // Gateway is loaded, set up callbacks and start payment
               window.payhere.onCompleted = async (orderId: string) => {
-                console.log("Payment completed. OrderID:" + orderId);
-                toast({ title: 'Payment Successful!', description: 'Your enrollment is complete.' });
+                toast({ title: 'Payment Successful!', description: 'Finalizing your enrollment...' });
                 
                 const clientFirestore = getClientFirestore(getApp());
                 if (clientFirestore && user && state.courseId) {
-                    const userRef = clientDoc(clientFirestore, 'users', user.uid);
-                    const enrollmentDocRef = clientDoc(clientFirestore, `users/${user.uid}/enrollments`, state.courseId);
+                    try {
+                        const userRef = clientDoc(clientFirestore, 'users', user.uid);
+                        const enrollmentDocRef = clientDoc(clientFirestore, `users/${user.uid}/enrollments`, state.courseId);
 
-                    await clientUpdateDoc(userRef, { role: 'student' });
+                        // Using client-side updates.
+                        await clientUpdateDoc(userRef, { role: 'student' });
 
-                    await clientSetDoc(enrollmentDocRef, {
-                        userId: user.uid,
-                        courseId: state.courseId,
-                        enrollmentDate: clientServerTimestamp(),
-                        paymentStatus: 'paid',
-                        orderId: orderId,
-                    });
+                        await clientSetDoc(enrollmentDocRef, {
+                            userId: user.uid,
+                            courseId: state.courseId,
+                            enrollmentDate: clientServerTimestamp(),
+                            paymentStatus: 'paid',
+                            orderId: orderId,
+                        });
+
+                        // Manually redirect after DB operations are complete
+                        router.push(`/payment/success?order_id=${orderId}`);
+
+                    } catch(dbError) {
+                         console.error("Database update failed:", dbError);
+                         toast({ variant: 'destructive', title: 'Enrollment Failed', description: 'Your payment was successful, but we failed to update your account. Please contact support.' });
+                    }
+                } else {
+                     toast({ variant: 'destructive', title: 'Enrollment Failed', description: 'Could not find user or course details to complete enrollment. Please contact support.' });
                 }
               };
               window.payhere.onDismissed = () => {
@@ -190,7 +203,7 @@ export default function EnrollPage() {
         });
       }
     }
-  }, [state, toast, form, user]);
+  }, [state, toast, form, user, router]);
 
 
   useEffect(() => {
