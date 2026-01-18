@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useActionState, useMemo, useState } from 'react';
+import { useEffect, useActionState, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { getApp } from 'firebase/app';
-import { getFirestore as getClientFirestore, doc as clientDoc, updateDoc as clientUpdateDoc, collection as clientCollection, addDoc as clientAddDoc, serverTimestamp as clientServerTimestamp, where, query, getDocs } from 'firebase/firestore';
+import { getFirestore as getClientFirestore, doc as clientDoc, updateDoc as clientUpdateDoc, setDoc as clientSetDoc, serverTimestamp as clientServerTimestamp } from 'firebase/firestore';
 
 
 import { Button } from '@/components/ui/button';
@@ -36,7 +36,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { CreditCard, UserPlus } from 'lucide-react';
 import Image from 'next/image';
-import { useFirebase, useUser } from '@/firebase';
+import { useUser } from '@/firebase';
 import { payhereConfig, coursePrices } from '@/lib/payhere';
 
 const formSchema = z.object({
@@ -115,7 +115,6 @@ export default function EnrollPage() {
   const { toast } = useToast();
   const { user } = useUser();
   const [state, formAction] = useActionState(enrollAction, { success: false, message: '' });
-  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -129,60 +128,70 @@ export default function EnrollPage() {
 
   useEffect(() => {
     if (state.message) {
-        if (state.success) {
-            if (state.payment && state.courseId) {
-                // Payment details are available, trigger Payhere
-                setSelectedCourseId(state.courseId);
-                if(window.payhere) {
-                    window.payhere.onCompleted = async (orderId: string) => {
-                        console.log("Payment completed. OrderID:" + orderId);
-                        toast({ title: 'Payment Successful!', description: 'Your enrollment is complete.' });
-                        
-                        const clientFirestore = getClientFirestore(getApp());
-                        if (clientFirestore && user && selectedCourseId) {
-                            const userRef = clientDoc(clientFirestore, 'users', user.uid);
-                            await clientUpdateDoc(userRef, { role: 'student' });
+      if (state.success) {
+        if (state.payment && state.courseId) {
+          
+          const attemptPayment = (tries = 0) => {
+            if (window.payhere) {
+              // Gateway is loaded, set up callbacks and start payment
+              window.payhere.onCompleted = async (orderId: string) => {
+                console.log("Payment completed. OrderID:" + orderId);
+                toast({ title: 'Payment Successful!', description: 'Your enrollment is complete.' });
+                
+                const clientFirestore = getClientFirestore(getApp());
+                if (clientFirestore && user && state.courseId) {
+                    const userRef = clientDoc(clientFirestore, 'users', user.uid);
+                    const enrollmentDocRef = clientDoc(clientFirestore, `users/${user.uid}/enrollments`, state.courseId);
 
-                            const enrollmentRef = clientCollection(clientFirestore, `users/${user.uid}/enrollments`);
-                            await clientAddDoc(enrollmentRef, {
-                                userId: user.uid,
-                                courseId: selectedCourseId,
-                                enrollmentDate: clientServerTimestamp(),
-                                paymentStatus: 'paid',
-                                orderId: orderId,
-                            });
-                        }
-                    };
-                    window.payhere.onDismissed = () => {
-                        console.log("Payment dismissed");
-                        toast({ variant: 'destructive', title: 'Payment Canceled', description: 'Your payment process was canceled.' });
-                    };
-                    window.payhere.onError = (error: string) => {
-                        console.log("Payhere Error:" + error);
-                        toast({ variant: 'destructive', title: 'Payment Error', description: error });
-                    };
-                    window.payhere.startPayment(state.payment);
-                } else {
-                     toast({ variant: 'destructive', title: 'Error', description: 'Payment gateway could not be loaded.' });
+                    await clientUpdateDoc(userRef, { role: 'student' });
+
+                    await clientSetDoc(enrollmentDocRef, {
+                        userId: user.uid,
+                        courseId: state.courseId,
+                        enrollmentDate: clientServerTimestamp(),
+                        paymentStatus: 'paid',
+                        orderId: orderId,
+                    });
                 }
+              };
+              window.payhere.onDismissed = () => {
+                console.log("Payment dismissed");
+                toast({ variant: 'destructive', title: 'Payment Canceled', description: 'Your payment process was canceled.' });
+              };
+              window.payhere.onError = (error: string) => {
+                console.log("Payhere Error:" + error);
+                toast({ variant: 'destructive', title: 'Payment Error', description: error });
+              };
 
+              window.payhere.startPayment(state.payment);
+
+            } else if (tries < 15) { // Try for ~3 seconds
+              setTimeout(() => attemptPayment(tries + 1), 200);
             } else {
-                // This handles the free demo success case
-                 toast({
-                    title: 'Success!',
-                    description: state.message,
-                });
-                form.reset();
+              toast({ variant: 'destructive', title: 'Error', description: 'Payment gateway could not be loaded. Please check your connection and try again.' });
             }
+          };
+          
+          attemptPayment();
+
         } else {
-            toast({
-            variant: 'destructive',
-            title: 'Uh oh! Something went wrong.',
+          // This handles the free demo success case
+          toast({
+            title: 'Success!',
             description: state.message,
-            });
+          });
+          form.reset();
         }
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: state.message,
+        });
+      }
     }
-  }, [state, toast, form, user, selectedCourseId]);
+  }, [state, toast, form, user]);
+
 
   useEffect(() => {
     if(user) {
