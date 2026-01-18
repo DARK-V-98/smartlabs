@@ -168,6 +168,15 @@ service cloud.firestore {
     }
 
     /**
+     * @description Payment records. Read-only for admins.
+     * Write access is handled server-side.
+     */
+    match /payments/{paymentId} {
+      allow get, list: if isSupportStaff();
+      allow write: if false; // Deny all client-side writes
+    }
+
+    /**
      * @description User-specific test results. Only accessible by the owner.
      */
     match /users/{userId}/test_results/{userTestResultId} {

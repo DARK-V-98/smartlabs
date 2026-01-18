@@ -54,10 +54,12 @@ export async function POST(request: NextRequest) {
 
                 const enrollmentRef = adminDb.collection('users').doc(userId).collection('enrollments').doc(courseId);
                 const userRef = adminDb.collection('users').doc(userId);
+                const paymentRef = adminDb.collection('payments').doc(data.payment_id as string);
                 
                 await adminDb.runTransaction(async (transaction) => {
                     const userDoc = await transaction.get(userRef);
                     
+                    // Create enrollment record
                     transaction.set(enrollmentRef, {
                         userId: userId,
                         courseId: courseId,
@@ -67,7 +69,20 @@ export async function POST(request: NextRequest) {
                         paymentId: data.payment_id,
                     });
                     
-                    if (userDoc.exists && userDoc.data()?.role !== 'student') {
+                    // Create payment log record
+                    transaction.set(paymentRef, {
+                        id: data.payment_id,
+                        userId: userId,
+                        courseId: courseId,
+                        orderId: order_id,
+                        amount: payhere_amount,
+                        currency: payhere_currency,
+                        statusCode: status_code,
+                        paymentTimestamp: FieldValue.serverTimestamp(),
+                    });
+
+                    // Update user role if they are not yet a student or have a higher role
+                    if (userDoc.exists && userDoc.data()?.role === 'user') {
                        transaction.update(userRef, { role: 'student' });
                     }
                 });
