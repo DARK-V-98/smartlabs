@@ -2,12 +2,14 @@
 'use client';
 
 import { Suspense } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSearchParams } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
 
 function SuccessContent() {
     const searchParams = useSearchParams();
@@ -24,10 +26,19 @@ function SuccessContent() {
             </CardHeader>
             <CardContent>
                 <p className="text-muted-foreground">
-                    Your payment has been processed successfully. Your spot is confirmed! You will receive a confirmation email shortly with further details.
+                    Your payment has been processed and your spot is confirmed! We are now automatically updating your account access.
                 </p>
+                
+                <Alert className="mt-6 text-left">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Update In Progress</AlertTitle>
+                    <AlertDescription>
+                        It may take up to a minute for the new course to appear on your dashboard. Your dashboard will update automatically when it's ready.
+                    </AlertDescription>
+                </Alert>
+
                 {orderId && (
-                    <p className="mt-4 text-sm text-muted-foreground">
+                    <p className="mt-6 text-sm text-muted-foreground">
                         Your Order ID is: <span className="font-mono bg-muted p-1 rounded-md">{orderId}</span>
                     </p>
                 )}
