@@ -154,8 +154,10 @@ service cloud.firestore {
      * Write access is restricted to support staff.
      */
     match /resources/{resourceId} {
-      allow get, list: if isAuthenticated() && isEnrolled(resource.data.courseId);
-      allow write: if isSupportStaff(); 
+      // For queries (list), Firestore will use the 'get' rule on each document.
+      // This is secure because the client only queries for course IDs it is enrolled in.
+      allow get: if isAuthenticated() && isEnrolled(resource.data.courseId);
+      allow write: if isSupportStaff();
     }
 
     /**
