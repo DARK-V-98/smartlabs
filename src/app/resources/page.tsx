@@ -27,7 +27,7 @@ export default function ResourcesPage() {
   );
   const { data: enrollments, isLoading: enrollmentsLoading } = useCollection(enrollmentsQuery);
 
-  const enrolledCourseIds = useMemo(() => enrollments?.map(e => e.courseId) || [], [enrollments]);
+  const enrolledCourseIds = useMemo(() => enrollments?.map(e => e.id) || [], [enrollments]);
 
   const resourcesQuery = useMemoFirebase(() => 
     firestore && enrolledCourseIds.length > 0 ? query(collection(firestore, 'resources'), where('courseId', 'in', enrolledCourseIds)) : null,
@@ -36,8 +36,8 @@ export default function ResourcesPage() {
   
   const { data: resourceLibrary, isLoading: resourcesLoading } = useCollection(resourcesQuery);
 
-  const testsAndLists = resourceLibrary?.filter(r => r.type === 'test' || r.type === 'list');
-  const videos = resourceLibrary?.filter(r => r.type === 'video');
+  const testsAndLists = resourceLibrary?.filter(r => r.type === 'test' || r.type === 'list' || r.type === 'document');
+  const videos = resourceLibrary?.filter(r => r.resourceType === 'video');
 
   const isLoading = enrollmentsLoading || resourcesLoading;
 
