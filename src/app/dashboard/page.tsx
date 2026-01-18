@@ -20,6 +20,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 
 const lmsFeatures = [
+    { title: 'Enroll in New Course', description: 'Explore our courses and register for another one.', href: '/enroll', icon: GraduationCap },
     { title: 'Class Recordings', description: 'Access recordings of all your past classes.', href: '/dashboard/recordings', icon: ListVideo },
     { title: 'Templates & Study Materials', description: 'Find course materials, templates, and notes.', href: '/resources', icon: FileText },
     { title: 'Practice Test Area', description: 'Take mock exams to prepare for the real test.', href: '/dashboard/practice-tests', icon: BookOpen },
