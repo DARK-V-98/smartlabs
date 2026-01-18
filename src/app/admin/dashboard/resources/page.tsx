@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, Video, FileText, Upload, Loader2 } from 'lucide-react';
+import { MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, Video, FileText, Upload, Loader2, Image as ImageIcon } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 
@@ -31,7 +31,7 @@ import Link from 'next/link';
 const resourceFormSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   description: z.string().min(10, 'Description is required'),
-  resourceType: z.enum(['video', 'test', 'list', 'document'], { required_error: 'Resource type is required' }),
+  resourceType: z.enum(['video', 'document', 'image', 'test', 'list'], { required_error: 'Resource type is required' }),
   courseId: z.string({ required_error: 'Course is required' }),
 });
 
@@ -100,6 +100,13 @@ export default function ResourceManagementPage() {
 
     try {
       if (fileToUpload) {
+        let folder = 'documents'; // default folder
+        if (data.resourceType === 'video') {
+          folder = 'videos';
+        } else if (data.resourceType === 'image') {
+          folder = 'images';
+        }
+        
         const fileDataUrl = await fileToBase64(fileToUpload);
         const fileBase64 = fileDataUrl.split(',')[1];
 
@@ -111,6 +118,7 @@ export default function ResourceManagementPage() {
           body: JSON.stringify({
             fileBase64: fileBase64,
             fileName: fileToUpload.name,
+            folder: folder,
           }),
         });
 
@@ -162,6 +170,17 @@ export default function ResourceManagementPage() {
     return courses?.find(c => c.id === courseId)?.name || 'N/A';
   }
 
+  const getIconForType = (type: string) => {
+    switch (type) {
+      case 'video':
+        return <Video className="h-4 w-4" />;
+      case 'image':
+        return <ImageIcon className="h-4 w-4" />;
+      default:
+        return <FileText className="h-4 w-4" />;
+    }
+  };
+
   return (
     <div className="w-full min-h-screen">
       <section className="py-8 md:py-12">
@@ -199,7 +218,7 @@ export default function ResourceManagementPage() {
                         <TableRow key={resource.id}>
                           <TableCell className="font-medium">{resource.title}</TableCell>
                           <TableCell className="capitalize flex items-center gap-2">
-                            {resource.resourceType === 'video' ? <Video className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
+                            {getIconForType(resource.resourceType)}
                             {resource.resourceType}
                           </TableCell>
                           <TableCell>{getCourseName(resource.courseId)}</TableCell>
@@ -275,6 +294,7 @@ export default function ResourceManagementPage() {
                                 <SelectContent>
                                     <SelectItem value="video">Video</SelectItem>
                                     <SelectItem value="document">Document</SelectItem>
+                                    <SelectItem value="image">Image</SelectItem>
                                     <SelectItem value="test">Test</SelectItem>
                                     <SelectItem value="list">List</SelectItem>
                                 </SelectContent>

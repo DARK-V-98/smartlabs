@@ -18,17 +18,23 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { fileBase64, fileName } = await request.json();
+    const { fileBase64, fileName, folder } = await request.json();
 
-    if (!fileBase64 || !fileName) {
-      console.error("[Bunny.net Upload Debug] Error: Request body missing fileBase64 or fileName.");
-      return NextResponse.json({ error: 'File data or name missing from request.' }, { status: 400 });
+    if (!fileBase64 || !fileName || !folder) {
+      console.error("[Bunny.net Upload Debug] Error: Request body missing fileBase64, fileName, or folder.");
+      return NextResponse.json({ error: 'File data, name, or folder missing from request.' }, { status: 400 });
+    }
+
+    const validFolders = ['videos', 'documents', 'images'];
+    if (!validFolders.includes(folder)) {
+        console.error(`[Bunny.net Upload Debug] Error: Invalid folder specified: ${folder}`);
+        return NextResponse.json({ error: 'Invalid folder specified.' }, { status: 400 });
     }
 
     const buffer = Buffer.from(fileBase64, 'base64');
     
     // Use the storage region hostname for the API endpoint
-    const bunnyPath = fileName;
+    const bunnyPath = `${folder}/${fileName}`;
     const apiUrl = `https://${storageHostname}/${storageZoneName}/${bunnyPath}`;
     console.log(`[Bunny.net Upload Debug] Attempting to upload to: ${apiUrl}`);
 
