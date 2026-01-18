@@ -3,7 +3,14 @@
 
 import { createHash } from 'crypto';
 import { payhereUrls } from '@/lib/payhere';
-import { adminDb } from '@/lib/firebase-admin';
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { firebaseConfig } from '@/firebase/config';
+
+// Initialize Firebase Client SDK for server-side use
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const db = getFirestore(app);
+
 
 export type ServerActionState = {
     success: boolean;
@@ -33,17 +40,14 @@ export async function enrollAction(prevState: ServerActionState, formData: FormD
       return { success: true, message: 'Free demo requested! We will contact you shortly.' };
   }
   
-  if (!adminDb) {
-    return { success: false, message: "Server configuration error." };
-  }
   if (!formValues.courseId || !formValues.batchId) {
       return { success: false, message: 'Please select both a course and a batch.' };
   }
 
-  const courseRef = adminDb.collection('courses').doc(formValues.courseId);
-  const courseDoc = await courseRef.get();
+  const courseRef = doc(db, 'courses', formValues.courseId);
+  const courseDoc = await getDoc(courseRef);
 
-  if (!courseDoc.exists) {
+  if (!courseDoc.exists()) {
       return { success: false, message: 'Selected course not found.' };
   }
 
