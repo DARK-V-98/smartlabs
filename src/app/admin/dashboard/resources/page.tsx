@@ -76,8 +76,7 @@ export default function ResourceManagementPage() {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       // result is "data:mime/type;base64,the_base64_string"
-      // we just need the base64 part
-      reader.onload = () => resolve((reader.result as string).split(',')[1]);
+      reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
 
@@ -100,7 +99,9 @@ export default function ResourceManagementPage() {
 
     try {
       if (fileToUpload) {
-        const fileBase64 = await fileToBase64(fileToUpload);
+        const fileDataUrl = await fileToBase64(fileToUpload);
+        // We only need the base64 part of the data URL
+        const fileBase64 = fileDataUrl.split(',')[1];
 
         const response = await fetch('/api/upload', {
           method: 'POST',
@@ -256,11 +257,11 @@ export default function ResourceManagementPage() {
                         />
                      </FormControl>
                      <FormDescription>
-                        {fileToUpload
-                            ? `New file: ${fileToUpload.name}`
-                            : (selectedResource?.url
-                            ? `Current file: ${selectedResource.url.split('/').pop()}`
-                            : "Upload a file for this resource.")}
+                        {(() => {
+                          if (fileToUpload) return `New file: ${fileToUpload.name}`;
+                          if (selectedResource?.url) return `Current file: ${selectedResource.url.split('/').pop()?.split('?')[0]}`;
+                          return "Upload a file for this resource.";
+                        })()}
                      </FormDescription>
                      <FormMessage />
                    </FormItem>
