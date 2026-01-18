@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useFirebase, useCollection, useMemoFirebase, useDoc } from '@/firebase';
-import { collection, doc, writeBatch, query, orderBy, collectionGroup } from 'firebase/firestore';
+import { doc, writeBatch, query, collectionGroup } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -125,11 +125,22 @@ export default function EnrollmentManagementPage() {
   
   const enrollmentsQuery = useMemoFirebase(() => 
       firestore 
-        ? query(collectionGroup(firestore, 'enrollments'), orderBy('enrollmentDate', 'desc')) 
+        ? query(collectionGroup(firestore, 'enrollments')) 
         : null, 
       [firestore]
   );
   const { data: enrollments, isLoading } = useCollection(enrollmentsQuery);
+  
+  const sortedEnrollments = useMemo(() => {
+    if (!enrollments) return null;
+    return [...enrollments].sort((a, b) => {
+        const dateA = a.enrollmentDate?.toDate() || 0;
+        const dateB = b.enrollmentDate?.toDate() || 0;
+        if (dateA > dateB) return -1;
+        if (dateA < dateB) return 1;
+        return 0;
+    });
+  }, [enrollments]);
 
   const renderSkeleton = () => (
     Array.from({ length: 5 }).map((_, i) => (
@@ -175,13 +186,13 @@ export default function EnrollmentManagementPage() {
                   </TableHeader>
                   <TableBody>
                     {isLoading ? renderSkeleton() : (
-                        enrollments?.map((enrollment) => (
+                        sortedEnrollments?.map((enrollment) => (
                             <EnrollmentRow key={enrollment.id} enrollment={enrollment as Enrollment} />
                         ))
                     )}
                   </TableBody>
                 </Table>
-                { !isLoading && enrollments?.length === 0 && (
+                { !isLoading && sortedEnrollments?.length === 0 && (
                     <div className="text-center py-10 text-muted-foreground">
                         No pending or active enrollments found.
                     </div>
