@@ -43,6 +43,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#4f46e5" />
+        <Script src="https://sandbox.payhere.lk/lib/payhere.js" strategy="beforeInteractive" />
       </head>
       <body
         className={cn(
@@ -59,7 +60,6 @@ export default function RootLayout({
           <Toaster />
           <CookieBanner />
         </FirebaseClientProvider>
-        <Script type="text/javascript" src="https://sandbox.payhere.lk/lib/payhere.js"></Script>
       </body>
     </html>
   );
