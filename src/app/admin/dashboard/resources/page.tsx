@@ -70,33 +70,47 @@ export default function ResourceManagementPage() {
     }
     setIsDialogOpen(true);
   };
+  
+  const fileToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      // result is "data:mime/type;base64,the_base64_string"
+      // we just need the base64 part
+      reader.onload = () => resolve((reader.result as string).split(',')[1]);
+      reader.onerror = (error) => reject(error);
+    });
+
 
   const onSubmit = async (data: ResourceFormValues) => {
     if (!firestore) return;
 
-    // For a new resource, a file must be provided.
     if (!selectedResource && !fileToUpload) {
         toast({
             variant: 'destructive',
             title: 'File Required',
             description: 'Please upload a file for the new resource.',
         });
-        return; // Stop execution
+        return;
     }
 
     setIsUploading(true);
 
-    let fileUrl = selectedResource?.url; // Keep existing URL if not changed
+    let fileUrl = selectedResource?.url;
 
     try {
-      // 1. If a new file is selected, upload it first
       if (fileToUpload) {
-        const formData = new FormData();
-        formData.append('file', fileToUpload);
+        const fileBase64 = await fileToBase64(fileToUpload);
 
         const response = await fetch('/api/upload', {
           method: 'POST',
-          body: formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fileBase64: fileBase64,
+            fileName: fileToUpload.name,
+          }),
         });
 
         const result = await response.json();
@@ -109,7 +123,6 @@ export default function ResourceManagementPage() {
       
       const resourceData = { ...data, url: fileUrl };
 
-      // 2. Add/Update Firestore document
       if (selectedResource) {
         const resourceRef = doc(firestore, 'resources', selectedResource.id);
         await updateDoc(resourceRef, resourceData);
@@ -245,9 +258,9 @@ export default function ResourceManagementPage() {
                      <FormDescription>
                         {fileToUpload
                             ? `New file: ${fileToUpload.name}`
-                            : selectedResource?.url
+                            : (selectedResource?.url
                             ? `Current file: ${selectedResource.url.split('/').pop()}`
-                            : "Upload a file for this resource."}
+                            : "Upload a file for this resource.")}
                      </FormDescription>
                      <FormMessage />
                    </FormItem>

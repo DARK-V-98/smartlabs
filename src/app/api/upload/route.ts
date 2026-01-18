@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-  // IMPORTANT: This is a placeholder. You need to implement the actual file upload logic to Bunny.net.
-  
   const storageZoneName = process.env.BUNNY_STORAGE_ZONE_NAME;
   const apiKey = process.env.BUNNY_API_KEY;
   const bunnyHostname = process.env.NEXT_PUBLIC_BUNNY_HOSTNAME;
@@ -12,39 +10,35 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const formData = await request.formData();
-    const file = formData.get('file') as File | null;
+    const { fileBase64, fileName } = await request.json();
 
-    if (!file) {
-      return NextResponse.json({ error: 'No file provided.' }, { status: 400 });
+    if (!fileBase64 || !fileName) {
+      return NextResponse.json({ error: 'File data or name missing.' }, { status: 400 });
     }
 
-    // STEP 1: Construct the Bunny.net API URL.
-    // We'll use the original filename here, but you might want to generate a unique name.
-    const bunnyPath = file.name;
+    const buffer = Buffer.from(fileBase64, 'base64');
+    
+    // Use the original filename for the path in Bunny.net
+    const bunnyPath = fileName;
     const apiUrl = `https://storage.bunnycdn.com/${storageZoneName}/${bunnyPath}`;
 
-    // STEP 2: Use the fetch API to upload the file.
     const response = await fetch(apiUrl, {
       method: 'PUT',
       headers: {
         'AccessKey': apiKey,
-        'Content-Type': file.type,
+        'Content-Type': 'application/octet-stream',
       },
-      body: file,
+      body: buffer,
     });
 
     if (!response.ok) {
-      // If the upload failed, log the response and return an error.
       const errorText = await response.text();
       console.error('Bunny.net upload failed:', errorText);
       throw new Error(`Failed to upload file to Bunny.net. Status: ${response.status}`);
     }
 
-    // STEP 3: If the upload is successful, construct the public URL to the file.
     const fileUrl = `https://${bunnyHostname}/${bunnyPath}`;
 
-    // STEP 4: Return the public URL in the response.
     return NextResponse.json({ success: true, url: fileUrl });
 
   } catch (error) {
