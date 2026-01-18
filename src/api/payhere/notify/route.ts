@@ -54,19 +54,24 @@ export async function POST(request: NextRequest) {
                     throw new Error("Firebase Admin DB is not initialized.");
                 }
 
-                // Use the unique payment_id from Payhere as the enrollment document ID
+                // Fetch batch name first to denormalize it into the enrollment record
+                const batchRef = adminDb.collection('courses').doc(courseId).collection('batches').doc(batchId);
+                const batchDoc = await batchRef.get();
+                const batchName = batchDoc.exists ? batchDoc.data()?.name : 'Default Batch';
+
+                // Prepare document references
                 const enrollmentRef = adminDb.collection('users').doc(userId).collection('enrollments').doc(payment_id as string);
                 const paymentRef = adminDb.collection('payments').doc(payment_id as string);
 
-                // Simplified data creation without a complex transaction to improve reliability
+                // Prepare data payloads
                 const enrollmentData = {
                     userId: userId,
                     courseId: courseId,
                     batchId: batchId,
-                    batchName: 'Default Batch', // This can be fetched on the client if needed
+                    batchName: batchName,
                     enrollmentDate: FieldValue.serverTimestamp(),
                     paymentStatus: 'paid',
-                    enrollmentStatus: 'pending',
+                    enrollmentStatus: 'pending', // Set to 'pending' for admin approval
                     orderId: order_id,
                     paymentId: payment_id,
                 };
@@ -82,7 +87,7 @@ export async function POST(request: NextRequest) {
                     paymentTimestamp: FieldValue.serverTimestamp(),
                 };
 
-                // Perform writes directly. If one fails, the error will be logged.
+                // Perform writes directly for robustness.
                 await enrollmentRef.set(enrollmentData);
                 await paymentRef.set(paymentData);
 
@@ -90,7 +95,7 @@ export async function POST(request: NextRequest) {
 
             } catch (error) {
                 console.error('Error processing successful payment in DB:', error);
-                // Still return 200 to PayHere to acknowledge receipt, but log the error
+                // Still return 200 to PayHere to acknowledge receipt, but log the internal error
             }
         } else {
             console.log(`Payment status not successful for order ${order_id}. Status: ${status_code}`);
