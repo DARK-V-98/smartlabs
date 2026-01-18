@@ -3,18 +3,13 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser, useAuth, useFirebase, useCollection, useMemoFirebase } from '@/firebase';
-import { doc, getDoc, collection, updateDoc } from 'firebase/firestore';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { doc, getDoc, collection } from 'firebase/firestore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
-import { LogOut, Users, BookOpen, BarChart3, MoreHorizontal, Shield, UserCheck, UserX, UserCog, MessageSquare, GraduationCap, FileText, Library, DollarSign } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { LogOut, Users, UserCog, MessageSquare, GraduationCap, FileText, Library, DollarSign, UserCheck } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { errorEmitter, FirestorePermissionError } from '@/firebase';
 import Image from 'next/image';
 
 export default function AdminDashboardPage() {
@@ -22,12 +17,11 @@ export default function AdminDashboardPage() {
   const auth = useAuth();
   const { firestore } = useFirebase();
   const router = useRouter();
-  const { toast } = useToast();
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [currentUserRole, setCurrentUserRole] = useState('');
 
-  // Fetch all users from the 'users' collection
+  // Fetch all users from the 'users' collection for the count
   const usersQuery = useMemoFirebase(() => 
     firestore ? collection(firestore, 'users') : null, 
     [firestore]
@@ -62,38 +56,6 @@ export default function AdminDashboardPage() {
     router.push('/login');
   };
 
-  const handleRoleChange = (userId: string, newRole: 'user' | 'teacher' | 'admin' | 'developer') => {
-    if (!firestore || !currentUser) return;
-    
-    if(userId === currentUser.uid) {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: "You cannot change your own role.",
-        });
-        return;
-    }
-
-    const userRef = doc(firestore, 'users', userId);
-    const updatedData = { role: newRole };
-
-    updateDoc(userRef, updatedData)
-      .then(() => {
-        toast({
-          title: 'Success!',
-          description: `User role has been updated to ${newRole}.`,
-        });
-      })
-      .catch((error) => {
-        const permissionError = new FirestorePermissionError({
-            path: userRef.path,
-            operation: 'update',
-            requestResourceData: updatedData
-        });
-        errorEmitter.emit('permission-error', permissionError);
-      });
-  };
-
   if (isUserLoading || !isAdmin) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -124,7 +86,7 @@ export default function AdminDashboardPage() {
             </Button>
           </header>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -134,6 +96,18 @@ export default function AdminDashboardPage() {
                     <div className="text-2xl font-bold">{users?.length ?? 0}</div>
                     <p className="text-xs text-muted-foreground">Live count of registered users.</p>
                 </CardContent>
+            </Card>
+            <Card className="hover:bg-muted/50 transition-colors">
+                <Link href="/admin/dashboard/users">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">User Management</CardTitle>
+                        <UserCog className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">Manage</div>
+                        <p className="text-xs text-muted-foreground">Manage roles and access.</p>
+                    </CardContent>
+                </Link>
             </Card>
              <Card className="hover:bg-muted/50 transition-colors">
                 <Link href="/admin/dashboard/courses">
@@ -208,70 +182,6 @@ export default function AdminDashboardPage() {
                 </Link>
             </Card>
           </div>
-          
-          <Card>
-            <CardHeader>
-                <CardTitle>User Management</CardTitle>
-                <CardDescription>View, manage roles, and monitor all users on the platform.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                {usersLoading ? <p>Loading users...</p> : (
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>User</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Role</TableHead>
-                            <TableHead>
-                                <span className="sr-only">Actions</span>
-                            </TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {users && users.map((user) => (
-                            <TableRow key={user.id}>
-                                <TableCell>
-                                    <div className="flex items-center gap-3">
-                                        <Avatar className="hidden h-9 w-9 sm:flex">
-                                            <AvatarImage src={user.photoURL || `https://picsum.photos/seed/${user.id}/100/100`} alt="Avatar" />
-                                            <AvatarFallback>{user.displayName?.charAt(0) || user.email.charAt(0)}</AvatarFallback>
-                                        </Avatar>
-                                        <div className="grid gap-1">
-                                            <p className="text-sm font-medium leading-none">{user.displayName || 'No Name'}</p>
-                                        </div>
-                                    </div>
-                                </TableCell>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>
-                                    <Badge variant={user.role === 'admin' || user.role === 'developer' ? 'destructive' : user.role === 'teacher' ? 'secondary' : 'outline'} className="capitalize">{user.role || 'user'}</Badge>
-                                </TableCell>
-                                <TableCell>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button aria-haspopup="true" size="icon" variant="ghost" disabled={user.id === currentUser?.uid}>
-                                                <MoreHorizontal className="h-4 w-4" />
-                                                <span className="sr-only">Toggle menu</span>
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuLabel>Manage User</DropdownMenuLabel>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'teacher')}><UserCog className="mr-2 h-4 w-4" /> Make Teacher</DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'admin')}><Shield className="mr-2 h-4 w-4" /> Make Admin</DropdownMenuItem>
-                                             <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'developer')}><UserCog className="mr-2 h-4 w-4" /> Make Developer</DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'user')}><UserCheck className="mr-2 h-4 w-4" /> Make Student</DropdownMenuItem>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem className="text-red-600 focus:text-red-500"><UserX className="mr-2 h-4 w-4" /> Suspend User</DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                )}
-            </CardContent>
-          </Card>
         </div>
       </section>
     </div>
