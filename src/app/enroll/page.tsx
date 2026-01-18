@@ -123,16 +123,6 @@ export default function EnrollPage() {
     }
   }, [state.success, state.payload]);
 
-  const handleFormSubmit = (data: FormValues) => {
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-        if (value !== undefined) formData.append(key, value.toString());
-    });
-    if (user?.uid) formData.append('userId', user.uid);
-    if (user?.email) formData.append('email', user.email);
-    formAction(formData);
-  };
-
   return (
     <div className="w-full">
       <section className="py-12 md:py-20">
@@ -159,7 +149,10 @@ export default function EnrollPage() {
               </CardHeader>
               <CardContent>
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
+                  <form action={formAction} className="space-y-6">
+                    {user?.uid && <input type="hidden" name="userId" value={user.uid} />}
+                    {user?.email && <input type="hidden" name="email" value={user.email} />}
+                    
                     <FormField control={form.control} name="fullName" render={({ field }) => (
                         <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem>
                     )}/>
