@@ -74,6 +74,16 @@ export default function ResourceManagementPage() {
   const onSubmit = async (data: ResourceFormValues) => {
     if (!firestore) return;
 
+    // For a new resource, a file must be provided.
+    if (!selectedResource && !fileToUpload) {
+        toast({
+            variant: 'destructive',
+            title: 'File Required',
+            description: 'Please upload a file for the new resource.',
+        });
+        return; // Stop execution
+    }
+
     setIsUploading(true);
 
     let fileUrl = selectedResource?.url; // Keep existing URL if not changed
@@ -95,10 +105,6 @@ export default function ResourceManagementPage() {
           throw new Error(result.error || 'File upload failed');
         }
         fileUrl = result.url;
-      }
-
-      if (!fileUrl && !selectedResource) {
-        throw new Error('A file upload or an existing URL is required.');
       }
       
       const resourceData = { ...data, url: fileUrl };
