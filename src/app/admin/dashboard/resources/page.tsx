@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -26,15 +27,15 @@ import { MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, Video, FileText, Up
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 
-const resourceSchema = z.object({
+// Schema for the form validation, URL is handled separately.
+const resourceFormSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   description: z.string().min(10, 'Description is required'),
-  url: z.string().url('Must be a valid URL').optional(),
   resourceType: z.enum(['video', 'test', 'list', 'document'], { required_error: 'Resource type is required' }),
   courseId: z.string({ required_error: 'Course is required' }),
 });
 
-type ResourceFormValues = z.infer<typeof resourceSchema>;
+type ResourceFormValues = z.infer<typeof resourceFormSchema>;
 
 export default function ResourceManagementPage() {
   const { firestore } = useFirebase();
@@ -57,7 +58,7 @@ export default function ResourceManagementPage() {
   const { data: courses } = useCollection(coursesQuery);
 
   const form = useForm<ResourceFormValues>({
-    resolver: zodResolver(resourceSchema),
+    resolver: zodResolver(resourceFormSchema),
   });
 
   const handleDialogOpen = (resource: any = null) => {
@@ -66,7 +67,7 @@ export default function ResourceManagementPage() {
     if (resource) {
       form.reset(resource);
     } else {
-      form.reset({ title: '', description: '', url: '', resourceType: undefined, courseId: undefined });
+      form.reset({ title: '', description: '', resourceType: undefined, courseId: undefined });
     }
     setIsDialogOpen(true);
   };
@@ -100,7 +101,6 @@ export default function ResourceManagementPage() {
     try {
       if (fileToUpload) {
         const fileDataUrl = await fileToBase64(fileToUpload);
-        // We only need the base64 part of the data URL
         const fileBase64 = fileDataUrl.split(',')[1];
 
         const response = await fetch('/api/upload', {
