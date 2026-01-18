@@ -59,8 +59,7 @@ export default function EnrollPage() {
   const { toast } = useToast();
   const { user } = useUser();
   const { firestore } = useFirebase();
-  const [state, formAction] = useActionState(enrollAction, { success: false, message: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [state, formAction, isPending] = useActionState(enrollAction, { success: false, message: '' });
   
   const coursesQuery = useMemoFirebase(
     () => (firestore ? collection(firestore, 'courses') : null),
@@ -89,8 +88,7 @@ export default function EnrollPage() {
 
 
   useEffect(() => {
-    if (state.message) {
-        setIsSubmitting(false); // Stop loading indicator
+    if (state.message && !isPending) {
         if (state.success && state.payload) {
             // This is the payment redirection case, the form will submit automatically
         } else if (state.success) {
@@ -102,7 +100,7 @@ export default function EnrollPage() {
             toast({ variant: 'destructive', title: 'Error', description: state.message });
         }
     }
-  }, [state, toast, form]);
+  }, [state, isPending, toast, form]);
 
   useEffect(() => {
     if (user) {
@@ -126,16 +124,13 @@ export default function EnrollPage() {
   }, [state.success, state.payload]);
 
   const handleFormSubmit = (data: FormValues) => {
-    setIsSubmitting(true);
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
         if (value !== undefined) formData.append(key, value.toString());
     });
     if (user?.uid) formData.append('userId', user.uid);
     if (user?.email) formData.append('email', user.email);
-
-    // use a timeout to allow the action to be called
-    setTimeout(() => formAction(formData), 0);
+    formAction(formData);
   };
 
   return (
@@ -224,8 +219,8 @@ export default function EnrollPage() {
                             After submitting, you will be redirected to our secure payment gateway. For free demos, no payment is required.
                         </p>
                     </div>
-                    <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || coursesLoading}>
-                      {isSubmitting ? ( <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</> ) : (
+                    <Button type="submit" className="w-full" size="lg" disabled={isPending || coursesLoading}>
+                      {isPending ? ( <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</> ) : (
                         <><UserPlus className="mr-2 h-4 w-4" />
                         {isFreeDemo ? 'Request Free Demo' : 'Submit & Proceed to Payment'}</>
                       )}
