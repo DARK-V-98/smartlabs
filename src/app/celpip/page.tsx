@@ -170,7 +170,7 @@ export default function CELPIP() {
               <ul className="space-y-4">
                 {programFeatures.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-accent mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -203,7 +203,7 @@ export default function CELPIP() {
               <ul className="space-y-4">
                 {preparationTips.map((tip) => (
                   <li key={tip} className="flex items-start gap-3">
-                    <Zap className="h-5 w-5 text-primary mt-0.5" />
+                    <Zap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <span className="text-muted-foreground">{tip}</span>
                   </li>
                 ))}

@@ -163,7 +163,7 @@ export default function IELTS() {
             <ul className="space-y-3 mb-8">
               {courseFeatures.map((feature) => (
                 <li key={feature} className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-accent mt-0.5" />
+                  <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                   <span>{feature}</span>
                 </li>
               ))}

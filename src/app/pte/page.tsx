@@ -98,19 +98,19 @@ export default function PTE() {
               <h3 className="font-semibold text-lg mb-4">PTE preparation helps students improve:</h3>
               <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
+                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5 flex-shrink-0" />
                       <span>Fluency and pronunciation for speaking clearly and confidently</span>
                   </li>
                   <li className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
+                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5 flex-shrink-0" />
                       <span>Grammar and structure for writing well-organized responses</span>
                   </li>
                   <li className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
+                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5 flex-shrink-0" />
                       <span>Reading skills to understand texts quickly and accurately</span>
                   </li>
                   <li className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
+                      <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5 flex-shrink-0" />
                       <span>Listening skills to follow different accents and speech patterns</span>
                   </li>
               </ul>
@@ -180,7 +180,7 @@ export default function PTE() {
               <ul className="space-y-3 mb-8">
                 {boostifyFeatures.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5 flex-shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -226,7 +226,7 @@ export default function PTE() {
               <ul className="space-y-3 mb-8">
                 {physicalFeatures.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-accent-2 mt-0.5 flex-shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
