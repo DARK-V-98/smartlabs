@@ -1,3 +1,4 @@
+
 import { NextRequest, NextResponse } from 'next/server';
 import { createHash } from 'crypto';
 import { adminDb } from '@/lib/firebase-admin';
@@ -17,6 +18,7 @@ export async function POST(request: NextRequest) {
             payhere_currency,
             status_code,
             md5sig,
+            payment_id
         } = data;
 
         const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET;
@@ -42,9 +44,9 @@ export async function POST(request: NextRequest) {
 
         if (status_code === '2') { // Payment success
             try {
-                const [userId, courseId] = (order_id as string).split('__');
+                const [userId, courseId, batchId] = (order_id as string).split('__');
                 
-                if (!userId || !courseId) {
+                if (!userId || !courseId || !batchId) {
                     throw new Error(`Invalid order_id format: ${order_id}`);
                 }
                 
@@ -52,36 +54,37 @@ export async function POST(request: NextRequest) {
                     throw new Error("Firebase Admin DB is not initialized.");
                 }
 
-                const enrollmentRef = adminDb.collection('users').doc(userId).collection('enrollments').doc(courseId);
-                const paymentRef = adminDb.collection('payments').doc(data.payment_id as string);
-                
-                await adminDb.runTransaction(async (transaction) => {
-                    
-                    // Create enrollment record with 'pending' status
-                    transaction.set(enrollmentRef, {
-                        userId: userId,
-                        courseId: courseId,
-                        enrollmentDate: FieldValue.serverTimestamp(),
-                        paymentStatus: 'paid',
-                        enrollmentStatus: 'pending', // Set status to pending for admin verification
-                        orderId: order_id,
-                        paymentId: data.payment_id,
-                    });
-                    
-                    // Create payment log record
-                    transaction.set(paymentRef, {
-                        id: data.payment_id,
-                        userId: userId,
-                        courseId: courseId,
-                        orderId: order_id,
-                        amount: payhere_amount,
-                        currency: payhere_currency,
-                        statusCode: status_code,
-                        paymentTimestamp: FieldValue.serverTimestamp(),
-                    });
+                // Use the unique payment_id from Payhere as the enrollment document ID
+                const enrollmentRef = adminDb.collection('users').doc(userId).collection('enrollments').doc(payment_id as string);
+                const paymentRef = adminDb.collection('payments').doc(payment_id as string);
 
-                    // User role will be updated by an admin upon verification, not here.
-                });
+                // Simplified data creation without a complex transaction to improve reliability
+                const enrollmentData = {
+                    userId: userId,
+                    courseId: courseId,
+                    batchId: batchId,
+                    batchName: 'Default Batch', // This can be fetched on the client if needed
+                    enrollmentDate: FieldValue.serverTimestamp(),
+                    paymentStatus: 'paid',
+                    enrollmentStatus: 'pending',
+                    orderId: order_id,
+                    paymentId: payment_id,
+                };
+                
+                const paymentData = {
+                    id: payment_id,
+                    userId: userId,
+                    courseId: courseId,
+                    orderId: order_id,
+                    amount: payhere_amount,
+                    currency: payhere_currency,
+                    statusCode: status_code,
+                    paymentTimestamp: FieldValue.serverTimestamp(),
+                };
+
+                // Perform writes directly. If one fails, the error will be logged.
+                await enrollmentRef.set(enrollmentData);
+                await paymentRef.set(paymentData);
 
                 console.log(`Successfully created pending enrollment for user ${userId} in course ${courseId}`);
 
