@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const storageZoneName = process.env.BUNNY_STORAGE_ZONE_NAME;
-  const apiKey = process.env.BUNNY_API_KEY;
+  const apiKey = process.env.BUNNY_STORAGE_API_KEY;
   const bunnyHostname = process.env.NEXT_PUBLIC_BUNNY_HOSTNAME;
 
   if (!storageZoneName || !apiKey || !bunnyHostname || storageZoneName === 'your-storage-zone-name') {
