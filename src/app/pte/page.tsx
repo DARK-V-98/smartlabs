@@ -62,7 +62,7 @@ export default function PTE() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="hero" size="xl" asChild>
-                <Link href="/signup">
+                <Link href="/enroll">
                   Enroll Now
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -202,7 +202,7 @@ export default function PTE() {
               </div>
 
               <Button variant="hero" size="lg" className="w-full" asChild>
-                <Link href="/signup">Enroll in Boostify Session</Link>
+                <Link href="/enroll">Enroll in Boostify Session</Link>
               </Button>
             </motion.div>
 
@@ -248,7 +248,7 @@ export default function PTE() {
               </div>
 
               <Button variant="accent" size="lg" className="w-full bg-accent-2 hover:bg-accent-2/90" asChild>
-                <Link href="/signup">Enroll in Physical Session</Link>
+                <Link href="/enroll">Enroll in Physical Session</Link>
               </Button>
             </motion.div>
           </div>
@@ -270,7 +270,7 @@ export default function PTE() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               Book a free consultation to discuss your goals and find the perfect course for you.
             </p>
-            <Button variant="hero" size="xl" asChild>
+            <Button variant="hero" size="lg" asChild>
               <Link href="/contact">
                 Book a Free Consultation
                 <ArrowRight className="ml-2 h-5 w-5" />

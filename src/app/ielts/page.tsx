@@ -66,7 +66,7 @@ export default function IELTS() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="accent" size="xl" asChild>
-                <Link href="/signup">
+                <Link href="/enroll">
                   Enroll Now
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -189,7 +189,7 @@ export default function IELTS() {
             </div>
 
             <Button variant="accent" size="lg" className="w-full" asChild>
-              <Link href="/signup">Enroll in IELTS Class</Link>
+              <Link href="/enroll">Enroll in IELTS Class</Link>
             </Button>
           </motion.div>
         </div>

@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { LogIn } from 'lucide-react';
+import { ArrowLeft, LogIn } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -226,6 +226,7 @@ export default function LoginPage() {
                   </Link>
                 </p>
                 <Link href="/" className="hover:underline hover:text-primary">
+                  <ArrowLeft className="inline-block mr-1 h-4 w-4" />
                   Back to Home
                 </Link>
               </div>

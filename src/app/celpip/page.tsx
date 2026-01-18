@@ -71,7 +71,7 @@ export default function CELPIP() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="accent" size="xl" asChild>
-                <Link href="/signup">
+                <Link href="/enroll">
                   Get Started
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -178,7 +178,7 @@ export default function CELPIP() {
 
               <div className="mt-8">
                 <Button variant="accent" size="lg" className="w-full" asChild>
-                  <Link href="/signup">Get CELPIP Resources</Link>
+                  <Link href="/enroll">Get CELPIP Resources</Link>
                 </Button>
               </div>
             </motion.div>

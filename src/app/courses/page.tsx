@@ -26,7 +26,7 @@ export default function CoursesPage() {
   const { data: enrollments, isLoading: enrollmentsLoading } = useCollection(enrollmentsQuery);
 
   const enrolledCourseIds = useMemo(() => {
-    return new Set(enrollments?.map(e => e.courseId) || []);
+    return new Set(enrollments?.map(e => e.id) || []);
   }, [enrollments]);
 
   const isLoading = coursesLoading || enrollmentsLoading;
@@ -34,7 +34,7 @@ export default function CoursesPage() {
   return (
     <div className="w-full">
       <section className="py-12 md:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-headline font-bold">Explore Our Courses</h1>
             <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
