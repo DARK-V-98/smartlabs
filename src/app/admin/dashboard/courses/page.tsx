@@ -196,7 +196,7 @@ export default function CourseManagementPage() {
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>Course Management</CardTitle>
-                <CardDescription>Add, edit, or remove courses from the platform.</CardDescription>
+                <CardDescription>Add, edit, or remove courses and their batches from the platform.</CardDescription>
               </div>
               <Button onClick={() => handleCourseDialogOpen()}>
                 <PlusCircle className="mr-2 h-4 w-4" /> Add Course
@@ -222,27 +222,29 @@ export default function CourseManagementPage() {
                         <TableCell> {course.price?.toLocaleString()}</TableCell>
                         <TableCell>{course.duration}</TableCell>
                         <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem onClick={() => handleCourseDialogOpen(course)}>
-                                <Edit className="mr-2 h-4 w-4" /> Edit
-                              </DropdownMenuItem>
-                               <DropdownMenuItem onClick={() => handleBatchDialogOpen(course)}>
+                          <div className="flex gap-2 justify-end">
+                            <Button variant="outline" size="sm" onClick={() => handleBatchDialogOpen(course)}>
                                 <Users className="mr-2 h-4 w-4" /> Manage Batches
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleDeleteRequest(course, 'course')}
-                                className="text-red-600"
-                              >
-                                <Trash className="mr-2 h-4 w-4" /> Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent>
+                                <DropdownMenuItem onClick={() => handleCourseDialogOpen(course)}>
+                                  <Edit className="mr-2 h-4 w-4" /> Edit Course
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleDeleteRequest(course, 'course')}
+                                  className="text-red-600"
+                                >
+                                  <Trash className="mr-2 h-4 w-4" /> Delete Course
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
