@@ -3,16 +3,16 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   const storageZoneName = process.env.BUNNY_STORAGE_ZONE_NAME;
   const storageApiKey = process.env.BUNNY_STORAGE_API_KEY;
-  const bunnyHostname = process.env.NEXT_PUBLIC_BUNNY_HOSTNAME;
+  const storageHostname = process.env.BUNNY_STORAGE_HOSTNAME;
+  const cdnHostname = process.env.NEXT_PUBLIC_BUNNY_HOSTNAME;
 
-  // Detailed logging to help debug credential issues.
-  // This will appear in your server's terminal, not the browser console.
   console.log("--- [Bunny.net Upload Debug] ---");
   console.log("Storage Zone Name:", storageZoneName ? `"${storageZoneName}"` : "NOT FOUND in .env");
+  console.log("Storage Hostname:", storageHostname ? `"${storageHostname}"` : "NOT FOUND in .env");
+  console.log("CDN Hostname:", cdnHostname ? `"${cdnHostname}"` : "NOT FOUND in .env");
   console.log("Storage API Key:", storageApiKey ? `Loaded (${storageApiKey.length} chars)` : "NOT FOUND in .env");
-  console.log("Hostname:", bunnyHostname ? `"${bunnyHostname}"` : "NOT FOUND in .env");
   
-  if (!storageZoneName || !storageApiKey || !bunnyHostname || storageZoneName === 'your-storage-zone-name') {
+  if (!storageZoneName || !storageApiKey || !cdnHostname || !storageHostname) {
     console.error("[Bunny.net Upload Debug] Error: Credentials are not fully configured in the .env file.");
     return NextResponse.json({ error: 'Server configuration error: Bunny.net credentials are not set.' }, { status: 500 });
   }
@@ -27,8 +27,9 @@ export async function POST(request: NextRequest) {
 
     const buffer = Buffer.from(fileBase64, 'base64');
     
+    // Use the storage region hostname for the API endpoint
     const bunnyPath = fileName;
-    const apiUrl = `https://storage.bunnycdn.com/${storageZoneName}/${bunnyPath}`;
+    const apiUrl = `https://${storageHostname}/${storageZoneName}/${bunnyPath}`;
     console.log(`[Bunny.net Upload Debug] Attempting to upload to: ${apiUrl}`);
 
     const response = await fetch(apiUrl, {
@@ -47,7 +48,8 @@ export async function POST(request: NextRequest) {
       throw new Error(`Failed to upload file to Bunny.net. Status: ${response.status}`);
     }
 
-    const fileUrl = `https://${bunnyHostname}/${bunnyPath}`;
+    // Use the public CDN hostname for the accessible URL
+    const fileUrl = `https://${cdnHostname}/${bunnyPath}`;
     console.log(`[Bunny.net Upload Debug] Upload successful! Public URL: ${fileUrl}`);
     console.log("--- [Bunny.net Upload Debug End] ---");
 
