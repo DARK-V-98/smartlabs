@@ -11,12 +11,21 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
   DialogClose,
 } from '@/components/ui/dialog';
@@ -44,6 +53,8 @@ export default function CourseManagementPage() {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState<any>(null);
 
   const coursesQuery = useMemoFirebase(
     () => (firestore ? collection(firestore, 'courses') : null),
@@ -95,16 +106,17 @@ export default function CourseManagementPage() {
     }
   };
 
-  const handleDelete = async (courseId: string) => {
-    if (!firestore) return;
-    if (confirm('Are you sure you want to delete this course?')) {
-      try {
-        await deleteDoc(doc(firestore, 'courses', courseId));
-        toast({ title: 'Success', description: 'Course deleted successfully.' });
-      } catch (error) {
-        console.error('Error deleting course:', error);
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not delete the course.' });
-      }
+  const handleDelete = async () => {
+    if (!firestore || !courseToDelete) return;
+    try {
+      await deleteDoc(doc(firestore, 'courses', courseToDelete.id));
+      toast({ title: 'Success', description: 'Course deleted successfully.' });
+    } catch (error) {
+      console.error('Error deleting course:', error);
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not delete the course.' });
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setCourseToDelete(null);
     }
   };
 
@@ -116,61 +128,67 @@ export default function CourseManagementPage() {
              <Link href="/admin/dashboard"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard</Link>
           </Button>
 
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle>Course Management</CardTitle>
-                  <CardDescription>Add, edit, or remove courses from the platform.</CardDescription>
-                </div>
-                <Button onClick={() => handleDialogOpen()}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Course
-                </Button>
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <p>Loading courses...</p>
-                ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Course Name</TableHead>
-                        <TableHead>Price (LKR)</TableHead>
-                        <TableHead>Duration</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Course Management</CardTitle>
+                <CardDescription>Add, edit, or remove courses from the platform.</CardDescription>
+              </div>
+              <Button onClick={() => handleDialogOpen()}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Course
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <p>Loading courses...</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Course Name</TableHead>
+                      <TableHead>Price (LKR)</TableHead>
+                      <TableHead>Duration</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {courses?.map((course) => (
+                      <TableRow key={course.id}>
+                        <TableCell className="font-medium max-w-sm truncate">{course.name}</TableCell>
+                        <TableCell> {course.price?.toLocaleString()}</TableCell>
+                        <TableCell>{course.duration}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem onClick={() => handleDialogOpen(course)}>
+                                <Edit className="mr-2 h-4 w-4" /> Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setCourseToDelete(course);
+                                  setIsDeleteDialogOpen(true);
+                                }}
+                                className="text-red-600"
+                              >
+                                <Trash className="mr-2 h-4 w-4" /> Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {courses?.map((course) => (
-                        <TableRow key={course.id}>
-                          <TableCell className="font-medium max-w-sm truncate">{course.name}</TableCell>
-                          <TableCell> {course.price?.toLocaleString()}</TableCell>
-                          <TableCell>{course.duration}</TableCell>
-                          <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent>
-                                <DropdownMenuItem onClick={() => handleDialogOpen(course)}>
-                                  <Edit className="mr-2 h-4 w-4" /> Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleDelete(course.id)} className="text-red-600">
-                                  <Trash className="mr-2 h-4 w-4" /> Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
-              </CardContent>
-            </Card>
-
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+          
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="sm:max-w-2xl">
               <DialogHeader>
                 <DialogTitle>{selectedCourse ? 'Edit Course' : 'Add New Course'}</DialogTitle>
@@ -237,10 +255,24 @@ export default function CourseManagementPage() {
               </Form>
             </DialogContent>
           </Dialog>
+
+          <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the course
+                  <span className="font-bold"> {courseToDelete?.name}</span>.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setCourseToDelete(null)}>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </section>
     </div>
   );
 }
-
-    

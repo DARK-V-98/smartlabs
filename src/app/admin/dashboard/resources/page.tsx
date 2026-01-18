@@ -11,6 +11,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -27,7 +37,7 @@ import { MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, Video, FileText, Up
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 
-// Schema for the form validation, URL is handled separately.
+// Schema for the form validation
 const resourceFormSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   description: z.string().min(10, 'Description is required'),
@@ -44,6 +54,8 @@ export default function ResourceManagementPage() {
   const [selectedResource, setSelectedResource] = useState<any>(null);
   const [fileToUpload, setFileToUpload] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [resourceToDelete, setResourceToDelete] = useState<any>(null);
 
   const resourcesQuery = useMemoFirebase(
     () => (firestore ? collection(firestore, 'resources') : null),
@@ -76,54 +88,42 @@ export default function ResourceManagementPage() {
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      // result is "data:mime/type;base64,the_base64_string"
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
-
 
   const onSubmit = async (data: ResourceFormValues) => {
     if (!firestore) return;
 
     if (!selectedResource && !fileToUpload) {
-        toast({
-            variant: 'destructive',
-            title: 'File Required',
-            description: 'Please upload a file for the new resource.',
-        });
-        return;
+      toast({
+        variant: 'destructive',
+        title: 'File Required',
+        description: 'Please select a file to upload for a new resource.',
+      });
+      return;
     }
 
     setIsUploading(true);
-
     let fileUrl = selectedResource?.url;
 
     try {
       if (fileToUpload) {
-        let folder = 'documents'; // default folder
-        if (data.resourceType === 'video') {
-          folder = 'videos';
-        } else if (data.resourceType === 'image') {
-          folder = 'images';
-        }
-        
         const fileDataUrl = await fileToBase64(fileToUpload);
         const fileBase64 = fileDataUrl.split(',')[1];
+        const folder = data.resourceType === 'video' ? 'videos' : data.resourceType === 'image' ? 'images' : 'documents';
 
         const response = await fetch('/api/upload', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            fileBase64: fileBase64,
+            fileBase64,
             fileName: fileToUpload.name,
             folder: folder,
           }),
         });
 
         const result = await response.json();
-        
         if (!response.ok) {
           throw new Error(result.error || 'File upload failed');
         }
@@ -145,24 +145,25 @@ export default function ResourceManagementPage() {
       form.reset();
       setFileToUpload(null);
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
       console.error('Error saving resource:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Could not save the resource.';
-      toast({ variant: 'destructive', title: 'Error', description: errorMessage });
+      toast({ variant: 'destructive', title: 'Error Saving Resource', description: errorMessage });
     } finally {
-        setIsUploading(false);
+      setIsUploading(false);
     }
   };
 
-  const handleDelete = async (resourceId: string) => {
-    if (!firestore) return;
-    if (confirm('Are you sure you want to delete this resource?')) {
-      try {
-        await deleteDoc(doc(firestore, 'resources', resourceId));
-        toast({ title: 'Success', description: 'Resource deleted successfully.' });
-      } catch (error) {
-        console.error('Error deleting resource:', error);
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not delete the resource.' });
-      }
+  const handleDelete = async () => {
+    if (!firestore || !resourceToDelete) return;
+    try {
+      await deleteDoc(doc(firestore, 'resources', resourceToDelete.id));
+      toast({ title: 'Success', description: 'Resource deleted successfully.' });
+    } catch (error) {
+      console.error('Error deleting resource:', error);
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not delete the resource.' });
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setResourceToDelete(null);
     }
   };
 
@@ -172,12 +173,9 @@ export default function ResourceManagementPage() {
 
   const getIconForType = (type: string) => {
     switch (type) {
-      case 'video':
-        return <Video className="h-4 w-4" />;
-      case 'image':
-        return <ImageIcon className="h-4 w-4" />;
-      default:
-        return <FileText className="h-4 w-4" />;
+      case 'video': return <Video className="h-4 w-4" />;
+      case 'image': return <ImageIcon className="h-4 w-4" />;
+      default: return <FileText className="h-4 w-4" />;
     }
   };
 
@@ -189,64 +187,70 @@ export default function ResourceManagementPage() {
              <Link href="/admin/dashboard"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard</Link>
           </Button>
 
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle>Resource Management</CardTitle>
-                  <CardDescription>Add, edit, or delete course materials.</CardDescription>
-                </div>
-                <Button onClick={() => handleDialogOpen()}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Resource
-                </Button>
-              </CardHeader>
-              <CardContent>
-                {resourcesLoading ? (
-                  <p>Loading resources...</p>
-                ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Title</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Course</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Resource Management</CardTitle>
+                <CardDescription>Add, edit, or delete course materials.</CardDescription>
+              </div>
+              <Button onClick={() => handleDialogOpen()}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Resource
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {resourcesLoading ? (
+                <p>Loading resources...</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Title</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Course</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {resources?.map((resource) => (
+                      <TableRow key={resource.id}>
+                        <TableCell className="font-medium">{resource.title}</TableCell>
+                        <TableCell className="capitalize flex items-center gap-2">
+                          {getIconForType(resource.resourceType)}
+                          {resource.resourceType}
+                        </TableCell>
+                        <TableCell>{getCourseName(resource.courseId)}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem onClick={() => handleDialogOpen(resource)}>
+                                <Edit className="mr-2 h-4 w-4" /> Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setResourceToDelete(resource);
+                                  setIsDeleteDialogOpen(true);
+                                }}
+                                className="text-red-600"
+                              >
+                                <Trash className="mr-2 h-4 w-4" /> Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {resources?.map((resource) => (
-                        <TableRow key={resource.id}>
-                          <TableCell className="font-medium">{resource.title}</TableCell>
-                          <TableCell className="capitalize flex items-center gap-2">
-                            {getIconForType(resource.resourceType)}
-                            {resource.resourceType}
-                          </TableCell>
-                          <TableCell>{getCourseName(resource.courseId)}</TableCell>
-                          <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent>
-                                <DropdownMenuItem onClick={() => handleDialogOpen(resource)}>
-                                  <Edit className="mr-2 h-4 w-4" /> Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleDelete(resource.id)} className="text-red-600">
-                                  <Trash className="mr-2 h-4 w-4" /> Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
-              </CardContent>
-            </Card>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
 
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="sm:max-w-2xl">
               <DialogHeader>
                 <DialogTitle>{selectedResource ? 'Edit Resource' : 'Add New Resource'}</DialogTitle>
@@ -270,21 +274,13 @@ export default function ResourceManagementPage() {
                    <FormItem>
                      <FormLabel>File Upload</FormLabel>
                      <FormControl>
-                        <Input 
-                            type="file" 
-                            onChange={(e) => setFileToUpload(e.target.files?.[0] || null)}
-                        />
+                        <Input type="file" onChange={(e) => setFileToUpload(e.target.files?.[0] || null)} />
                      </FormControl>
                      <FormDescription>
-                        {(() => {
-                          if (fileToUpload) return `New file: ${fileToUpload.name}`;
-                          if (selectedResource?.url) return `Current file: ${selectedResource.url.split('/').pop()?.split('?')[0]}`;
-                          return "Upload a file for this resource.";
-                        })()}
+                       {fileToUpload ? `New file: ${fileToUpload.name}` : selectedResource?.url ? `Current file: ${selectedResource.url.split('/').pop()?.split('?')[0]}`: "Upload a file for this resource."}
                      </FormDescription>
                      <FormMessage />
                    </FormItem>
-
                  <div className="grid grid-cols-2 gap-4">
                     <FormField control={form.control} name="resourceType" render={({ field }) => (
                         <FormItem>
@@ -331,6 +327,23 @@ export default function ResourceManagementPage() {
               </Form>
             </DialogContent>
           </Dialog>
+
+          <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the resource{' '}
+                  <span className="font-bold">{resourceToDelete?.title}</span>.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setResourceToDelete(null)}>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
         </div>
       </section>
     </div>
