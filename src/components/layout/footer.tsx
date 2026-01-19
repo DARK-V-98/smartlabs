@@ -128,9 +128,20 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Smart Labs. All rights reserved.
-          </p>
+          <div className="text-sm text-muted-foreground text-center sm:text-left">
+            <p>© {new Date().getFullYear()} Smart Labs. All rights reserved.</p>
+             <p>
+                Website Powered and Hosted by{' '}
+                <a
+                    href="https://www.esystemlk.xyz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-primary hover:underline"
+                >
+                    Esystemlk
+                </a>
+            </p>
+          </div>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <Link href="/policies" className="hover:text-primary transition-colors">Privacy</Link>
             <Link href="/policies" className="hover:text-primary transition-colors">Terms</Link>
