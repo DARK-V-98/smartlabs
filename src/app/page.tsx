@@ -387,20 +387,20 @@ export default function Home() {
                 Join thousands of successful students who achieved their dream scores with our AI-powered learning platform, expert instructors, and proven strategies.
               </p>
 
-              <div className="flex flex-col sm:flex-row flex-wrap items-start gap-4 mb-10">
-                <Button variant="hero" size="xl" asChild>
+              <div className="flex flex-col items-center sm:items-start sm:flex-row flex-wrap gap-4 mb-10">
+                <Button variant="hero" size="lg" asChild>
                   <Link href="/signup">
                     Start Free Trial
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="xl" asChild>
+                <Button variant="outline" size="lg" asChild>
                   <Link href="/dashboard/practice-tests">
                     <Sparkles className="mr-2 h-5 w-5" />
                     Explore AI Tests
                   </Link>
                 </Button>
-                <Button variant="outline" size="xl" asChild>
+                <Button variant="outline" size="lg" asChild>
                   <a href="https://register.smartlabs.lk" target="_blank" rel="noopener noreferrer">
                     Book Your Individual Session Now
                   </a>
