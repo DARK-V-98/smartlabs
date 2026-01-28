@@ -266,12 +266,16 @@
         },
         "url": {
           "type": "string",
-          "description": "URL of the resource.",
+          "description": "URL of the resource (for file-based resources like images, videos, PDFs).",
           "format": "uri"
+        },
+        "htmlContent": {
+            "type": "string",
+            "description": "HTML content for embedded resources."
         },
         "resourceType": {
           "type": "string",
-          "description": "Type of resource (e.g., sample test, video lesson)."
+          "description": "Type of resource (e.g., html, image, video, document)."
         },
         "courseId": {
           "type": "string",
@@ -282,7 +286,6 @@
         "id",
         "title",
         "description",
-        "url",
         "resourceType",
         "courseId"
       ]

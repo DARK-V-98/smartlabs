@@ -1,33 +1,28 @@
+
 'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useFirebase, useCollection, useMemoFirebase, useUser } from '@/firebase';
 import { collection, query, where } from 'firebase/firestore';
-import { FileText, Video, Download } from 'lucide-react';
+import { FileText, Video, Download, View, Lock, Play } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMemo } from 'react';
 import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Lock } from 'lucide-react';
-
-const iconMap = {
-  FileText: FileText,
-  Video: Video,
-};
 
 export default function ResourcesPage() {
   const { firestore } = useFirebase();
   const { user } = useUser();
   
   const enrollmentsQuery = useMemoFirebase(() => 
-    firestore && user ? collection(firestore, `users/${user.uid}/enrollments`) : null,
+    firestore && user ? query(collection(firestore, `users/${user.uid}/enrollments`), where('enrollmentStatus', '==', 'active')) : null,
     [firestore, user]
   );
   const { data: enrollments, isLoading: enrollmentsLoading } = useCollection(enrollmentsQuery);
 
-  const enrolledCourseIds = useMemo(() => enrollments?.map(e => e.id) || [], [enrollments]);
+  const enrolledCourseIds = useMemo(() => enrollments?.map(e => e.courseId) || [], [enrollments]);
 
   const resourcesQuery = useMemoFirebase(() => 
     firestore && enrolledCourseIds.length > 0 ? query(collection(firestore, 'resources'), where('courseId', 'in', enrolledCourseIds)) : null,
@@ -36,7 +31,7 @@ export default function ResourcesPage() {
   
   const { data: resourceLibrary, isLoading: resourcesLoading } = useCollection(resourcesQuery);
 
-  const testsAndLists = resourceLibrary?.filter(r => r.type === 'test' || r.type === 'list' || r.type === 'document');
+  const documents = resourceLibrary?.filter(r => r.resourceType === 'document' || r.resourceType === 'image' || r.resourceType === 'html');
   const videos = resourceLibrary?.filter(r => r.resourceType === 'video');
 
   const isLoading = enrollmentsLoading || resourcesLoading;
@@ -63,7 +58,7 @@ export default function ResourcesPage() {
         <Lock className="h-4 w-4" />
         <AlertTitle>No Resources Found</AlertTitle>
         <AlertDescription>
-            You are not enrolled in any courses, or your enrolled courses do not have any materials yet.
+            You do not have any active course enrollments, or your courses do not have materials yet.
             Please <Link href="/courses" className="font-bold underline hover:text-primary">enroll in a course</Link> to access the resource library.
         </AlertDescription>
     </Alert>
@@ -76,7 +71,7 @@ export default function ResourcesPage() {
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-headline font-bold">Resource Library</h1>
             <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
-              A curated collection of practice tests, vocabulary lists, and video lessons for your enrolled courses.
+              A curated collection of practice tests, documents, and video lessons for your enrolled courses.
             </p>
           </div>
           
@@ -99,11 +94,11 @@ export default function ResourcesPage() {
                     </TabsContent>
                     <TabsContent value="documents">
                         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {testsAndLists?.map((item) => (
+                            {documents?.map((item) => (
                             <ResourceCard key={item.id} item={item} />
                             ))}
                         </div>
-                        {testsAndLists?.length === 0 && <p className="text-center text-muted-foreground">No documents available for your courses yet.</p>}
+                        {documents?.length === 0 && <p className="text-center text-muted-foreground">No documents available for your courses yet.</p>}
                     </TabsContent>
                     <TabsContent value="videos">
                         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -123,33 +118,49 @@ export default function ResourcesPage() {
 }
 
 function ResourceCard({ item }: { item: any }) {
-  const Icon = item.resourceType === "video" ? Video : FileText;
+  const isHtml = item.resourceType === 'html';
+  const isVideo = item.resourceType === 'video';
 
-  if (item.resourceType === 'video') {
+  const Icon = isVideo ? Video : FileText;
+  const href = isHtml ? `/resources/${item.id}` : item.url || '#';
+  const target = isHtml ? '_self' : '_blank';
+
+  const getButtonProps = () => {
+    if (isHtml) return { text: 'View Content', icon: View };
+    if (isVideo) return { text: 'Watch Now', icon: Play };
+    return { text: 'Download', icon: Download };
+  };
+
+  const { text: buttonText, icon: ButtonIcon } = getButtonProps();
+
+  if (isVideo) {
     return (
-        <Card className="overflow-hidden group shadow-lg hover:shadow-xl transition-shadow">
-            <a href={item.url || '#'} target="_blank" rel="noopener noreferrer">
-              <div className="relative aspect-video">
-                  <Image 
-                      src={`https://picsum.photos/seed/${item.id}/400/225`}
-                      alt={item.title}
-                      data-ai-hint="lesson video"
-                      fill
-                      className="w-full object-cover transition-transform group-hover:scale-105"
-                  />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                      <Video className="h-12 w-12 sm:h-16 sm:w-16 text-white/80" />
-                  </div>
-              </div>
-              <CardHeader>
-                  <CardTitle className="font-headline">{item.title}</CardTitle>
-                  <CardDescription>{item.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                  <Button className="w-full">Watch Now</Button>
-              </CardContent>
-            </a>
-        </Card>
+      <Card className="overflow-hidden group shadow-lg hover:shadow-xl transition-shadow flex flex-col">
+        <Link href={href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined} className="flex flex-col flex-grow">
+          <div className="relative aspect-video">
+            <Image 
+              src={`https://picsum.photos/seed/${item.id}/400/225`}
+              alt={item.title}
+              data-ai-hint="lesson video"
+              fill
+              className="object-cover transition-transform group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <Play className="h-12 w-12 text-white/80 transition-transform group-hover:scale-110" />
+            </div>
+          </div>
+          <CardHeader className="flex-grow">
+            <CardTitle className="font-headline">{item.title}</CardTitle>
+            <CardDescription>{item.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button className="w-full">
+              <ButtonIcon className="mr-2 h-4 w-4" />
+              {buttonText}
+            </Button>
+          </CardContent>
+        </Link>
+      </Card>
     );
   }
 
@@ -157,21 +168,21 @@ function ResourceCard({ item }: { item: any }) {
     <Card className="flex flex-col shadow-lg hover:shadow-xl transition-shadow">
       <CardHeader className="flex-grow">
         <div className="flex items-start gap-4">
-            <div className="p-3 bg-secondary rounded-lg">
-                <Icon className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-                <CardTitle className="font-headline">{item.title}</CardTitle>
-                <CardDescription>{item.description}</CardDescription>
-            </div>
+          <div className="p-3 bg-secondary rounded-lg">
+            <Icon className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <CardTitle className="font-headline">{item.title}</CardTitle>
+            <CardDescription>{item.description}</CardDescription>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
         <Button asChild className="w-full">
-          <a href={item.url || '#'} target="_blank" rel="noopener noreferrer">
-            <Download className="mr-2 h-4 w-4" />
-            Download
-          </a>
+          <Link href={href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
+            <ButtonIcon className="mr-2 h-4 w-4" />
+            {buttonText}
+          </Link>
         </Button>
       </CardContent>
     </Card>

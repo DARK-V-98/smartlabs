@@ -33,7 +33,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, Video, FileText, Upload, Loader2, Image as ImageIcon } from 'lucide-react';
+import { MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, Video, FileText, Upload, Loader2, Image as ImageIcon, Code } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 
@@ -41,8 +41,9 @@ import Link from 'next/link';
 const resourceFormSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   description: z.string().min(10, 'Description is required'),
-  resourceType: z.enum(['video', 'document', 'image', 'test', 'list'], { required_error: 'Resource type is required' }),
+  resourceType: z.enum(['html', 'video', 'document', 'image'], { required_error: 'Resource type is required' }),
   courseId: z.string({ required_error: 'Course is required' }),
+  htmlContent: z.string().optional(),
 });
 
 type ResourceFormValues = z.infer<typeof resourceFormSchema>;
@@ -73,13 +74,15 @@ export default function ResourceManagementPage() {
     resolver: zodResolver(resourceFormSchema),
   });
 
+  const resourceType = form.watch("resourceType");
+
   const handleDialogOpen = (resource: any = null) => {
     setSelectedResource(resource);
     setFileToUpload(null);
     if (resource) {
       form.reset(resource);
     } else {
-      form.reset({ title: '', description: '', resourceType: undefined, courseId: undefined });
+      form.reset({ title: '', description: '', resourceType: undefined, courseId: undefined, htmlContent: '' });
     }
     setIsDialogOpen(true);
   };
@@ -94,62 +97,63 @@ export default function ResourceManagementPage() {
 
   const onSubmit = async (data: ResourceFormValues) => {
     if (!firestore) return;
-
-    if (!selectedResource && !fileToUpload) {
-      toast({
-        variant: 'destructive',
-        title: 'File Required',
-        description: 'Please select a file to upload for a new resource.',
-      });
-      return;
-    }
-
+    
     setIsUploading(true);
-    let fileUrl = selectedResource?.url;
+    let resourcePayload: any = { ...data };
 
     try {
-      if (fileToUpload) {
-        const fileDataUrl = await fileToBase64(fileToUpload);
-        const fileBase64 = fileDataUrl.split(',')[1];
-        const folder = data.resourceType === 'video' ? 'videos' : data.resourceType === 'image' ? 'images' : 'documents';
+        if (data.resourceType !== 'html') {
+            if (!selectedResource && !fileToUpload) {
+                toast({ variant: 'destructive', title: 'File Required', description: 'Please select a file to upload for this resource type.' });
+                setIsUploading(false);
+                return;
+            }
 
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            fileBase64,
-            fileName: fileToUpload.name,
-            folder: folder,
-          }),
-        });
+            let fileUrl = selectedResource?.url;
+            if (fileToUpload) {
+                const fileDataUrl = await fileToBase64(fileToUpload);
+                const fileBase64 = fileDataUrl.split(',')[1];
+                const folder = data.resourceType === 'video' ? 'videos' : data.resourceType === 'image' ? 'images' : 'documents';
 
-        const result = await response.json();
-        if (!response.ok) {
-          throw new Error(result.error || 'File upload failed');
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileBase64, fileName: fileToUpload.name, folder }),
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || 'File upload failed');
+                fileUrl = result.url;
+            }
+            resourcePayload.url = fileUrl;
+            delete resourcePayload.htmlContent;
+        } else {
+            if (!data.htmlContent) {
+                toast({ variant: 'destructive', title: 'Content Required', description: 'Please enter HTML content.' });
+                setIsUploading(false);
+                return;
+            }
+            resourcePayload.url = null;
         }
-        fileUrl = result.url;
-      }
-      
-      const resourceData = { ...data, url: fileUrl };
 
-      if (selectedResource) {
-        const resourceRef = doc(firestore, 'resources', selectedResource.id);
-        await updateDoc(resourceRef, resourceData);
-        toast({ title: 'Success', description: 'Resource updated successfully.' });
-      } else {
-        await addDoc(collection(firestore, 'resources'), resourceData);
-        toast({ title: 'Success', description: 'Resource added successfully.' });
-      }
+        if (selectedResource) {
+            const resourceRef = doc(firestore, 'resources', selectedResource.id);
+            await updateDoc(resourceRef, resourcePayload);
+            toast({ title: 'Success', description: 'Resource updated successfully.' });
+        } else {
+            await addDoc(collection(firestore, 'resources'), resourcePayload);
+            toast({ title: 'Success', description: 'Resource added successfully.' });
+        }
 
-      setIsDialogOpen(false);
-      form.reset();
-      setFileToUpload(null);
+        setIsDialogOpen(false);
+        form.reset();
+        setFileToUpload(null);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-      console.error('Error saving resource:', error);
-      toast({ variant: 'destructive', title: 'Error Saving Resource', description: errorMessage });
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        console.error('Error saving resource:', error);
+        toast({ variant: 'destructive', title: 'Error Saving Resource', description: errorMessage });
     } finally {
-      setIsUploading(false);
+        setIsUploading(false);
     }
   };
 
@@ -175,6 +179,7 @@ export default function ResourceManagementPage() {
     switch (type) {
       case 'video': return <Video className="h-4 w-4" />;
       case 'image': return <ImageIcon className="h-4 w-4" />;
+      case 'html': return <Code className="h-4 w-4" />;
       default: return <FileText className="h-4 w-4" />;
     }
   };
@@ -256,7 +261,7 @@ export default function ResourceManagementPage() {
                 <DialogTitle>{selectedResource ? 'Edit Resource' : 'Add New Resource'}</DialogTitle>
               </DialogHeader>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4 max-h-[80vh] overflow-y-auto pr-6">
                   <FormField control={form.control} name="title" render={({ field }) => (
                       <FormItem>
                         <FormLabel>Title</FormLabel>
@@ -271,28 +276,17 @@ export default function ResourceManagementPage() {
                         <FormMessage />
                       </FormItem>
                   )} />
-                   <FormItem>
-                     <FormLabel>File Upload</FormLabel>
-                     <FormControl>
-                        <Input type="file" onChange={(e) => setFileToUpload(e.target.files?.[0] || null)} />
-                     </FormControl>
-                     <FormDescription>
-                       {fileToUpload ? `New file: ${fileToUpload.name}` : selectedResource?.url ? `Current file: ${selectedResource.url.split('/').pop()?.split('?')[0]}`: "Upload a file for this resource."}
-                     </FormDescription>
-                     <FormMessage />
-                   </FormItem>
-                 <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <FormField control={form.control} name="resourceType" render={({ field }) => (
                         <FormItem>
                             <FormLabel>Resource Type</FormLabel>
                              <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl><SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger></FormControl>
                                 <SelectContent>
+                                    <SelectItem value="html">HTML Content</SelectItem>
                                     <SelectItem value="video">Video</SelectItem>
-                                    <SelectItem value="document">Document</SelectItem>
+                                    <SelectItem value="document">Document (PDF)</SelectItem>
                                     <SelectItem value="image">Image</SelectItem>
-                                    <SelectItem value="test">Test</SelectItem>
-                                    <SelectItem value="list">List</SelectItem>
                                 </SelectContent>
                              </Select>
                             <FormMessage />
@@ -313,6 +307,30 @@ export default function ResourceManagementPage() {
                         </FormItem>
                     )} />
                  </div>
+
+                 {resourceType === 'html' ? (
+                    <FormField control={form.control} name="htmlContent" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>HTML Content</FormLabel>
+                          <FormControl>
+                            <Textarea placeholder="<div>Your HTML code here...</div>" className="min-h-64 font-mono" {...field} />
+                          </FormControl>
+                           <FormDescription>Paste your full HTML and CSS code here.</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                    )} />
+                 ) : (
+                    <FormItem>
+                        <FormLabel>File Upload</FormLabel>
+                        <FormControl>
+                            <Input type="file" onChange={(e) => setFileToUpload(e.target.files?.[0] || null)} />
+                        </FormControl>
+                        <FormDescription>
+                        {fileToUpload ? `New file: ${fileToUpload.name}` : selectedResource?.url ? `Current file: ${selectedResource.url.split('/').pop()?.split('?')[0]}`: "Upload a file for this resource."}
+                        </FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                 )}
                   
                   <DialogFooter className="pt-4">
                     <DialogClose asChild>
