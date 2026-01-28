@@ -33,7 +33,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, Video, FileText, Upload, Loader2, Image as ImageIcon, Code } from 'lucide-react';
+import { MoreHorizontal, PlusCircle, Trash, Edit, ArrowLeft, Video, FileText, Upload, Loader2, Image as ImageIcon, Code, View } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 
@@ -232,6 +232,21 @@ export default function ResourceManagementPage() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
+                              <DropdownMenuItem onClick={() => {
+                                const isHtml = resource.resourceType === 'html';
+                                const href = isHtml ? `/resources/${resource.id}` : resource.url;
+                                if (href) {
+                                    window.open(href, '_blank', 'noopener,noreferrer');
+                                } else {
+                                    toast({
+                                        variant: 'destructive',
+                                        title: 'Not Viewable',
+                                        description: 'This resource has no content or URL to view.',
+                                    });
+                                }
+                              }}>
+                                <View className="mr-2 h-4 w-4" /> View
+                              </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handleDialogOpen(resource)}>
                                 <Edit className="mr-2 h-4 w-4" /> Edit
                               </DropdownMenuItem>
@@ -367,3 +382,5 @@ export default function ResourceManagementPage() {
     </div>
   );
 }
+
+    
