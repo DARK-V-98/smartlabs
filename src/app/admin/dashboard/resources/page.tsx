@@ -236,7 +236,7 @@ export default function ResourceManagementPage() {
                                 const isHtml = resource.resourceType === 'html';
                                 const href = isHtml ? `/resources/${resource.id}` : resource.url;
                                 if (href) {
-                                    window.open(href, '_blank', 'noopener,noreferrer');
+                                    window.open(href, isHtml ? '_self' : '_blank', 'noopener,noreferrer');
                                 } else {
                                     toast({
                                         variant: 'destructive',
@@ -382,5 +382,3 @@ export default function ResourceManagementPage() {
     </div>
   );
 }
-
-    
