@@ -10,14 +10,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 
 export default function ResourceContentPage({ params }: { params: { resourceId: string } }) {
+  const { resourceId } = params;
   const { firestore } = useFirebase();
 
   const resourceQuery = useMemoFirebase(
     () =>
       firestore
-        ? doc(firestore, 'resources', params.resourceId)
+        ? doc(firestore, 'resources', resourceId)
         : null,
-    [firestore, params.resourceId]
+    [firestore, resourceId]
   );
   
   const { data: resource, isLoading } = useDoc(resourceQuery);
