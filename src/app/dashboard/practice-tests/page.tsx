@@ -69,8 +69,8 @@ const practiceTests = [
     section: 'Speaking',
     title: 'Answer Short Question',
     description: 'Answer simple questions.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-speaking-answer-short-question',
+    status: 'Available',
     hasAiScore: true,
   },
   {
@@ -78,8 +78,8 @@ const practiceTests = [
     section: 'Speaking',
     title: 'Summarize Group Discussion',
     description: 'Listen and summarize a discussion.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-speaking-summarize-group-discussion',
+    status: 'Available',
     hasAiScore: true,
   },
   {
@@ -87,8 +87,8 @@ const practiceTests = [
     section: 'Speaking',
     title: 'Respond to a Situation',
     description: 'Respond to a daily life situation.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-speaking-respond-to-situation',
+    status: 'Available',
     hasAiScore: true,
   },
   {

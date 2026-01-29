@@ -6,3 +6,6 @@ import './flows/score-pte-speaking-read-aloud';
 import './flows/score-pte-speaking-repeat-sentence';
 import './flows/score-pte-speaking-describe-image';
 import './flows/score-pte-speaking-retell-lecture';
+import './flows/score-pte-speaking-answer-short-question';
+import './flows/score-pte-speaking-respond-to-situation';
+import './flows/score-pte-speaking-summarize-group-discussion';

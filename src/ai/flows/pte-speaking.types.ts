@@ -69,3 +69,56 @@ export const PteRetellLectureOutputSchema = z.object({
     overallScore: z.number().min(0).max(90).describe("The overall weighted score."),
 });
 export type PteRetellLectureOutput = z.infer<typeof PteRetellLectureOutputSchema>;
+
+// --- Answer Short Question ---
+export const PteAnswerShortQuestionInputSchema = z.object({
+  questionAudioTranscript: z.string().describe('The transcript of the question that was read to the user.'),
+  expectedAnswer: z.string().describe('A simple, correct answer to the question.'),
+  audioDataUri: z.string().describe("A recording of the user answering the question, as a data URI."),
+});
+export type PteAnswerShortQuestionInput = z.infer<typeof PteAnswerShortQuestionInputSchema>;
+
+export const PteAnswerShortQuestionOutputSchema = z.object({
+    transcript: z.string().describe("The text transcribed from the user's audio recording."),
+    isCorrect: z.boolean().describe("Whether the user's answer was correct. The answer should be a simple word or phrase."),
+    feedback: z.string().describe("Feedback on why the answer was correct or incorrect, and brief notes on pronunciation/fluency if there are issues."),
+    pronunciationScore: z.number().min(0).max(90).describe("Score based on pronunciation clarity."),
+    fluencyScore: z.number().min(0).max(90).describe("Score based on speech fluency."),
+    overallScore: z.number().min(0).max(90).describe("The overall score. Calculated by averaging a content score (90 for correct, 10 for incorrect) with pronunciation and fluency scores."),
+});
+export type PteAnswerShortQuestionOutput = z.infer<typeof PteAnswerShortQuestionOutputSchema>;
+
+// --- Respond to a Situation ---
+export const PteRespondToSituationInputSchema = z.object({
+  situationTranscript: z.string().describe('The transcript of the situation described to the user.'),
+  audioDataUri: z.string().describe("A recording of the user's response, as a data URI."),
+});
+export type PteRespondToSituationInput = z.infer<typeof PteRespondToSituationInputSchema>;
+
+export const PteRespondToSituationOutputSchema = z.object({
+    transcript: z.string().describe("The text transcribed from the user's audio recording."),
+    contentScore: z.number().min(0).max(90).describe("Score based on the appropriateness, relevance, and completeness of the response to the situation."),
+    pronunciationScore: z.number().min(0).max(90).describe("Score based on pronunciation clarity."),
+    fluencyScore: z.number().min(0).max(90).describe("Score based on speech fluency."),
+    feedback: z.string().describe("Specific feedback on the content, pronunciation, and fluency of the response."),
+    overallScore: z.number().min(0).max(90).describe("The overall weighted score."),
+});
+export type PteRespondToSituationOutput = z.infer<typeof PteRespondToSituationOutputSchema>;
+
+
+// --- Summarize Group Discussion ---
+export const PteSummarizeGroupDiscussionInputSchema = z.object({
+  discussionTranscript: z.string().describe('The transcript of the group discussion the user listened to.'),
+  audioDataUri: z.string().describe("A recording of the user summarizing the discussion, as a data URI."),
+});
+export type PteSummarizeGroupDiscussionInput = z.infer<typeof PteSummarizeGroupDiscussionInputSchema>;
+
+export const PteSummarizeGroupDiscussionOutputSchema = z.object({
+    transcript: z.string().describe("The text transcribed from the user's audio recording."),
+    contentScore: z.number().min(0).max(90).describe("Score based on how well the user summarized the main points of the discussion."),
+    pronunciationScore: z.number().min(0).max(90).describe("Score based on pronunciation clarity."),
+    fluencyScore: z.number().min(0).max(90).describe("Score based on speech fluency."),
+    feedback: z.string().describe("Specific feedback on content coverage, pronunciation, and fluency."),
+    overallScore: z.number().min(0).max(90).describe("The overall weighted score."),
+});
+export type PteSummarizeGroupDiscussionOutput = z.infer<typeof PteSummarizeGroupDiscussionOutputSchema>;
