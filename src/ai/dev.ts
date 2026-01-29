@@ -11,3 +11,5 @@ import './flows/score-pte-speaking-respond-to-situation';
 import './flows/score-pte-speaking-summarize-group-discussion';
 import './flows/score-pte-writing-summarize-text';
 import './flows/score-pte-listening-summarize-spoken-text';
+import './flows/score-pte-writing-write-essay';
+import './flows/score-pte-listening-write-from-dictation';

@@ -250,7 +250,7 @@ const practiceTests = [
     description: 'Type a sentence you hear.',
     href: '/dashboard/practice-tests/pte-listening-write-from-dictation',
     status: 'Available',
-    hasAiScore: false,
+    hasAiScore: true,
   },
   {
     exam: 'IELTS',
@@ -367,9 +367,6 @@ export default function PracticeTestsPage() {
                                             >
                                                 <span className="flex-1 truncate">{test.title}</span>
                                                 <div className="flex items-center gap-1 flex-shrink-0">
-                                                {test.status === 'Coming Soon' && (
-                                                    <Badge variant="outline">Soon</Badge>
-                                                )}
                                                 {test.hasAiScore && (
                                                     <Badge
                                                     variant="secondary"

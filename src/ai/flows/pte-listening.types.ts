@@ -17,3 +17,18 @@ export const PteSummarizeSpokenTextOutputSchema = z.object({
     feedback: z.string().describe("Specific feedback on each scoring criterion."),
 });
 export type PteSummarizeSpokenTextOutput = z.infer<typeof PteSummarizeSpokenTextOutputSchema>;
+
+// --- Write from Dictation ---
+export const PteWriteFromDictationInputSchema = z.object({
+  originalSentence: z.string().describe('The original sentence that was dictated.'),
+  writtenSentence: z.string().describe('The sentence the user typed.'),
+});
+export type PteWriteFromDictationInput = z.infer<typeof PteWriteFromDictationInputSchema>;
+
+export const PteWriteFromDictationOutputSchema = z.object({
+    score: z.number().min(0).max(90).describe("Score based on the number of correct words in the correct sequence."),
+    correctWords: z.number().describe("The number of correctly typed words."),
+    totalWords: z.number().describe("The total number of words in the original sentence."),
+    feedback: z.string().describe("Feedback highlighting any errors in spelling or missed words."),
+});
+export type PteWriteFromDictationOutput = z.infer<typeof PteWriteFromDictationOutputSchema>;
