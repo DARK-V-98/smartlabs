@@ -25,7 +25,6 @@ export default function PteRetellLecturePage() {
     
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
-    const audioPlayerRef = useRef<HTMLAudioElement>(null);
     const timerRef = useRef<NodeJS.Timeout>();
 
     const currentLecture = pteRetellLectureData[currentLectureIndex];
@@ -57,14 +56,20 @@ export default function PteRetellLecturePage() {
     }, [gameState]);
 
     const playLecture = () => {
-        if (audioPlayerRef.current) {
+        if ('speechSynthesis' in window) {
             setGameState('playing');
-            audioPlayerRef.current.play();
+            const utterance = new SpeechSynthesisUtterance(currentLecture.transcript);
+            utterance.onend = () => {
+                setGameState('preparing');
+            };
+            utterance.onerror = () => {
+                toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play lecture audio.'});
+                setGameState('idle');
+            };
+            window.speechSynthesis.speak(utterance);
+        } else {
+            toast({ variant: 'destructive', title: 'Browser Not Supported', description: 'Your browser does not support speech synthesis.'});
         }
-    };
-    
-    const onAudioEnded = () => {
-        setGameState('preparing');
     };
 
     const startRecording = async () => {
@@ -130,7 +135,6 @@ export default function PteRetellLecturePage() {
                     <CardContent>
                         <div className="p-6 my-8 bg-muted/50 rounded-lg text-center min-h-[100px] flex flex-col items-center justify-center">
                             <h3 className="text-lg font-semibold mb-2">{currentLecture.title}</h3>
-                            <audio ref={audioPlayerRef} src={currentLecture.audioSrc} onEnded={onAudioEnded} className="hidden" />
                             {gameState === 'idle' && <Button onClick={playLecture} disabled={!hasPermission} size="lg"><PlayCircle className="mr-2 h-5 w-5" />Play Lecture</Button>}
                             {gameState === 'playing' && <div className="flex items-center gap-2 text-lg font-semibold text-primary"><Volume2 className="h-6 w-6 animate-pulse" />Listening to lecture...</div>}
                             {gameState === 'preparing' && <div className="text-center"><p className="text-lg font-semibold">Prepare to speak...</p><p className="text-6xl font-bold text-primary">{countdown}</p></div>}

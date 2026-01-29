@@ -22,7 +22,6 @@ export default function PteRepeatSentencePage() {
     
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
-    const audioPlayerRef = useRef<HTMLAudioElement>(null);
 
     const currentSentence = pteRepeatSentenceData[currentSentenceIndex];
 
@@ -36,16 +35,21 @@ export default function PteRepeatSentencePage() {
     }, [toast]);
     
     const playSentence = () => {
-        if (audioPlayerRef.current) {
+        if ('speechSynthesis' in window) {
             setGameState('playing');
-            audioPlayerRef.current.play();
+            const utterance = new SpeechSynthesisUtterance(currentSentence.text);
+            utterance.onend = () => {
+                // This will be called when the speech finishes.
+                startRecording();
+            };
+            utterance.onerror = () => {
+                toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play sentence audio.'});
+                setGameState('idle'); // Reset state on error
+            };
+            window.speechSynthesis.speak(utterance);
         } else {
-            toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not load sentence audio.'});
+            toast({ variant: 'destructive', title: 'Browser Not Supported', description: 'Your browser does not support speech synthesis.'});
         }
-    };
-    
-    const onAudioEnded = () => {
-        startRecording();
     };
 
     const startRecording = async () => {
@@ -112,7 +116,6 @@ export default function PteRepeatSentencePage() {
                         {!hasPermission && <Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>Microphone Required</AlertTitle><AlertDescription>Please grant microphone access and refresh.</AlertDescription></Alert>}
                         
                         <div className="p-6 my-8 bg-muted/50 rounded-lg text-center min-h-[100px] flex items-center justify-center">
-                            <audio ref={audioPlayerRef} src={currentSentence.audioSrc} onEnded={onAudioEnded} className="hidden" />
                             {gameState === 'idle' && <Button onClick={playSentence} disabled={!hasPermission} size="lg"><PlayCircle className="mr-2 h-5 w-5" />Play Sentence</Button>}
                             {gameState === 'playing' && <div className="flex items-center gap-2 text-lg font-semibold text-primary"><Volume2 className="h-6 w-6 animate-pulse" />Listening...</div>}
                             {gameState === 'recording' && <div className="flex items-center gap-2 text-lg font-semibold text-destructive"><Mic className="h-6 w-6 animate-pulse" />Recording...</div>}
