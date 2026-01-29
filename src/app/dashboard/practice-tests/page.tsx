@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -33,8 +32,8 @@ const practiceTests = [
     section: 'Speaking',
     title: 'Read Aloud',
     description: 'Practice reading a text aloud.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-speaking-read-aloud',
+    status: 'Available',
     hasAiScore: true,
   },
   {
