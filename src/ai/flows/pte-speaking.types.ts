@@ -17,3 +17,55 @@ export const PteReadAloudOutputSchema = z.object({
     overallScore: z.number().min(0).max(90).describe("The overall weighted score for the Read Aloud task."),
 });
 export type PteReadAloudOutput = z.infer<typeof PteReadAloudOutputSchema>;
+
+// --- Repeat Sentence ---
+export const PteRepeatSentenceInputSchema = z.object({
+  originalSentence: z.string().describe('The original sentence that the user was asked to repeat.'),
+  audioDataUri: z.string().describe("A recording of the user repeating the sentence, as a data URI."),
+});
+export type PteRepeatSentenceInput = z.infer<typeof PteRepeatSentenceInputSchema>;
+
+export const PteRepeatSentenceOutputSchema = z.object({
+    transcript: z.string().describe("The text transcribed from the user's audio recording."),
+    contentScore: z.number().min(0).max(90).describe("Score based on the number of correct words compared to the original sentence."),
+    pronunciationScore: z.number().min(0).max(90).describe("Score based on pronunciation clarity."),
+    fluencyScore: z.number().min(0).max(90).describe("Score based on speech fluency and rhythm."),
+    feedback: z.string().describe("Specific feedback on errors."),
+    overallScore: z.number().min(0).max(90).describe("The overall weighted score."),
+});
+export type PteRepeatSentenceOutput = z.infer<typeof PteRepeatSentenceOutputSchema>;
+
+
+// --- Describe Image ---
+export const PteDescribeImageInputSchema = z.object({
+  imageUrl: z.string().url().describe('The URL of the image the user needs to describe.'),
+  audioDataUri: z.string().describe("A recording of the user describing the image, as a data URI."),
+});
+export type PteDescribeImageInput = z.infer<typeof PteDescribeImageInputSchema>;
+
+export const PteDescribeImageOutputSchema = z.object({
+    transcript: z.string().describe("The text transcribed from the user's audio recording."),
+    contentScore: z.number().min(0).max(90).describe("Score based on the relevance and completeness of the image description, including key elements, relationships, and implications."),
+    pronunciationScore: z.number().min(0).max(90).describe("Score based on pronunciation clarity."),
+    fluencyScore: z.number().min(0).max(90).describe("Score based on speech fluency."),
+    feedback: z.string().describe("Specific feedback on content, pronunciation, and fluency."),
+    overallScore: z.number().min(0).max(90).describe("The overall weighted score."),
+});
+export type PteDescribeImageOutput = z.infer<typeof PteDescribeImageOutputSchema>;
+
+// --- Retell Lecture ---
+export const PteRetellLectureInputSchema = z.object({
+  lectureTranscript: z.string().describe('The transcript of the lecture the user listened to.'),
+  audioDataUri: z.string().describe("A recording of the user retelling the lecture, as a data URI."),
+});
+export type PteRetellLectureInput = z.infer<typeof PteRetellLectureInputSchema>;
+
+export const PteRetellLectureOutputSchema = z.object({
+    transcript: z.string().describe("The text transcribed from the user's audio recording."),
+    contentScore: z.number().min(0).max(90).describe("Score based on how well the user retold the main points of the lecture."),
+    pronunciationScore: z.number().min(0).max(90).describe("Score based on pronunciation clarity."),
+    fluencyScore: z.number().min(0).max(90).describe("Score based on speech fluency."),
+    feedback: z.string().describe("Specific feedback on content, pronunciation, and fluency."),
+    overallScore: z.number().min(0).max(90).describe("The overall weighted score."),
+});
+export type PteRetellLectureOutput = z.infer<typeof PteRetellLectureOutputSchema>;

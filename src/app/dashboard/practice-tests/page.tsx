@@ -42,8 +42,8 @@ const practiceTests = [
     section: 'Speaking',
     title: 'Repeat Sentence',
     description: 'Listen and repeat a sentence.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-speaking-repeat-sentence',
+    status: 'Available',
     hasAiScore: true,
   },
   {
@@ -51,8 +51,8 @@ const practiceTests = [
     section: 'Speaking',
     title: 'Describe Image',
     description: 'Describe an image in detail.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-speaking-describe-image',
+    status: 'Available',
     hasAiScore: true,
   },
   {
@@ -60,8 +60,8 @@ const practiceTests = [
     section: 'Speaking',
     title: 'Retell Lecture',
     description: 'Listen to a lecture and retell it.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-speaking-retell-lecture',
+    status: 'Available',
     hasAiScore: true,
   },
   {
@@ -370,6 +370,9 @@ export default function PracticeTestsPage() {
                                                 <div className="flex items-center gap-1 flex-shrink-0">
                                                 {test.status === 'Coming Soon' && (
                                                     <Badge variant="outline">Soon</Badge>
+                                                )}
+                                                 {test.status === 'Available' && (
+                                                    <Badge variant="secondary" className="bg-green-500/10 text-green-700">New</Badge>
                                                 )}
                                                 {test.hasAiScore && (
                                                     <Badge
