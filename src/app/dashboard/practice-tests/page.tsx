@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -96,8 +95,8 @@ const practiceTests = [
     section: 'Speaking',
     title: 'Respond to a Situation (Core)',
     description: 'Core-specific situation response.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-speaking-respond-to-situation-core',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -114,8 +113,8 @@ const practiceTests = [
     section: 'Writing',
     title: 'Write Essay',
     description: 'Write a 200-300 word argumentative essay.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-writing-write-essay',
+    status: 'Available',
     hasAiScore: true,
   },
   {
@@ -123,8 +122,8 @@ const practiceTests = [
     section: 'Writing',
     title: 'Summarize Written Text (Core)',
     description: 'Core-specific summary writing.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-writing-summarize-text-core',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -132,8 +131,8 @@ const practiceTests = [
     section: 'Writing',
     title: 'Write Email (Core)',
     description: 'Core-specific email writing task.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-writing-write-email-core',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -159,8 +158,8 @@ const practiceTests = [
     section: 'Reading',
     title: 'Multiple-Choice, Multiple Answer',
     description: 'Select all correct responses from a list.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-reading-multiple-choice-multiple-answer',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -168,8 +167,8 @@ const practiceTests = [
     section: 'Reading',
     title: 'Reorder Paragraphs',
     description: 'Arrange text boxes in the correct order.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-reading-reorder-paragraphs',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -177,8 +176,8 @@ const practiceTests = [
     section: 'Reading',
     title: 'Fill in the Blanks (Drag & Drop)',
     description: 'Drag words to fill the blanks in a text.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-reading-fill-in-blanks-drag-drop',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -195,8 +194,8 @@ const practiceTests = [
     section: 'Listening',
     title: 'Multiple-Choice, Multiple Answer',
     description: 'Select all correct responses from a list.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-listening-multiple-choice-multiple-answer',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -204,8 +203,8 @@ const practiceTests = [
     section: 'Listening',
     title: 'Fill in the Blanks',
     description: 'Type the missing word in a transcript.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-listening-fill-in-blanks',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -213,8 +212,8 @@ const practiceTests = [
     section: 'Listening',
     title: 'Highlight Correct Summary',
     description: 'Choose the best summary of a recording.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-listening-highlight-correct-summary',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -222,8 +221,8 @@ const practiceTests = [
     section: 'Listening',
     title: 'Multiple-Choice, Single Answer',
     description: 'Select one correct response.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-listening-multiple-choice-single-answer',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -231,8 +230,8 @@ const practiceTests = [
     section: 'Listening',
     title: 'Select Missing Word',
     description: 'Choose the last word of a recording.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-listening-select-missing-word',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -240,8 +239,8 @@ const practiceTests = [
     section: 'Listening',
     title: 'Highlight Incorrect Words',
     description: 'Find words that differ from a recording.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-listening-highlight-incorrect-words',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -249,8 +248,8 @@ const practiceTests = [
     section: 'Listening',
     title: 'Write from Dictation',
     description: 'Type a sentence you hear.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-listening-write-from-dictation',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -267,8 +266,8 @@ const practiceTests = [
     section: 'Listening',
     title: 'CELPIP Listening Practice',
     description: 'Listen to conversations and answer questions to prepare for the CELPIP Listening test.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/celpip-listening-practice',
+    status: 'Available',
     hasAiScore: false,
   },
 ];
@@ -370,9 +369,6 @@ export default function PracticeTestsPage() {
                                                 <div className="flex items-center gap-1 flex-shrink-0">
                                                 {test.status === 'Coming Soon' && (
                                                     <Badge variant="outline">Soon</Badge>
-                                                )}
-                                                 {test.status === 'Available' && (
-                                                    <Badge variant="secondary" className="bg-green-500/10 text-green-700">New</Badge>
                                                 )}
                                                 {test.hasAiScore && (
                                                     <Badge
