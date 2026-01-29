@@ -1,6 +1,6 @@
 
 'use client';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle, RefreshCw, XCircle, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -43,9 +43,9 @@ export default function PteMockTest2Page() {
         setTotalPossibleScore(total);
     }, []);
 
-    const handleAnswerChange = (questionId: string, value: any) => {
+    const handleAnswerChange = useCallback((questionId: string, value: any) => {
         setAnswers(prev => ({ ...prev, [questionId]: value }));
-    };
+    }, []);
 
     const handleSubmit = () => {
         let currentScore = 0;
@@ -191,11 +191,9 @@ const ReorderParagraphsComponent = ({ question, onAnswerChange, initialOrder, is
     const [items, setItems] = useState<string[]>(question.paragraphs);
 
     useEffect(() => {
-        // Shuffle on the client after mount and on retry to avoid hydration mismatch
         if (!isSubmitted) {
             setItems(shuffle([...question.paragraphs]));
         }
-    // We only want this to run when the question changes or on retry.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSubmitted, question.id]);
 
