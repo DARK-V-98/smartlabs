@@ -105,8 +105,8 @@ const practiceTests = [
     section: 'Writing',
     title: 'Summarize Written Text',
     description: 'Write a one-sentence summary of a text.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-writing-summarize-text',
+    status: 'Available',
     hasAiScore: true,
   },
   {
@@ -150,8 +150,8 @@ const practiceTests = [
     section: 'Reading',
     title: 'Fill in the Blanks (Dropdown)',
     description: 'Select the most appropriate word from a dropdown.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-reading-fill-in-blanks-dropdown',
+    status: 'Available',
     hasAiScore: false,
   },
   {
@@ -186,8 +186,8 @@ const practiceTests = [
     section: 'Listening',
     title: 'Summarize Spoken Text',
     description: 'Summarize a lecture you hear.',
-    href: '#',
-    status: 'Coming Soon',
+    href: '/dashboard/practice-tests/pte-listening-summarize-spoken-text',
+    status: 'Available',
     hasAiScore: true,
   },
   {

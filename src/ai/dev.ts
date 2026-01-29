@@ -9,3 +9,5 @@ import './flows/score-pte-speaking-retell-lecture';
 import './flows/score-pte-speaking-answer-short-question';
 import './flows/score-pte-speaking-respond-to-situation';
 import './flows/score-pte-speaking-summarize-group-discussion';
+import './flows/score-pte-writing-summarize-text';
+import './flows/score-pte-listening-summarize-spoken-text';
