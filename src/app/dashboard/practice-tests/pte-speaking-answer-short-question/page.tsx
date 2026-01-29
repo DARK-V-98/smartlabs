@@ -11,6 +11,8 @@ import { scorePteAnswerShortQuestion } from '@/ai/flows/score-pte-speaking-answe
 import type { PteAnswerShortQuestionInput, PteAnswerShortQuestionOutput } from '@/ai/flows/pte-speaking.types';
 import { pteAnswerShortQuestionData } from '@/lib/pte-speaking-answer-short-question-data';
 import { Progress } from '@/components/ui/progress';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function PteAnswerShortQuestionPage() {
     const { toast } = useToast();
@@ -19,6 +21,8 @@ export default function PteAnswerShortQuestionPage() {
     const [result, setResult] = useState<PteAnswerShortQuestionOutput | null>(null);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+    const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+    const [selectedVoiceURI, setSelectedVoiceURI] = useState<string | undefined>();
     
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
@@ -32,12 +36,36 @@ export default function PteAnswerShortQuestionPage() {
                 setHasPermission(false);
                 toast({ variant: 'destructive', title: 'Microphone Access Denied' });
             });
-    }, [toast]);
+        
+        const handleVoicesChanged = () => {
+            const availableVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+            setVoices(availableVoices);
+            if (!selectedVoiceURI && availableVoices.length > 0) {
+                const googleVoice = availableVoices.find(v => v.name.includes('Google') && v.lang.startsWith('en'));
+                setSelectedVoiceURI(googleVoice?.voiceURI || availableVoices[0].voiceURI);
+            }
+        };
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
+            handleVoicesChanged();
+        }
+
+        return () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = null;
+            }
+        };
+    }, [toast, selectedVoiceURI]);
     
     const playQuestion = () => {
         if ('speechSynthesis' in window) {
             setGameState('playing');
             const utterance = new SpeechSynthesisUtterance(currentQuestion.question);
+            const selectedVoice = voices.find(v => v.voiceURI === selectedVoiceURI);
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
             utterance.onend = () => {
                 startRecording();
             };
@@ -118,8 +146,31 @@ export default function PteAnswerShortQuestionPage() {
                     <CardContent>
                         {!hasPermission && <Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>Microphone Required</AlertTitle><AlertDescription>Please grant microphone access and refresh.</AlertDescription></Alert>}
                         
-                        <div className="p-6 my-8 bg-muted/50 rounded-lg text-center min-h-[100px] flex flex-col items-center justify-center">
-                           {gameState === 'idle' && <Button onClick={playQuestion} disabled={!hasPermission} size="lg"><PlayCircle className="mr-2 h-5 w-5" />Play Question</Button>}
+                        <div className="p-6 my-8 bg-muted/50 rounded-lg text-center min-h-[100px] flex flex-col items-center justify-center gap-6">
+                           {gameState === 'idle' && (
+                                <>
+                                    <div className="w-full max-w-sm space-y-2 text-left">
+                                        <Label htmlFor="voice-select">Voice Accent</Label>
+                                        <Select
+                                            value={selectedVoiceURI}
+                                            onValueChange={setSelectedVoiceURI}
+                                            disabled={voices.length === 0}
+                                        >
+                                            <SelectTrigger id="voice-select">
+                                                <SelectValue placeholder={voices.length > 0 ? "Select a voice" : "Loading voices..."} />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {voices.map(voice => (
+                                                    <SelectItem key={voice.voiceURI} value={voice.voiceURI}>
+                                                        {voice.name} ({voice.lang})
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <Button onClick={playQuestion} disabled={!hasPermission} size="lg"><PlayCircle className="mr-2 h-5 w-5" />Play Question</Button>
+                                </>
+                           )}
                             {gameState === 'playing' && <div className="flex items-center gap-2 text-lg font-semibold text-primary"><Volume2 className="h-6 w-6 animate-pulse" />Listening...</div>}
                             {gameState === 'recording' && <div className="flex items-center gap-2 text-lg font-semibold text-destructive"><Mic className="h-6 w-6 animate-pulse" />Recording...</div>}
                             {(gameState === 'stopped' || gameState === 'loading' || gameState === 'results') && <p className="text-lg text-muted-foreground font-medium">{currentQuestion.question}</p>}

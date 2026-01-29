@@ -11,6 +11,8 @@ import { scorePteRespondToSituation } from '@/ai/flows/score-pte-speaking-respon
 import type { PteRespondToSituationInput, PteRespondToSituationOutput } from '@/ai/flows/pte-speaking.types';
 import { pteRespondToSituationData } from '@/lib/pte-speaking-respond-to-situation-data';
 import { Progress } from '@/components/ui/progress';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function PteRespondToSituationPage() {
     const { toast } = useToast();
@@ -19,6 +21,8 @@ export default function PteRespondToSituationPage() {
     const [result, setResult] = useState<PteRespondToSituationOutput | null>(null);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+    const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+    const [selectedVoiceURI, setSelectedVoiceURI] = useState<string | undefined>();
     
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
@@ -32,12 +36,36 @@ export default function PteRespondToSituationPage() {
                 setHasPermission(false);
                 toast({ variant: 'destructive', title: 'Microphone Access Denied' });
             });
-    }, [toast]);
+        
+        const handleVoicesChanged = () => {
+            const availableVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+            setVoices(availableVoices);
+            if (!selectedVoiceURI && availableVoices.length > 0) {
+                const googleVoice = availableVoices.find(v => v.name.includes('Google') && v.lang.startsWith('en'));
+                setSelectedVoiceURI(googleVoice?.voiceURI || availableVoices[0].voiceURI);
+            }
+        };
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
+            handleVoicesChanged();
+        }
+
+        return () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = null;
+            }
+        };
+    }, [toast, selectedVoiceURI]);
     
     const playSituation = () => {
         if ('speechSynthesis' in window) {
             setGameState('playing');
             const utterance = new SpeechSynthesisUtterance(currentSituation.situation);
+            const selectedVoice = voices.find(v => v.voiceURI === selectedVoiceURI);
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
             utterance.onend = () => {
                 startRecording();
             };
@@ -112,9 +140,32 @@ export default function PteRespondToSituationPage() {
                         <CardDescription>You will hear a description of a situation. Please respond as you would in real life.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="p-6 my-8 bg-muted/50 rounded-lg text-center min-h-[100px] flex flex-col items-center justify-center gap-4">
+                        <div className="p-6 my-8 bg-muted/50 rounded-lg text-center min-h-[100px] flex flex-col items-center justify-center gap-6">
                             <h3 className="text-lg font-semibold">{currentSituation.title}</h3>
-                            {gameState === 'idle' && <Button onClick={playSituation} disabled={!hasPermission} size="lg"><PlayCircle className="mr-2 h-5 w-5" />Play Situation</Button>}
+                            {gameState === 'idle' && (
+                                <>
+                                    <div className="w-full max-w-sm space-y-2 text-left">
+                                        <Label htmlFor="voice-select">Voice Accent</Label>
+                                        <Select
+                                            value={selectedVoiceURI}
+                                            onValueChange={setSelectedVoiceURI}
+                                            disabled={voices.length === 0}
+                                        >
+                                            <SelectTrigger id="voice-select">
+                                                <SelectValue placeholder={voices.length > 0 ? "Select a voice" : "Loading voices..."} />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {voices.map(voice => (
+                                                    <SelectItem key={voice.voiceURI} value={voice.voiceURI}>
+                                                        {voice.name} ({voice.lang})
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <Button onClick={playSituation} disabled={!hasPermission} size="lg"><PlayCircle className="mr-2 h-5 w-5" />Play Situation</Button>
+                                </>
+                            )}
                             {gameState === 'playing' && <div className="flex items-center gap-2 text-lg font-semibold text-primary"><Volume2 className="h-6 w-6 animate-pulse" />Listening...</div>}
                             {gameState === 'recording' && <div className="flex items-center gap-2 text-lg font-semibold text-destructive"><Mic className="h-6 w-6 animate-pulse" />Recording...</div>}
                              {(gameState === 'stopped' || gameState === 'loading' || gameState === 'results') && <p className="text-base text-muted-foreground italic">"{currentSituation.situation}"</p>}
