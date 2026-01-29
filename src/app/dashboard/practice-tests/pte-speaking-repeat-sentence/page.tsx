@@ -11,6 +11,8 @@ import { scorePteRepeatSentence } from '@/ai/flows/score-pte-speaking-repeat-sen
 import type { PteRepeatSentenceInput, PteRepeatSentenceOutput } from '@/ai/flows/pte-speaking.types';
 import { pteRepeatSentenceData } from '@/lib/pte-speaking-repeat-sentence-data';
 import { Progress } from '@/components/ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 export default function PteRepeatSentencePage() {
     const { toast } = useToast();
@@ -19,6 +21,8 @@ export default function PteRepeatSentencePage() {
     const [result, setResult] = useState<PteRepeatSentenceOutput | null>(null);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+    const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+    const [selectedVoiceURI, setSelectedVoiceURI] = useState<string | undefined>();
     
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
@@ -32,19 +36,43 @@ export default function PteRepeatSentencePage() {
                 setHasPermission(false);
                 toast({ variant: 'destructive', title: 'Microphone Access Denied' });
             });
-    }, [toast]);
+            
+        const handleVoicesChanged = () => {
+            const availableVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+            setVoices(availableVoices);
+            if (!selectedVoiceURI && availableVoices.length > 0) {
+                const googleVoice = availableVoices.find(v => v.name.includes('Google') && v.lang.startsWith('en'));
+                setSelectedVoiceURI(googleVoice?.voiceURI || availableVoices[0].voiceURI);
+            }
+        };
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
+            handleVoicesChanged();
+        }
+
+        return () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = null;
+            }
+        };
+    }, [toast, selectedVoiceURI]);
     
     const playSentence = () => {
         if ('speechSynthesis' in window) {
             setGameState('playing');
             const utterance = new SpeechSynthesisUtterance(currentSentence.text);
+            const selectedVoice = voices.find(v => v.voiceURI === selectedVoiceURI);
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
             utterance.onend = () => {
-                // This will be called when the speech finishes.
                 startRecording();
             };
-            utterance.onerror = () => {
+            utterance.onerror = (e) => {
+                console.error("Speech Synthesis Error:", e);
                 toast({ variant: 'destructive', title: 'Audio Error', description: 'Could not play sentence audio.'});
-                setGameState('idle'); // Reset state on error
+                setGameState('idle');
             };
             window.speechSynthesis.speak(utterance);
         } else {
@@ -115,8 +143,31 @@ export default function PteRepeatSentencePage() {
                     <CardContent>
                         {!hasPermission && <Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>Microphone Required</AlertTitle><AlertDescription>Please grant microphone access and refresh.</AlertDescription></Alert>}
                         
-                        <div className="p-6 my-8 bg-muted/50 rounded-lg text-center min-h-[100px] flex items-center justify-center">
-                            {gameState === 'idle' && <Button onClick={playSentence} disabled={!hasPermission} size="lg"><PlayCircle className="mr-2 h-5 w-5" />Play Sentence</Button>}
+                        <div className="p-6 my-8 bg-muted/50 rounded-lg text-center min-h-[100px] flex flex-col items-center justify-center gap-6">
+                            {gameState === 'idle' && (
+                                <>
+                                    <div className="w-full max-w-sm space-y-2 text-left">
+                                        <Label htmlFor="voice-select">Voice Accent</Label>
+                                        <Select
+                                            value={selectedVoiceURI}
+                                            onValueChange={setSelectedVoiceURI}
+                                            disabled={voices.length === 0}
+                                        >
+                                            <SelectTrigger id="voice-select">
+                                                <SelectValue placeholder={voices.length > 0 ? "Select a voice" : "Loading voices..."} />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {voices.map(voice => (
+                                                    <SelectItem key={voice.voiceURI} value={voice.voiceURI}>
+                                                        {voice.name} ({voice.lang})
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <Button onClick={playSentence} disabled={!hasPermission || voices.length === 0} size="lg"><PlayCircle className="mr-2 h-5 w-5" />Play Sentence</Button>
+                                </>
+                            )}
                             {gameState === 'playing' && <div className="flex items-center gap-2 text-lg font-semibold text-primary"><Volume2 className="h-6 w-6 animate-pulse" />Listening...</div>}
                             {gameState === 'recording' && <div className="flex items-center gap-2 text-lg font-semibold text-destructive"><Mic className="h-6 w-6 animate-pulse" />Recording...</div>}
                             {(gameState === 'stopped' || gameState === 'loading' || gameState === 'results') && <p className="text-lg text-muted-foreground font-medium">{currentSentence.text}</p>}
