@@ -7,9 +7,15 @@ import { Badge } from "@/components/ui/badge";
 
 const mockTestCourses = [
   {
-    title: "PTE Academic Mock Tests",
+    title: "PTE Academic Mock Test 1",
     description: "Full-length practice tests to simulate the real exam experience.",
     href: "/mock-tests/pte/test-1",
+    status: "Available"
+  },
+  {
+    title: "PTE Academic Mock Test 2",
+    description: "A second full-length practice test to sharpen your skills.",
+    href: "/mock-tests/pte/test-2",
     status: "Available"
   },
   {

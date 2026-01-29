@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { ArrowLeft, CheckCircle, RefreshCw, XCircle, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { pteLongReadingTestData, PteQuestion, FillInTheBlanksRW, ReorderParagraphs, FillInTheBlanksReading } from '@/lib/pte-long-reading-test-data';
+import { pteLongReadingTestData2 } from '@/lib/pte-long-reading-test-data-2';
+import { PteQuestion, FillInTheBlanksRW, ReorderParagraphs, FillInTheBlanksReading } from '@/lib/pte-long-reading-test-data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Reorder } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 
 // Helper to shuffle an array
@@ -22,7 +22,7 @@ const shuffle = (array: any[]) => {
     return array;
 };
 
-export default function PteMockTest1Page() {
+export default function PteMockTest2Page() {
     const [answers, setAnswers] = useState<Record<string, any>>({});
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [score, setScore] = useState(0);
@@ -30,7 +30,7 @@ export default function PteMockTest1Page() {
 
     useEffect(() => {
         let total = 0;
-        pteLongReadingTestData.questions.forEach(q => {
+        pteLongReadingTestData2.questions.forEach(q => {
             if (q.type === 'fill-in-the-blanks-rw') {
                 total += q.blanks.length;
             } else if (q.type === 'fill-in-the-blanks-r') {
@@ -48,7 +48,7 @@ export default function PteMockTest1Page() {
 
     const handleSubmit = () => {
         let currentScore = 0;
-        pteLongReadingTestData.questions.forEach(q => {
+        pteLongReadingTestData2.questions.forEach(q => {
             const userAnswer = answers[q.id];
             if (!userAnswer) return;
 
@@ -71,7 +71,7 @@ export default function PteMockTest1Page() {
                     }
                 }
             } else if (q.type === 'fill-in-the-blanks-r') {
-                q.correctWords.forEach((correctWord, index) => {
+                 q.correctWords.forEach((correctWord, index) => {
                     if (userAnswer[index] === correctWord) {
                         currentScore++;
                     }
@@ -98,7 +98,7 @@ export default function PteMockTest1Page() {
                     </Button>
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-3xl font-headline">{pteLongReadingTestData.title}</CardTitle>
+                            <CardTitle className="text-3xl font-headline">{pteLongReadingTestData2.title}</CardTitle>
                             <CardDescription>Complete all questions and submit your answers to see your score.</CardDescription>
                         </CardHeader>
                         {isSubmitted && (
@@ -112,7 +112,7 @@ export default function PteMockTest1Page() {
                         )}
                     </Card>
 
-                    {pteLongReadingTestData.questions.map((question, index) => (
+                    {pteLongReadingTestData2.questions.map((question, index) => (
                         <Card key={question.id}>
                             <CardHeader>
                                 <CardTitle>Question {index + 1}</CardTitle>
@@ -145,8 +145,6 @@ export default function PteMockTest1Page() {
         </div>
     );
 }
-
-// Sub-components for different question types
 
 const FillInTheBlanksRWComponent = ({ question, onAnswerChange, answers, isSubmitted }: { question: FillInTheBlanksRW, onAnswerChange: Function, answers: Record<string,string>, isSubmitted: boolean }) => {
     const passageParts = question.passage.split('{BLANK}');
@@ -192,7 +190,7 @@ const ReorderParagraphsComponent = ({ question, onAnswerChange, initialOrder, is
     const [items, setItems] = useState<string[]>(() => initialOrder || shuffle([...question.paragraphs]));
 
     useEffect(() => {
-        if(!isSubmitted) { // Prevents re-shuffling on retry
+        if(!isSubmitted) {
             onAnswerChange(question.id, items);
         }
     }, [items, isSubmitted, onAnswerChange, question.id]);
@@ -240,7 +238,7 @@ const FillInTheBlanksRComponent = ({ question, onAnswerChange, answers, isSubmit
             onAnswerChange(question.id, initialBlanks);
             setWordBank(shuffle([...question.wordBank]));
         }
-    }, [question.id, isSubmitted, question.correctWords.length, question.wordBank]);
+    }, [question.id, isSubmitted, question.correctWords.length, question.wordBank, onAnswerChange]);
 
     const handleWordBankClick = (word: string, index: number) => {
         if (isSubmitted) return;
