@@ -258,9 +258,9 @@ const practiceTests = [
     section: 'Writing',
     title: 'IELTS Writing Task 2: Essay',
     description: 'Practice writing a full essay for the IELTS Academic Writing Task 2.',
-    href: '#',
-    status: 'Coming Soon',
-    hasAiScore: false,
+    href: '/dashboard/practice-tests/ielts-writing-task2',
+    status: 'Available',
+    hasAiScore: true,
   },
   {
     exam: 'CELPIP',
