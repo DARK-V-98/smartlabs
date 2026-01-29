@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
@@ -189,19 +190,22 @@ const FillInTheBlanksRWComponent = ({ question, onAnswerChange, answers, isSubmi
 };
 
 const ReorderParagraphsComponent = ({ question, onAnswerChange, initialOrder, isSubmitted }: { question: ReorderParagraphs, onAnswerChange: Function, initialOrder: string[], isSubmitted: boolean }) => {
-    const [items, setItems] = useState<string[]>(() => initialOrder || shuffle([...question.paragraphs]));
+    const [items, setItems] = useState<string[]>(question.paragraphs);
 
     useEffect(() => {
-        if(!isSubmitted) { // Prevents re-shuffling on retry
+        // Shuffle on the client after mount and on retry to avoid hydration mismatch
+        if (!isSubmitted) {
+            setItems(shuffle([...question.paragraphs]));
+        }
+    // We only want this to run when the question changes or on retry.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSubmitted, question.id]);
+
+    useEffect(() => {
+        if(!isSubmitted) {
             onAnswerChange(question.id, items);
         }
     }, [items, isSubmitted, onAnswerChange, question.id]);
-    
-    useEffect(() => {
-        if(!initialOrder && !isSubmitted) {
-            setItems(shuffle([...question.paragraphs]));
-        }
-    }, [isSubmitted, initialOrder, question.paragraphs]);
     
     const isCorrect = isSubmitted && JSON.stringify(items) === JSON.stringify(question.correctOrder);
     
