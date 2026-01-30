@@ -165,7 +165,6 @@ const heroCards = [
   {
     title: "PTE",
     line1: "AI-Powered Scoring",
-    line2: "Fast, Accurate, Computer-based",
     icon: Target,
     style: {
       borderColor: "border-primary/30",
@@ -175,8 +174,7 @@ const heroCards = [
   },
   {
     title: "IELTS",
-    line1: "Global Standard for Migration & Study",
-    line2: null,
+    line1: "Global Standard",
     icon: Globe,
     style: {
       borderColor: "border-accent-2/30",
@@ -186,8 +184,7 @@ const heroCards = [
   },
   {
     title: "CELPIP",
-    line1: "Your Key to Canadian Immigration",
-    line2: null,
+    line1: "Canadian Immigration",
     icon: Zap,
     style: {
       borderColor: "border-accent-4/30",
@@ -199,20 +196,14 @@ const heroCards = [
 
 export default function Home() {
   const [imgIndex, setImgIndex] = useState(0);
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   useEffect(() => {
     const bgInterval = setInterval(() => {
       setImgIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
     }, 5500); // Change image every 5.5 seconds
     
-    const cardInterval = setInterval(() => {
-      setCurrentCardIndex((prevIndex) => (prevIndex + 1) % heroCards.length);
-    }, 4000); // 3s display + 1s cooldown
-    
     return () => {
       clearInterval(bgInterval);
-      clearInterval(cardInterval);
     };
   }, []);
   
@@ -303,39 +294,31 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right Content - Animated Hero Card */}
-            <motion.div
-              className="relative hidden lg:flex items-center justify-center min-h-[550px] lg:min-h-[600px] xl:w-[500px] xl:min-h-[700px]"
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentCardIndex}
-                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -20, scale: 0.9 }}
-                  transition={{ duration: 0.5, ease: 'easeInOut' }}
-                  className={cn(
-                    "absolute w-80 h-96 xl:w-96 xl:h-[28rem] glass-card rounded-3xl p-8 flex flex-col justify-between shadow-2xl border-2",
-                    heroCards[currentCardIndex].style.borderColor
-                  )}
-                >
-                  <div>
-                    <div className="flex justify-between items-start">
-                      <h3 className="font-bold text-4xl text-foreground">{heroCards[currentCardIndex].title}</h3>
-                      <div className={cn("p-3 rounded-xl", heroCards[currentCardIndex].style.bgColor)}>
-                        <heroCards[currentCardIndex].icon className={cn("h-8 w-8", heroCards[currentCardIndex].style.textColor)} />
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p className={cn("text-lg font-semibold", heroCards[currentCardIndex].style.textColor)}>{heroCards[currentCardIndex].line1}</p>
-                    {heroCards[currentCardIndex].line2 && (
-                      <p className="text-sm text-muted-foreground">{heroCards[currentCardIndex].line2}</p>
-                    )}
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </motion.div>
+            {/* Right Content - Static Cards */}
+            <div className="relative hidden lg:flex items-center justify-center">
+                <div className="grid gap-6">
+                    {heroCards.map((card, index) => (
+                        <motion.div
+                            key={card.title}
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.5, delay: 0.4 + index * 0.2 }}
+                            className={cn(
+                                "w-80 glass-card rounded-3xl p-6 flex items-center gap-4 shadow-xl border-2",
+                                card.style.borderColor
+                            )}
+                        >
+                            <div className={cn("p-3 rounded-xl", card.style.bgColor)}>
+                                <card.icon className={cn("h-8 w-8", card.style.textColor)} />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-xl text-foreground">{card.title}</h3>
+                                <p className={cn("text-sm font-semibold", card.style.textColor)}>{card.line1}</p>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
           </div>
         </div>
       </section>
