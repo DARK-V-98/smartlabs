@@ -1,8 +1,8 @@
 
 'use client';
 import Link from "next/link";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import React, { useRef } from "react";
+import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion";
+import React, { useRef, useState, useEffect } from "react";
 import Image from 'next/image';
 import { 
   Book,
@@ -325,6 +325,31 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
+const backgroundImages = ['/1.png', '/2.png', '/3.png', '/4.png'];
+const animationVariants = [
+  { // 0
+    initial: { opacity: 0, scale: 1 },
+    animate: { opacity: 1, scale: 1.05, transition: { duration: 1.5, ease: "easeOut" } },
+    exit: { y: "50%", opacity: 0, scale: 0.95, transition: { duration: 2, ease: "easeIn" } },
+  },
+  { // 1
+    initial: { y: "-100%", opacity: 0 },
+    animate: { y: 0, opacity: 1, transition: { duration: 1.5, ease: "easeOut" } },
+    exit: { x: "-100%", opacity: 0, transition: { duration: 2, ease: "easeIn" } },
+  },
+  { // 2
+    initial: { x: "100%", opacity: 0 },
+    animate: { x: 0, opacity: 1, transition: { duration: 1.5, ease: "easeOut" } },
+    exit: { y: "-100%", opacity: 0, transition: { duration: 2, ease: "easeIn" } },
+  },
+  { // 3
+    initial: { y: "100%", opacity: 0 },
+    animate: { y: 0, opacity: 1, transition: { duration: 1.5, ease: "easeOut" } },
+    exit: { x: "100%", opacity: 0, transition: { duration: 2, ease: "easeIn" } },
+  },
+];
+
+
 export default function Home() {
   const heroRef = useRef(null);
   const x = useMotionValue(0);
@@ -338,6 +363,15 @@ export default function Home() {
 
   const parallaxX2 = useTransform(springX, [-100, 100], [15, -15]);
   const parallaxY2 = useTransform(springY, [-100, 100], [10, -10]);
+
+  const [imgIndex, setImgIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setImgIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
+    }, 5500); // Change image every 5.5 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (heroRef.current) {
@@ -358,19 +392,29 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent-1/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
-        </div>
+        {/* Background Image Animation */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={imgIndex}
+            className="absolute inset-0 -z-20 h-full w-full bg-cover bg-center"
+            style={{ backgroundImage: `url(${backgroundImages[imgIndex]})` }}
+            variants={animationVariants[imgIndex]}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          />
+        </AnimatePresence>
+        {/* Glass overlay effect */}
+        <div className="absolute inset-0 -z-10 bg-background/50 backdrop-blur-sm" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left Content */}
-            <motion.div
+             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
+              className="glass-card rounded-3xl p-8"
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                 <Sparkles className="h-4 w-4" />
