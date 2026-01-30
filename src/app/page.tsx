@@ -1,4 +1,3 @@
-
 'use client';
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -295,8 +294,8 @@ export default function Home() {
             </motion.div>
 
             {/* Right Content - Static Cards */}
-            <div className="relative hidden lg:flex items-center justify-center">
-                <div className="grid gap-6">
+            <div className="relative flex items-center justify-center mt-12 lg:mt-0">
+                <div className="grid gap-6 w-full max-w-sm">
                     {heroCards.map((card, index) => (
                         <motion.div
                             key={card.title}
@@ -304,7 +303,7 @@ export default function Home() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: 0.4 + index * 0.2 }}
                             className={cn(
-                                "w-80 glass-card rounded-3xl p-6 flex items-center gap-4 shadow-xl border-2",
+                                "glass-card rounded-3xl p-6 flex items-center gap-4 shadow-xl border-2",
                                 card.style.borderColor
                             )}
                         >
