@@ -24,6 +24,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { AnimatedNumber } from "@/components/ui/animated-number";
 import { AnimatedCheckmark } from "@/components/ui/animated-checkmark";
+import { cn } from "@/lib/utils";
 
 type Stat = {
   value?: number;
@@ -349,44 +350,61 @@ const animationVariants = [
   },
 ];
 
+const heroCards = [
+  {
+    title: "PTE",
+    line1: "AI-Powered Scoring",
+    line2: "Fast, Accurate, Computer-based",
+    icon: Target,
+    style: {
+      borderColor: "border-primary/30",
+      bgColor: "bg-primary/10",
+      textColor: "text-primary",
+    },
+  },
+  {
+    title: "IELTS",
+    line1: "Global Standard for Migration & Study",
+    line2: null,
+    icon: Globe,
+    style: {
+      borderColor: "border-accent-2/30",
+      bgColor: "bg-accent-2/10",
+      textColor: "text-accent-2",
+    },
+  },
+  {
+    title: "CELPIP",
+    line1: "Your Key to Canadian Immigration",
+    line2: null,
+    icon: Zap,
+    style: {
+      borderColor: "border-accent-4/30",
+      bgColor: "bg-accent-4/10",
+      textColor: "text-accent-4",
+    },
+  },
+];
+
 
 export default function Home() {
-  const heroRef = useRef(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const springX = useSpring(x, { stiffness: 300, damping: 40 });
-  const springY = useSpring(y, { stiffness: 300, damping: 40 });
-
-  const parallaxX1 = useTransform(springX, [-100, 100], [-15, 15]);
-  const parallaxY1 = useTransform(springY, [-100, 100], [-10, 10]);
-
-  const parallaxX2 = useTransform(springX, [-100, 100], [15, -15]);
-  const parallaxY2 = useTransform(springY, [-100, 100], [10, -10]);
-
   const [imgIndex, setImgIndex] = useState(0);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const bgInterval = setInterval(() => {
       setImgIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
     }, 5500); // Change image every 5.5 seconds
-    return () => clearInterval(interval);
+    
+    const cardInterval = setInterval(() => {
+      setCurrentCardIndex((prevIndex) => (prevIndex + 1) % heroCards.length);
+    }, 4000); // 3s display + 1s cooldown
+    
+    return () => {
+      clearInterval(bgInterval);
+      clearInterval(cardInterval);
+    };
   }, []);
-
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (heroRef.current) {
-      const rect = (heroRef.current as HTMLElement).getBoundingClientRect();
-      const newX = event.clientX - rect.left - rect.width / 2;
-      const newY = event.clientY - rect.top - rect.height / 2;
-      x.set(newX);
-      y.set(newY);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
   
   return (
     <>
@@ -475,62 +493,38 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right Content - Hero Cards */}
+            {/* Right Content - Animated Hero Card */}
             <motion.div
-              ref={heroRef}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              className="relative hidden lg:flex items-center justify-center"
+              className="relative hidden lg:flex items-center justify-center min-h-[550px]"
             >
-              <div className="w-[450px] h-[450px] xl:w-[550px] xl:h-[550px] relative">
-                <motion.div 
-                    style={{ x: parallaxX2, y: parallaxY1, rotateZ: 10 }}
-                    animate={{ y: [0, -8, 0], x: [0, 5, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                    className="absolute top-10 right-0 w-72 xl:w-80 glass-card rounded-3xl p-6 flex flex-col justify-between border-2 border-primary/30 shadow-2xl"
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentCardIndex}
+                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                  transition={{ duration: 0.5, ease: 'easeInOut' }}
+                  className={cn(
+                    "absolute w-80 h-96 glass-card rounded-3xl p-8 flex flex-col justify-between shadow-2xl border-2",
+                    heroCards[currentCardIndex].style.borderColor
+                  )}
                 >
+                  <div>
                     <div className="flex justify-between items-start">
-                        <h3 className="font-bold text-3xl text-foreground">PTE</h3>
-                        <div className="p-2 bg-primary/10 rounded-xl">
-                          <Target className="h-8 w-8 text-primary" />
-                        </div>
+                      <h3 className="font-bold text-4xl text-foreground">{heroCards[currentCardIndex].title}</h3>
+                      <div className={cn("p-3 rounded-xl", heroCards[currentCardIndex].style.bgColor)}>
+                        <heroCards[currentCardIndex].icon className={cn("h-8 w-8", heroCards[currentCardIndex].style.textColor)} />
+                      </div>
                     </div>
-                    <div>
-                        <p className="text-sm font-semibold text-primary">AI-Powered Scoring</p>
-                        <p className="text-xs text-muted-foreground">Fast, Accurate, Computer-based</p>
-                    </div>
+                  </div>
+                  <div>
+                    <p className={cn("text-lg font-semibold", heroCards[currentCardIndex].style.textColor)}>{heroCards[currentCardIndex].line1}</p>
+                    {heroCards[currentCardIndex].line2 && (
+                      <p className="text-sm text-muted-foreground">{heroCards[currentCardIndex].line2}</p>
+                    )}
+                  </div>
                 </motion.div>
-
-                <motion.div 
-                    style={{ x: parallaxX1, y: parallaxY2, rotateZ: -12 }} 
-                    animate={{ y: [0, 10, 0], x: [0, -5, 0] }}
-                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-1/3 left-0 w-64 xl:w-72 glass-card rounded-3xl p-6 flex flex-col justify-between shadow-xl"
-                >
-                    <div className="flex justify-between items-start">
-                        <h3 className="font-bold text-2xl text-foreground">IELTS</h3>
-                        <div className="p-2 bg-accent-2/10 rounded-xl">
-                          <Globe className="h-8 w-8 text-accent-2" />
-                        </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground">Global Standard for Migration & Study</p>
-                </motion.div>
-                
-                <motion.div 
-                    style={{ x: parallaxX2, y: parallaxY2, rotateZ: -5 }} 
-                    animate={{ y: [0, -12, 0] }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    className="absolute bottom-0 right-1/4 w-64 xl:w-72 glass-card rounded-3xl p-6 flex flex-col justify-between shadow-xl"
-                >
-                    <div className="flex justify-between items-start">
-                        <h3 className="font-bold text-2xl text-foreground">CELPIP</h3>
-                        <div className="p-2 bg-accent-4/10 rounded-xl">
-                           <Zap className="h-8 w-8 text-accent-4" />
-                        </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground">Your Key to Canadian Immigration</p>
-                </motion.div>
-              </div>
+              </AnimatePresence>
             </motion.div>
           </div>
         </div>
