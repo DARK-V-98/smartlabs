@@ -45,7 +45,7 @@ export default function PteSummarizeSpokenTextPage() {
         }
 
         return () => {
-            if ('speechSynthesis' in window') {
+            if ('speechSynthesis' in window) {
                 window.speechSynthesis.onvoiceschanged = null;
             }
         };

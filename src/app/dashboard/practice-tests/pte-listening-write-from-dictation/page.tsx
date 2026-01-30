@@ -42,7 +42,7 @@ export default function PteWriteFromDictationPage() {
         }
 
         return () => {
-            if ('speechSynthesis' in window') {
+            if ('speechSynthesis' in window) {
                 window.speechSynthesis.onvoiceschanged = null;
             }
         };
