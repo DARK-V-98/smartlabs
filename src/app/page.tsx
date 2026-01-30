@@ -232,7 +232,7 @@ export default function Home() {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="glass-card rounded-3xl p-8"
+              className="glass-card rounded-3xl p-6 md:p-8"
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                 <Sparkles className="h-4 w-4" />
@@ -293,8 +293,8 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right Content - Static Cards */}
-            <div className="relative flex items-center justify-center mt-12 lg:mt-0">
+            {/* Right Content - Course Cards (Desktop) */}
+            <div className="hidden lg:flex items-center justify-center">
                 <div className="grid gap-6 w-full max-w-sm">
                     {heroCards.map((card, index) => (
                         <motion.div
@@ -319,6 +319,32 @@ export default function Home() {
                 </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Mobile-only Course Cards */}
+      <section className="relative lg:hidden px-4 sm:px-6 pb-20">
+        <div className="grid gap-6 w-full max-w-sm mx-auto">
+            {heroCards.map((card, index) => (
+                <motion.div
+                    key={card.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className={cn(
+                        "glass-card rounded-3xl p-6 flex items-center gap-4 shadow-xl border-2",
+                        card.style.borderColor
+                    )}
+                >
+                    <div className={cn("p-3 rounded-xl", card.style.bgColor)}>
+                        <card.icon className={cn("h-8 w-8", card.style.textColor)} />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-xl text-foreground">{card.title}</h3>
+                        <p className={cn("text-sm font-semibold", card.style.textColor)}>{card.line1}</p>
+                    </div>
+                </motion.div>
+            ))}
         </div>
       </section>
 
