@@ -383,7 +383,7 @@ export default function Home() {
                 with a Splash of Fun
               </h1>
               
-              <p className="text-lg text-muted-foreground mb-8 max-w-lg">
+              <p className="text-lg xl:text-xl text-muted-foreground mb-8 max-w-lg xl:max-w-xl">
                 Join thousands of successful students who achieved their dream scores with our AI-powered learning platform, expert instructors, and proven strategies.
               </p>
 
@@ -438,12 +438,12 @@ export default function Home() {
               onMouseLeave={handleMouseLeave}
               className="relative hidden lg:flex items-center justify-center"
             >
-              <div className="w-[450px] h-[450px] relative">
+              <div className="w-[450px] h-[450px] xl:w-[550px] xl:h-[550px] relative">
                 <motion.div 
                     style={{ x: parallaxX2, y: parallaxY1, rotateZ: 10 }}
                     animate={{ y: [0, -8, 0], x: [0, 5, 0] }}
                     transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                    className="absolute top-10 right-0 w-72 glass-card rounded-3xl p-6 flex flex-col justify-between border-2 border-primary/30 shadow-2xl"
+                    className="absolute top-10 right-0 w-72 xl:w-80 glass-card rounded-3xl p-6 flex flex-col justify-between border-2 border-primary/30 shadow-2xl"
                 >
                     <div className="flex justify-between items-start">
                         <h3 className="font-bold text-3xl text-foreground">PTE</h3>
@@ -461,7 +461,7 @@ export default function Home() {
                     style={{ x: parallaxX1, y: parallaxY2, rotateZ: -12 }} 
                     animate={{ y: [0, 10, 0], x: [0, -5, 0] }}
                     transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-1/3 left-0 w-64 glass-card rounded-3xl p-6 flex flex-col justify-between shadow-xl"
+                    className="absolute top-1/3 left-0 w-64 xl:w-72 glass-card rounded-3xl p-6 flex flex-col justify-between shadow-xl"
                 >
                     <div className="flex justify-between items-start">
                         <h3 className="font-bold text-2xl text-foreground">IELTS</h3>
@@ -476,7 +476,7 @@ export default function Home() {
                     style={{ x: parallaxX2, y: parallaxY2, rotateZ: -5 }} 
                     animate={{ y: [0, -12, 0] }}
                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    className="absolute bottom-0 right-1/4 w-64 glass-card rounded-3xl p-6 flex flex-col justify-between shadow-xl"
+                    className="absolute bottom-0 right-1/4 w-64 xl:w-72 glass-card rounded-3xl p-6 flex flex-col justify-between shadow-xl"
                 >
                     <div className="flex justify-between items-start">
                         <h3 className="font-bold text-2xl text-foreground">CELPIP</h3>
