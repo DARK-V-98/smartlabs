@@ -1,4 +1,3 @@
-
 'use client';
 import Link from "next/link";
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion";
@@ -386,7 +385,6 @@ const heroCards = [
   },
 ];
 
-
 export default function Home() {
   const [imgIndex, setImgIndex] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -495,7 +493,7 @@ export default function Home() {
 
             {/* Right Content - Animated Hero Card */}
             <motion.div
-              className="relative hidden lg:flex items-center justify-center min-h-[550px]"
+              className="relative hidden lg:flex items-center justify-center min-h-[550px] lg:min-h-[600px] xl:w-[500px] xl:min-h-[700px]"
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -505,7 +503,7 @@ export default function Home() {
                   exit={{ opacity: 0, y: -20, scale: 0.9 }}
                   transition={{ duration: 0.5, ease: 'easeInOut' }}
                   className={cn(
-                    "absolute w-80 h-96 glass-card rounded-3xl p-8 flex flex-col justify-between shadow-2xl border-2",
+                    "absolute w-80 h-96 xl:w-96 xl:h-[28rem] glass-card rounded-3xl p-8 flex flex-col justify-between shadow-2xl border-2",
                     heroCards[currentCardIndex].style.borderColor
                   )}
                 >
