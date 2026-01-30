@@ -431,85 +431,60 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right Content - Hero Card */}
+            {/* Right Content - Hero Cards */}
             <motion.div
               ref={heroRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
+              className="relative hidden lg:flex items-center justify-center"
             >
-              <div className="relative">
-                {/* Main Card */}
-                <div className="glass-card rounded-3xl p-8 shadow-xl">
-                  <div className="flex flex-col items-center gap-4 mb-6">
-                    <Image src="/logo.png" alt="Smart Labs Logo" width={160} height={160} />
-                    <div>
-                      <div className="font-display font-semibold text-lg text-center">Your Learning Journey</div>
-                      <div className="text-sm text-muted-foreground text-center">Personalized path to success</div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    {["Complete diagnostic test", "Get personalized study plan", "Practice with AI feedback", "Achieve your target score"].map((step, i) => (
-                      <div key={step} className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
-                          {i + 1}
-                        </div>
-                        <span className={i === 0 ? "font-medium" : "text-muted-foreground"}>{step}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 pt-6 border-t border-border">
-                    <div className="flex items-center justify-between">
-                      <div className="flex -space-x-2">
-                        {["PS", "MH", "SC", "+"].map((avatar, i) => (
-                          <div
-                            key={i}
-                            className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent-1 flex items-center justify-center text-white text-xs font-bold ring-2 ring-card"
-                          >
-                            {avatar}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="text-right">
-                        <div className="flex items-center gap-1 text-accent-4">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-4 w-4 fill-current" />
-                          ))}
-                        </div>
-                        <div className="text-sm text-muted-foreground">2,400+ reviews</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating Elements */}
-                <motion.div
-                  style={{ x: parallaxX1, y: parallaxY1 }}
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-4 -right-4 glass-card rounded-2xl p-4 shadow-lg"
+              <div className="w-[450px] h-[450px] relative">
+                <motion.div 
+                    style={{ x: parallaxX2, y: parallaxY1, rotateZ: 10 }}
+                    animate={{ y: [0, -8, 0], x: [0, 5, 0] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                    className="absolute top-10 right-0 w-72 glass-card rounded-3xl p-6 flex flex-col justify-between border-2 border-primary/30 shadow-2xl"
                 >
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-6 w-6 text-accent-2" />
-                    <span className="font-semibold">95% Success</span>
-                  </div>
+                    <div className="flex justify-between items-start">
+                        <h3 className="font-bold text-3xl text-foreground">PTE</h3>
+                        <div className="p-2 bg-primary/10 rounded-xl">
+                          <Target className="h-8 w-8 text-primary" />
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-primary">AI-Powered Scoring</p>
+                        <p className="text-xs text-muted-foreground">Fast, Accurate, Computer-based</p>
+                    </div>
                 </motion.div>
 
-                <motion.div
-                  style={{ x: parallaxX2, y: parallaxY2 }}
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                  className="absolute -bottom-4 -left-4 glass-card rounded-2xl p-4 shadow-lg"
+                <motion.div 
+                    style={{ x: parallaxX1, y: parallaxY2, rotateZ: -12 }} 
+                    animate={{ y: [0, 10, 0], x: [0, -5, 0] }}
+                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-1/3 left-0 w-64 glass-card rounded-3xl p-6 flex flex-col justify-between shadow-xl"
                 >
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-6 w-6 text-accent-3" />
-                    <span className="font-semibold">AI-Powered</span>
-                  </div>
+                    <div className="flex justify-between items-start">
+                        <h3 className="font-bold text-2xl text-foreground">IELTS</h3>
+                        <div className="p-2 bg-accent-2/10 rounded-xl">
+                          <Globe className="h-8 w-8 text-accent-2" />
+                        </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Global Standard for Migration & Study</p>
+                </motion.div>
+                
+                <motion.div 
+                    style={{ x: parallaxX2, y: parallaxY2, rotateZ: -5 }} 
+                    animate={{ y: [0, -12, 0] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                    className="absolute bottom-0 right-1/4 w-64 glass-card rounded-3xl p-6 flex flex-col justify-between shadow-xl"
+                >
+                    <div className="flex justify-between items-start">
+                        <h3 className="font-bold text-2xl text-foreground">CELPIP</h3>
+                        <div className="p-2 bg-accent-4/10 rounded-xl">
+                           <Zap className="h-8 w-8 text-accent-4" />
+                        </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Your Key to Canadian Immigration</p>
                 </motion.div>
               </div>
             </motion.div>
