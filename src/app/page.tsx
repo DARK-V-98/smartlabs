@@ -1,3 +1,4 @@
+
 'use client';
 import Link from "next/link";
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion";
@@ -326,6 +327,7 @@ const itemVariants = {
 };
 
 const backgroundImages = ['/1.png', '/2.png', '/3.png', '/4.png'];
+
 const animationVariants = [
   { // 0
     initial: { opacity: 0, scale: 1 },
