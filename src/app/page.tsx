@@ -1,5 +1,6 @@
 'use client';
 import Link from "next/link";
+import Script from "next/script";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import Image from 'next/image';
@@ -96,29 +97,6 @@ const features = [
   },
 ];
 
-const testimonials = [
-    {
-        name: 'Priya Sharma',
-        role: 'PTE Score: 85 | Sri Lanka',
-        content: 'Smart Labs transformed my preparation journey. The AI feedback and personalized study plan helped me achieve my target score in just 3 weeks!',
-        avatar: 'PS',
-        color: 'from-accent-1/80 to-accent-3/80',
-    },
-    {
-        name: 'Liam Smith',
-        role: 'IELTS Band: 8.5 | Australia',
-        content: 'The instructors are incredibly knowledgeable. Their strategies for the speaking section were game-changers. Highly recommended for anyone in Australia!',
-        avatar: 'LS',
-        color: 'from-accent-2/80 to-accent-4/80',
-    },
-    {
-        name: 'Nimali Perera',
-        role: 'CELPIP Score: 12 | Sri Lanka',
-        content: 'The self-paced CELPIP course was perfect for my schedule. The materials are comprehensive and the practice tests are very close to the real exam.',
-        avatar: 'NP',
-        color: 'from-primary/80 to-accent-2/80',
-    },
-];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -561,37 +539,8 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-3 gap-8"
-          >
-            {testimonials.slice(0, 3).map((testimonial) => (
-              <motion.div
-                key={testimonial.name}
-                variants={itemVariants}
-                className="glass-card rounded-3xl p-8 h-full flex flex-col"
-              >
-                <div className="flex items-center gap-1 text-accent-4 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-current" />
-                  ))}
-                </div>
-                <p className="text-foreground mb-6 leading-relaxed flex-grow">"{testimonial.content}"</p>
-                <div className="flex items-center gap-4 mt-auto">
-                  <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${testimonial.color} flex items-center justify-center text-white font-bold`}>
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-foreground">{testimonial.name}</div>
-                    <div className="text-sm text-primary font-medium">{testimonial.role}</div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+          <div className="sk-ww-google-reviews" data-embed-id="25670018"></div>
+          <Script src="https://widgets.sociablekit.com/google-reviews/widget.js" strategy="lazyOnload" />
         </div>
       </section>
 
