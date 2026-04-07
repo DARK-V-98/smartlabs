@@ -98,24 +98,30 @@ export default function PteReadAloudPage() {
 
         try {
             const audioBlob = await fetch(audioUrl).then(r => r.blob());
-            const reader = new FileReader();
-            reader.readAsDataURL(audioBlob);
-            reader.onloadend = async () => {
-                const base64Audio = reader.result as string;
-                if (!base64Audio) {
-                    throw new Error("Failed to convert audio to Base64");
-                }
-                const testInput: PteReadAloudInput = {
-                    text: testText,
-                    audioDataUri: base64Audio,
-                };
-                const scoreResult = await scorePteReadAloud(testInput);
-                setResult(scoreResult);
-                setIsLoading(false);
+            const base64Audio = await new Promise<string>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => resolve(reader.result as string);
+                reader.onerror = reject;
+            });
+
+            if (!base64Audio) {
+                throw new Error("Failed to convert audio to Base64");
+            }
+            const testInput: PteReadAloudInput = {
+                text: testText,
+                audioDataUri: base64Audio,
             };
+            const scoreResult = await scorePteReadAloud(testInput);
+            setResult(scoreResult);
         } catch (error) {
             console.error("Scoring failed:", error);
-            toast({ variant: 'destructive', title: 'Scoring Failed', description: 'Could not get feedback from the AI. Please try again.' });
+            toast({ 
+                variant: 'destructive', 
+                title: 'Scoring Failed', 
+                description: 'Could not get feedback from the AI. Please try again.' 
+            });
+        } finally {
             setIsLoading(false);
         }
     };

@@ -107,17 +107,30 @@ export default function PteRepeatSentencePage() {
         setGameState('loading');
         try {
             const audioBlob = await fetch(audioUrl).then(r => r.blob());
-            const reader = new FileReader();
-            reader.readAsDataURL(audioBlob);
-            reader.onloadend = async () => {
-                const base64Audio = reader.result as string;
-                const testInput: PteRepeatSentenceInput = { originalSentence: currentSentence.text, audioDataUri: base64Audio };
-                const scoreResult = await scorePteRepeatSentence(testInput);
-                setResult(scoreResult);
-                setGameState('results');
+            const base64Audio = await new Promise<string>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => resolve(reader.result as string);
+                reader.onerror = reject;
+            });
+
+            if (!base64Audio) {
+                throw new Error("Failed to convert audio to Base64");
+            }
+            const testInput: PteRepeatSentenceInput = { 
+                originalSentence: currentSentence.text, 
+                audioDataUri: base64Audio 
             };
+            const scoreResult = await scorePteRepeatSentence(testInput);
+            setResult(scoreResult);
+            setGameState('results');
         } catch (error) {
-            toast({ variant: 'destructive', title: 'Scoring Failed' });
+            console.error("Scoring failed:", error);
+            toast({ 
+                variant: 'destructive', 
+                title: 'Scoring Failed', 
+                description: 'Could not get feedback from the AI. Please try again.' 
+            });
             setGameState('stopped');
         }
     };

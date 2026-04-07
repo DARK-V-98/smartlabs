@@ -43,7 +43,11 @@ export default function PteReadingTestPage() {
       setResult(scoreResult);
     } catch (error) {
       console.error('Scoring failed:', error);
-      // Handle error display to the user
+      toast({ 
+          variant: 'destructive', 
+          title: 'Scoring Failed', 
+          description: 'Could not get feedback from the AI. Please try again.' 
+      });
     } finally {
       setIsLoading(false);
     }

@@ -15,8 +15,10 @@ For each question provided in the input, you must:
 1.  Compare the 'userAnswer' to the 'correctAnswer'.
 2.  Set 'isCorrect' to true if they match, and false otherwise.
 3.  If the answer is incorrect, provide a brief, helpful 'feedback' explaining why the correct answer is the right choice based on the question. If correct, the feedback should be a short, positive confirmation like "Correct!".
-4.  After evaluating all questions, calculate the 'overallScore' as a percentage of correct answers.
-5.  Provide some 'generalFeedback' in one or two sentences, encouraging the user and suggesting what to focus on next.
+
+Populate the 'results' array with these evaluated questions.
+After evaluating all questions, calculate the 'overallScore' as a percentage of correct answers.
+Provide some 'generalFeedback' in one or two sentences, encouraging the user and suggesting what to focus on next.
 
 Here is the test data:
 {{json questions}}
